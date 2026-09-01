@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scroll-scrub test rig</title>
+<style>
+  :root {
+    --bg: #0b0c0d;
+    --ink: #e8e6e1;
+    --ink-dim: #8a8781;
+    --gold: #ffbe50;
+    --line: #232527;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* The scroll track. Its height is what buys us scrub distance. */
+  #track { height: 500vh; position: relative; }
+
+  #stage {
+    position: sticky; top: 0;
+    height: 100vh; width: 100%;
+    overflow: hidden;
+    display: grid; place-items: center;
+    background: #0b0c0d;
+  }
+
+  /* Both renderers occupy the same box; only one is visible at a time. */
+  #stage video, #stage canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #stage video { opacity: 0; }
+  #stage canvas { opacity: 0; }
+  .live { opacity: 1 !important; }
+
+  /* ---- narrative copy, to rehearse the real pacing ---- */
+  .copy {
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    width: min(760px, 84vw);
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .35s ease;
+    text-shadow: 0 2px 30px rgba(0,0,0,.9);
+  }
+  .copy.at-top { top: 12vh; }
+  .copy.at-bottom { bottom: 14vh; }
+  .copy h1 {
+    font-size: clamp(30px, 5.4vw, 64px);
+    line-height: 1.06;
+    margin: 0 0 .5em;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+  .copy p {
+    margin: 0; color: var(--ink-dim);
+    font-size: clamp(15px, 1.7vw, 19px);
+  }
+  .copy em { color: var(--gold); font-style: normal; }
+
+  /* ---- control panel ---- */
+  #panel {
+    position: fixed; z-index: 10;
+    top: 14px; right: 14px;
+    width: 280px;
+    background: rgba(14,15,16,.90);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-dim);
+  }
+  #panel h2 {
+    margin: 0 0 9px;
+    font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .modes { display: grid; gap: 5px; margin-bottom: 11px; }
+  .modes button {
+    all: unset;
+    cursor: pointer;
+    padding: 7px 9px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--ink-dim);
+    display: flex; justify-content: space-between; gap: 8px;
+    transition: border-color .15s, color .15s;
+  }
+  .modes button:hover { border-color: #3a3d40; color: var(--ink); }
+  .modes button[aria-pressed="true"] {
+    border-color: var(--gold); color: var(--gold);
+    background: rgba(255,190,80,.07);
+  }
+  .modes button .sz { opacity: .55; }
+
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 2.5px 0; vertical-align: baseline; }
+  td:last-child { text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .warn { color: #ff8b6b !important; }
+  .ok { color: #7fd39b !important; }
+
+  #bar {
+    height: 3px; margin-top: 10px;
+    background: var(--line); border-radius: 2px; overflow: hidden;
+  }
+  #barFill { height: 100%; width: 0; background: var(--gold); }
+
+  #hint {
+    position: fixed; z-index: 10;
+    bottom: 16px; left: 50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
+    background: rgba(14,15,16,.86);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 7px 15px;
+    transition: opacity .4s;
+  }
+
+  #loading {
+    position: absolute; z-index: 5;
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+  }
+
+  @media (max-width: 720px) {
+    #panel { width: calc(100vw - 28px); top: auto; bottom: 14px; right: 14px; }
+    #hint { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="track">
+  <div id="stage">
+    <div id="loading">loading…</div>
+
+    <video id="vidIntra" muted playsinline preload="auto" src="assets/video/scrub-allintra.mp4"></video>
+    <video id="vidNaive" muted playsinline preload="auto" src="assets/video/scrub-naive.mp4"></video>
+    <canvas id="cv"></canvas>
+
+    <div class="copy at-top" data-in="0.00" data-out="0.20">
+      <h1>The block is not empty.</h1>
+      <p>Everything the student will become is already inside it.</p>
+    </div>
+    <div class="copy at-bottom" data-in="0.28" data-out="0.62">
+      <h1>Old schooling <em>adds</em>.</h1>
+      <p>It layers credentials onto the stone until you cannot see the shape.</p>
+    </div>
+    <div class="copy at-bottom" data-in="0.68" data-out="1.01">
+      <h1>We <em>remove</em>.</h1>
+      <p>The code is not written on the marble. It is the cut that frees the figure.</p>
+    </div>
+  </div>
+</div>
+
+<div id="panel">
+  <h2>Technique</h2>
+  <div class="modes">
+    <button data-mode="intra" aria-pressed="true">currentTime · all-intra <span class="sz">2.9 MB</span></button>
+    <button data-mode="naive" aria-pressed="false">currentTime · normal GOP <span class="sz">220 KB</span></button>
+    <button data-mode="seq" aria-pressed="false">canvas · JPEG seq <span class="sz">4.8 MB</span></button>
+  </div>
+  <table>
+    <tr><td>scroll</td><td id="mProg">0%</td></tr>
+    <tr><td>target frame</td><td id="mTarget">0</td></tr>
+    <tr><td>painted frame</td><td id="mShown">0</td></tr>
+    <tr><td>distinct fps</td><td id="mFps">0</td></tr>
+    <tr><td>seek latency</td><td id="mLat">–</td></tr>
+    <tr><td>stalls</td><td id="mStall">0</td></tr>
+    <tr><td>ready in</td><td id="mReady">–</td></tr>
+  </table>
+  <div id="bar"><div id="barFill"></div></div>
+</div>
+
+<div id="hint">scroll to scrub · switch technique above · watch “distinct fps”</div>
+
+<script>
+(() => {
+  'use strict';
+
+  const TOTAL_FRAMES = 240;
+  const FPS = 30;
+  const SEQ_PATH = (i) => `assets/frames/jpg/f${String(i + 1).padStart(4, '0')}.jpg`;
+
+  const $ = (id) => document.getElementById(id);
+  const stage = $('stage');
+  const vidIntra = $('vidIntra');
+  const vidNaive = $('vidNaive');
+  const cv = $('cv');
+  const ctx = cv.getContext('2d', { alpha: false });
+  const loading = $('loading');
+
+  let mode = 'intra';
+  let seqImages = null;      // lazily loaded on first switch to 'seq'
+  let seqReady = false;
+
+  // ---------------------------------------------------------------- telemetry
+  const stats = { lastShown: -1, distinct: 0, fps: 0, stalls: 0, lat: 0, seekStart: 0 };
+  setInterval(() => {
+    stats.fps = stats.distinct;
+    stats.distinct = 0;
+  }, 1000);
+
+  // ------------------------------------------------------------ scroll driver
+  // Raw scroll position is noisy and arrives in coarse jumps on trackpads and
+  // wheel devices. Easing a follower toward the target is what separates a
+  // scrub that feels attached to the finger from one that feels like a slideshow.
+  let target = 0;   // 0..1 from scroll
+  let current = 0;  // eased follower
+  const EASE = 0.14;
+
+  function readScroll() {
+    const track = $('track');
+    const scrollable = track.offsetHeight - window.innerHeight;
+    target = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
+  }
+  window.addEventListener('scroll', readScroll, { passive: true });
+  window.addEventListener('resize', () => { readScroll(); sizeCanvas(); });
+
+  function sizeCanvas() {
+    // Cap DPR at 2. Beyond that we pay fill-rate for pixels nobody resolves.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(stage.clientWidth * dpr);
+    cv.height = Math.round(stage.clientHeight * dpr);
+  }
+
+  // ---------------------------------------------------------------- renderers
+  const activeVideo = () => (mode === 'intra' ? vidIntra : vidNaive);
+
+  function paintVideo(t) {
+    const v = activeVideo();
+    if (!v.duration || !isFinite(v.duration)) return;
+    // Nudge off the exact final timestamp; seeking to duration can park on a
+    // blank frame in some browsers.
+    const time = Math.min(t * v.duration, v.duration - 0.001);
+    const frame = Math.round(time * FPS);
+    if (frame !== stats.lastTargetFrame) {
+      stats.seekStart = performance.now();
+      v.currentTime = time;
+      stats.lastTargetFrame = frame;
+    }
+  }
+
+  function paintSequence(t) {
+    if (!seqReady) return;
+    const idx = Math.min(TOTAL_FRAMES - 1, Math.round(t * (TOTAL_FRAMES - 1)));
+    if (idx === stats.lastShown) return;
+    const img = seqImages[idx];
+    if (!img || !img.complete) { stats.stalls++; return; }
+
+    // Manual object-fit: cover, since drawImage has no such concept.
+    const cw = cv.width, ch = cv.height;
+    const ar = img.naturalWidth / img.naturalHeight;
+    let dw = cw, dh = cw / ar;
+    if (dh < ch) { dh = ch; dw = ch * ar; }
+    ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+
+    stats.lastShown = idx;
+    stats.distinct++;
+  }
+
+  // Fires when a decoded frame is actually presented — the honest measure of
+  // whether a seek landed, as opposed to when we merely asked for it.
+  function attachFrameCallback(v) {
+    if (!v.requestVideoFrameCallback) return;
+    const tick = () => {
+      if (activeVideo() === v && mode !== 'seq') {
+        const f = Math.round(v.currentTime * FPS);
+        if (f !== stats.lastShown) {
+          stats.lastShown = f;
+          stats.distinct++;
+          if (stats.seekStart) stats.lat = performance.now() - stats.seekStart;
+        }
+      }
+      v.requestVideoFrameCallback(tick);
+    };
+    v.requestVideoFrameCallback(tick);
+  }
+  attachFrameCallback(vidIntra);
+  attachFrameCallback(vidNaive);
+
+  // ------------------------------------------------------------------- copy
+  const copies = [...document.querySelectorAll('.copy')].map((el) => ({
+    el, in: parseFloat(el.dataset.in), out: parseFloat(el.dataset.out),
+  }));
+  function updateCopy(t) {
+    for (const c of copies) {
+      const on = t >= c.in && t < c.out;
+      const want = on ? '1' : '0';
+      if (c.el.style.opacity !== want) c.el.style.opacity = want;
+    }
+  }
+
+  // -------------------------------------------------------------- main loop
+  function frame() {
+    current += (target - current) * EASE;
+    if (Math.abs(target - current) < 0.0002) current = target;
+
+    if (mode === 'seq') paintSequence(current);
+    else paintVideo(current);
+
+    updateCopy(current);
+
+    $('mProg').textContent = Math.round(current * 100) + '%';
+    $('mTarget').textContent = Math.round(current * (TOTAL_FRAMES - 1));
+    $('mShown').textContent = stats.lastShown < 0 ? '–' : stats.lastShown;
+    const fpsEl = $('mFps');
+    fpsEl.textContent = stats.fps;
+    fpsEl.className = stats.fps >= 24 ? 'ok' : stats.fps >= 12 ? '' : 'warn';
+    $('mLat').textContent = mode === 'seq' ? 'n/a' : (stats.lat ? stats.lat.toFixed(1) + ' ms' : '–');
+    $('mStall').textContent = stats.stalls;
+    $('barFill').style.width = (current * 100) + '%';
+
+    requestAnimationFrame(frame);
+  }
+
+  // -------------------------------------------------------------- preloading
+  function loadSequence() {
+    if (seqImages) return Promise.resolve();
+    const t0 = performance.now();
+    seqImages = new Array(TOTAL_FRAMES);
+    let done = 0;
+
+    // Bounded concurrency. Firing 240 requests at once buries the connection
+    // pool and the last frames land long after the first scroll.
+    const CONCURRENCY = 8;
+    let next = 0;
+
+    return new Promise((resolve) => {
+      const startOne = () => {
+        if (next >= TOTAL_FRAMES) return;
+        const i = next++;
+        const img = new Image();
+        img.decoding = 'async';
+        img.onload = img.onerror = () => {
+          done++;
+          loading.textContent = `decoding sequence… ${done}/${TOTAL_FRAMES}`;
+          if (done === TOTAL_FRAMES) {
+            seqReady = true;
+            loading.textContent = '';
+            $('mReady').textContent = Math.round(performance.now() - t0) + ' ms';
+            resolve();
+          } else startOne();
+        };
+        img.src = SEQ_PATH(i);
+        seqImages[i] = img;
+      };
+      for (let k = 0; k < CONCURRENCY; k++) startOne();
+    });
+  }
+
+  // ------------------------------------------------------------ mode switching
+  function setMode(next) {
+    mode = next;
+    stats.lastShown = -1;
+    stats.lastTargetFrame = -1;
+    stats.stalls = 0;
+    stats.lat = 0;
+
+    vidIntra.classList.toggle('live', mode === 'intra');
+    vidNaive.classList.toggle('live', mode === 'naive');
+    cv.classList.toggle('live', mode === 'seq');
+
+    document.querySelectorAll('.modes button').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+
+    if (mode === 'seq') {
+      $('mReady').textContent = seqReady ? $('mReady').textContent : '…';
+      if (!seqReady) { loading.textContent = 'decoding sequence…'; loadSequence(); }
+    } else {
+      loading.textContent = '';
+      $('mReady').textContent = 'instant';
+    }
+  }
+  document.querySelectorAll('.modes button').forEach((b) =>
+    b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+  // ------------------------------------------------------------------- boot
+  // Safari will not decode a frame for a seek until the element has been
+  // primed, so we play-then-immediately-pause both elements up front.
+  function prime(v) {
+    const p = v.play();
+    if (p && p.then) p.then(() => v.pause()).catch(() => {});
+    else v.pause();
+  }
+  let primed = false;
+  const doPrime = () => {
+    if (primed) return;
+    primed = true;
+    prime(vidIntra); prime(vidNaive);
+  };
+  ['pointerdown', 'touchstart', 'keydown', 'wheel'].forEach((e) =>
+    window.addEventListener(e, doPrime, { once: true, passive: true }));
+
+  vidIntra.addEventListener('loadeddata', () => {
+    loading.textContent = '';
+    doPrime();
+  }, { once: true });
+
+  sizeCanvas();
+  readScroll();
+  setMode('intra');
+  requestAnimationFrame(frame);
+
+  // Fade the hint away once the user has actually scrolled.
+  let hintGone = false;
+  window.addEventListener('scroll', () => {
+    if (hintGone || window.scrollY < 120) return;
+    hintGone = true;
+    $('hint').style.opacity = '0';
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

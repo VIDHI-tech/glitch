@@ -1,0 +1,1376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GLITCH — Learn beyond the system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Archivo:wght@300;400;500&display=swap">
+<style>
+/* =========================================================== tokens */
+:root {
+  --ground: #0B0B0D;
+  --stone:  #E8E4DB;
+  --shadow: #B8B2A6;
+  --dim:    #8B857A;
+  --gold:   #C9A44C;
+  --gold-hot: #F5D77A;
+  --glitch: #00E5D0;
+  --verm:   #E34A28;
+  --ochre:  #B07A3A;
+  --oxred:  #9C4A2A;
+  --bone:   #D8CFBB;
+  --f-display: "Cinzel", Georgia, serif;
+  --f-body: "Archivo", -apple-system, BlinkMacSystemFont, sans-serif;
+  --f-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --mx: 0px; --my: 0px;
+}
+* { box-sizing: border-box; }
+html { background: var(--ground); }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--stone);
+  font-family: var(--f-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.plx { will-change: transform; }
+.plx[data-depth="1"] { transform: translate3d(calc(var(--mx) * 1.5), calc(var(--my) * 1), 0); }
+.plx[data-depth="2"] { transform: translate3d(calc(var(--mx) * 3), calc(var(--my) * 1.8), 0); }
+.plx[data-depth="3"] { transform: translate3d(calc(var(--mx) * 5), calc(var(--my) * 3), 0); }
+
+.rv {
+  opacity: 0;
+  transform: translateY(var(--rv-y, 26px)) scale(var(--rv-s, 1)) rotate(var(--rv-r, 0deg));
+  filter: blur(var(--rv-b, 0px));
+  transition: opacity .6s ease, transform .6s ease, filter .6s ease;
+}
+.rv.on { opacity: 1; transform: none; filter: none; }
+
+/* ======================================================= chapter nav */
+#chapnav {
+  position: fixed; right: 18px; top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 10px 8px;
+  background: rgba(11,11,13,.55);
+  border: 1px solid rgba(201,164,76,.18);
+  border-radius: 3px;
+  backdrop-filter: blur(6px);
+}
+#chapnav button {
+  display: flex; align-items: center; gap: 8px;
+  background: none; border: 0; cursor: pointer;
+  padding: 6px 4px;
+  color: var(--dim);
+  font: 10px/1 var(--f-body);
+  letter-spacing: .18em;
+}
+#chapnav button .num { font-family: var(--f-display); font-size: 11px; }
+#chapnav button .lbl {
+  max-width: 0; overflow: hidden; white-space: nowrap;
+  transition: max-width .35s ease, opacity .35s ease;
+  opacity: 0; text-transform: uppercase;
+}
+#chapnav:hover button .lbl,
+#chapnav button:focus-visible .lbl { max-width: 130px; opacity: 1; }
+#chapnav button[aria-current="true"] { color: var(--gold); }
+#chapnav button:hover { color: var(--stone); }
+#chapnav button:focus-visible { outline: 1px solid var(--gold); outline-offset: 2px; }
+#chapnav .bar {
+  height: 2px; margin-top: 8px; background: rgba(184,178,166,.2);
+  border-radius: 1px; overflow: hidden;
+}
+#chapnav .bar i { display: block; height: 100%; width: 0; background: var(--gold); }
+
+/* ================================================== shared chapter bits */
+.track { position: relative; }
+.stage {
+  position: sticky; top: 0;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--ground);
+}
+.copy {
+  position: absolute;
+  left: clamp(28px, 7vw, 104px);
+  top: 50%;
+  transform: translateY(calc(-50% + var(--rise, 10px)));
+  width: min(460px, 62vw);
+  opacity: 0;
+  transition: opacity .55s ease, transform .55s ease;
+  pointer-events: none;
+  z-index: 6;
+}
+.copy.on { opacity: 1; --rise: 0px; }
+.copy h1, .copy h2 {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.6vw, 50px);
+  line-height: 1.12;
+  letter-spacing: .012em;
+  margin: 0;
+  text-wrap: balance;
+  text-shadow: 0 2px 40px rgba(0,0,0,.9);
+}
+.copy.minor h2 { font-size: clamp(22px, 2.8vw, 40px); }
+.copy p {
+  margin: 15px 0 0;
+  max-width: 40ch;
+  font-size: clamp(14px, 1.15vw, 16.5px);
+  font-weight: 300;
+  line-height: 1.62;
+  color: #C4BFB5;
+  text-shadow: 0 1px 3px rgba(0,0,0,.95);
+}
+.copy .gold { color: var(--gold); }
+.cta {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 13px 30px;
+  border: 1px solid rgba(201,164,76,.5);
+  border-radius: 2px;
+  color: var(--gold);
+  font-size: 13px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  pointer-events: auto;
+  transition: background .25s, border-color .25s, transform .25s;
+}
+.cta:hover, .cta:focus-visible {
+  background: rgba(201,164,76,.10);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+.cta:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* ============================================ chapter 1: the cave stone */
+/* Back layer: chapter 2's first frame, fully rendered underneath from the
+   start. Front layer (#caveworld) is everything of chapter 1 and gets eaten
+   by the burn mask from the centre outward. */
+#ch2back { position: absolute; inset: 0; z-index: 0; isolation: isolate; }
+#caveworld {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    radial-gradient(ellipse 70% 60% at 60% 42%, #17161A 0%, #0B0B0D 62%),
+    linear-gradient(to top, #131110 0%, transparent 18%),
+    var(--ground);
+  will-change: clip-path;
+}
+#stonewrap { position: absolute; inset: 0; }
+/* the marble plate exactly as it was: same cover framing, same soft mask */
+#bg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  -webkit-mask-image: radial-gradient(ellipse 90% 85% at 50% 45%, #000 55%, transparent 100%);
+          mask-image: radial-gradient(ellipse 90% 85% at 50% 45%, #000 55%, transparent 100%);
+}
+/* cave art sits over the lit face of the stone */
+#artwrap {
+  position: absolute;
+  left: 26%; top: 12%;
+  width: 52%; height: 78%;
+  z-index: 2;
+  pointer-events: none;
+}
+#artlayer { width: 100%; height: 100%; }
+/* pigment sinks into the marble instead of sitting on it */
+#pigment { mix-blend-mode: multiply; opacity: 1; }
+#goldtrace { mix-blend-mode: screen; }
+#veil {
+  position: absolute; inset: 0; z-index: 3;
+  background:
+    linear-gradient(to right,
+      rgba(11,11,13,.92) 0%, rgba(11,11,13,.72) 24%,
+      rgba(11,11,13,.22) 44%, rgba(11,11,13,0) 60%),
+    linear-gradient(to bottom,
+      rgba(11,11,13,.5) 0%, rgba(11,11,13,0) 24%,
+      rgba(11,11,13,0) 74%, rgba(11,11,13,.72) 100%);
+  pointer-events: none;
+}
+/* code fragments: released from the marks, not written on the stone */
+.frag {
+  position: absolute;
+  font: 400 clamp(11px, 1.05vw, 15px)/1.4 var(--f-mono);
+  color: var(--gold);
+  text-shadow: 0 0 14px rgba(201,164,76,.45), 0 1px 2px rgba(0,0,0,.9);
+  letter-spacing: .02em;
+  white-space: nowrap;
+  opacity: 0;
+  will-change: transform, opacity;
+  pointer-events: none;
+  z-index: 4;
+}
+.frag.bin  { letter-spacing: .16em; color: #BE9A45; font-size: clamp(10px, .92vw, 13px); }
+.frag.sym  { font-size: clamp(18px, 1.9vw, 30px); color: var(--gold-hot); letter-spacing: .04em; }
+.frag.code { color: var(--gold); }
+/* the single irregular heat point where the burn will begin */
+#heat {
+  position: absolute;
+  width: 120px; height: 120px;
+  transform: translate(-50%, -50%) scale(.4);
+  border-radius: 50%;
+  background: radial-gradient(circle at 48% 52%,
+    rgba(245,215,122,.9) 0%, rgba(224,118,47,.55) 26%,
+    rgba(64,26,10,.85) 55%, rgba(20,10,6,.6) 68%, transparent 78%);
+  filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  mix-blend-mode: screen;
+}
+/* incandescent rim + char, drawn as strokes of the same burn blob */
+#burnrim { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 7; pointer-events: none; }
+#rim-char { fill: none; stroke: #17100A; stroke-width: 24; opacity: 0; filter: blur(7px); }
+#rim-hot  { fill: none; stroke: #E0762F; stroke-width: 6;  opacity: 0; filter: blur(2.5px); }
+#rim-core { fill: none; stroke: var(--gold-hot); stroke-width: 1.8; opacity: 0; }
+#embers { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 8; pointer-events: none; }
+#cue {
+  position: absolute; bottom: 26px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--dim);
+  transition: opacity .5s;
+  z-index: 9;
+}
+#cue i { display: block; width: 1px; height: 34px; background: linear-gradient(var(--dim), transparent); }
+
+/* ================================= chapter 2 interior (first frame only) */
+.interior { position: absolute; inset: 0; background: #14100A; }
+.interior svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.interior .caption {
+  position: absolute; left: 50%; bottom: 7%;
+  transform: translateX(-50%);
+  font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
+  color: #8A7350;
+  z-index: 2;
+}
+#ch2intro { position: relative; min-height: 100svh; overflow: hidden; }
+#ch2intro .interior { position: absolute; inset: 0; }
+
+/* ================================================ chapter 2: classroom */
+#ch2 .stage { background: #17161A; }
+#rotunda {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 120% 90% at 50% -18%, #3A3733 0%, #262421 34%, #17161A 62%),
+    radial-gradient(ellipse 60% 45% at 50% 4%, rgba(232,228,219,.14), transparent 60%);
+}
+#rotunda svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+#deskfield { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; }
+.clockface { position: absolute; z-index: 3; }
+.certs { position: absolute; top: 12%; right: 8%; z-index: 3; display: flex; gap: 14px; }
+.cert {
+  width: 74px; height: 96px;
+  border: 1px solid rgba(184,178,166,.5);
+  background: linear-gradient(180deg, rgba(232,228,219,.10), rgba(232,228,219,.04));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; letter-spacing: .2em; color: var(--dim); text-transform: uppercase;
+  --rv-y: -18px;
+}
+#vermilion {
+  position: absolute; z-index: 4;
+  width: 46px; height: 46px;
+  left: 30%; top: 58%;
+  will-change: transform;
+}
+#vermilion svg { width: 100%; height: 100%; filter: drop-shadow(0 6px 10px rgba(0,0,0,.5)); }
+#ch2 .copy { z-index: 6; }
+#ch2-vignette {
+  position: absolute; inset: 0; z-index: 5; pointer-events: none;
+  background: radial-gradient(ellipse 90% 80% at 50% 50%, transparent 52%, rgba(11,11,13,.9) 100%);
+  opacity: 0;
+}
+
+/* ==================================================== portal 2 (frozen) */
+.portal-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.portal-through {
+  position: absolute; inset: 0;
+  clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%);
+  will-change: clip-path;
+}
+.portal-caption {
+  position: absolute; left: 50%; bottom: 10%;
+  transform: translateX(-50%);
+  font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ================================================== chapter 3 (frozen) */
+#ch3 .stage { background: radial-gradient(ellipse 90% 70% at 60% 40%, #141318 0%, #0B0B0D 70%); }
+#orbits { position: absolute; left: 50%; top: 46%; width: min(64vw, 760px); aspect-ratio: 1.6;
+  transform: translate(-50%, -50%); z-index: 1; opacity: .6; }
+#orbits svg { width: 100%; height: 100%; overflow: visible; }
+.card {
+  position: absolute;
+  width: 148px;
+  padding: 12px 14px 12px;
+  background: rgba(17,16,20,.88);
+  border: 1px solid rgba(201,164,76,.32);
+  border-radius: 3px;
+  color: var(--stone);
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  line-height: 1.5;
+  box-shadow: 0 12px 30px rgba(0,0,0,.5);
+  transition: opacity .6s ease, transform .6s ease, filter .6s ease,
+              border-color .25s, box-shadow .25s;
+  cursor: default;
+}
+.card small { display: block; color: var(--dim); font-size: 8.5px; letter-spacing: .1em; margin-top: 5px; text-transform: none; }
+.card .chip { display: block; width: 22px; height: 3px; background: var(--gold); margin-bottom: 9px; }
+.card:hover, .card:focus-visible {
+  border-color: var(--gold);
+  box-shadow: 0 16px 40px rgba(0,0,0,.6), 0 0 0 1px rgba(201,164,76,.25);
+  outline: none;
+}
+.card.verm .chip { background: var(--verm); }
+#gear { position: absolute; left: 7%; bottom: 9%; width: 74px; z-index: 3; opacity: .75; will-change: transform; }
+#token { position: absolute; width: 30px; height: 30px; z-index: 4; will-change: transform; }
+#token i {
+  display: block; width: 100%; height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #FF7A54, var(--verm) 58%, #A93318);
+  box-shadow: 0 4px 10px rgba(0,0,0,.55), 0 0 14px rgba(227,74,40,.35);
+}
+#ch3 .copy { left: 50%; transform: translate(-50%, calc(-50% + var(--rise, 10px))); text-align: center; width: min(560px, 80vw); }
+#ch3 .copy p { margin-inline: auto; }
+
+/* ================================================== chapter 4 (frozen) */
+#ch4 .stage { background: #0B0B0D; }
+#constellation { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+#constellation line { stroke: var(--gold); stroke-width: 1; opacity: .8; }
+#constellation .halo { fill: none; stroke: rgba(201,164,76,.35); }
+#constellation circle.node { fill: #1C1A20; stroke: var(--shadow); stroke-width: 1; }
+#constellation text { fill: var(--shadow); font: 9px var(--f-body); letter-spacing: .12em; text-anchor: middle; }
+#constellation .pass { fill: var(--gold-hot); filter: drop-shadow(0 0 6px rgba(245,215,122,.8)); }
+#ch4 .copy { z-index: 6; }
+
+/* ================================================== chapter 5 (frozen) */
+#ch5 {
+  min-height: 120vh;
+  display: grid; place-items: center;
+  position: relative;
+  background:
+    radial-gradient(ellipse 70% 46% at 50% 62%, rgba(201,164,76,.07), transparent 70%),
+    var(--ground);
+}
+#ch5 .inner { text-align: center; padding: 24vh 24px; max-width: 620px; }
+#ch5 h2 {
+  font-family: var(--f-display); font-weight: 400;
+  font-size: clamp(30px, 4vw, 54px); line-height: 1.16; margin: 0;
+  text-wrap: balance;
+}
+#key { width: 44px; margin: 0 auto 34px; display: block; opacity: .85; transition: transform .5s ease; }
+#ch5 .inner:hover #key { transform: rotate(-18deg); }
+
+/* ============================================================= debug */
+#debug {
+  display: none;
+  position: fixed; top: 10px; left: 10px;
+  padding: 8px 12px;
+  background: rgba(11,11,13,.85);
+  border: 1px solid rgba(201,164,76,.35);
+  font: 11px/1.7 var(--f-mono);
+  color: var(--stone);
+  z-index: 51; pointer-events: none; white-space: pre;
+}
+body.debug #debug { display: block; }
+
+/* ==================================================== responsive */
+@media (max-width: 760px) {
+  .plx[data-depth] { transform: none; }
+  #artwrap { left: 14%; top: 16%; width: 74%; height: 66%; }
+  #veil {
+    background:
+      linear-gradient(to bottom,
+        rgba(11,11,13,.5) 0%, rgba(11,11,13,.04) 22%,
+        rgba(11,11,13,.3) 56%, rgba(11,11,13,.92) 84%);
+  }
+  .copy, #ch3 .copy {
+    left: 24px; right: 24px; width: auto;
+    top: auto; bottom: 12vh;
+    transform: translateY(var(--rise, 10px));
+    text-align: left;
+  }
+  .copy p { max-width: none; }
+  .frag { font-size: 10px; }
+  #chapnav {
+    right: auto; left: 50%; top: auto; bottom: 12px;
+    transform: translateX(-50%);
+    flex-direction: row; gap: 2px; padding: 6px 10px;
+  }
+  #chapnav button .lbl { display: none; }
+  #chapnav .bar { display: none; }
+  .certs { top: 8%; right: 4%; }
+  .cert { width: 54px; height: 70px; }
+  .card { width: 124px; font-size: 9px; }
+  #orbits { width: 92vw; }
+  #gear { display: none; }
+}
+
+/* ================================================= reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .rv, .copy, .card { transition: none; }
+  .plx[data-depth] { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ======================================================= chapter nav -->
+<nav id="chapnav" aria-label="Chapters">
+  <button data-go="ch1" aria-current="true"><span class="num">I</span><span class="lbl">The First Tool</span></button>
+  <button data-go="ch2intro"><span class="num">II</span><span class="lbl">The Old Classroom</span></button>
+  <button data-go="ch3"><span class="num">III</span><span class="lbl">The Glitch</span></button>
+  <button data-go="ch4"><span class="num">IV</span><span class="lbl">The Community</span></button>
+  <button data-go="ch5"><span class="num">V</span><span class="lbl">The Invitation</span></button>
+  <span class="bar" aria-hidden="true"><i></i></span>
+</nav>
+
+<!-- ============================================ CHAPTER 1 · THE FIRST TOOL -->
+<section id="ch1" class="track" style="height: 560vh" aria-label="Chapter 1 — The First Tool">
+  <div class="stage">
+
+    <!-- BACK LAYER: chapter 2's first frame, rendered from the start -->
+    <div id="ch2back" class="interior" data-placeholder="chapter 2 first frame"></div>
+
+    <!-- FRONT LAYER: the complete cave-stone world; the burn removes it -->
+    <div id="caveworld">
+      <!-- The original marble plate, unchanged: same footage, same framing,
+           same scrub. Cave art is painted ON it, not instead of it. -->
+      <div id="stonewrap" class="plx" data-depth="1">
+        <video id="bg" muted playsinline preload="auto"
+               poster="assets/video/hero-poster.jpg" data-placeholder="marble footage"></video>
+      </div>
+
+      <!-- Cave art, blended into the stone face. Pigment multiplies into the
+           marble so it sits in the surface rather than floating over it; a
+           noise mask erodes the strokes so nothing reads as clean vector. -->
+      <div id="artwrap">
+        <svg id="artlayer" viewBox="0 0 600 800" aria-hidden="true" data-placeholder="cave pigment art">
+          <defs>
+            <filter id="handrough" x="-25%" y="-25%" width="150%" height="150%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="5" result="n"/>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="6.5"/>
+            </filter>
+            <filter id="goldglow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.6" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <!-- erosion: patchy alpha so pigment survives only where the
+                 stone held it, the way real cave pigment has flaked -->
+            <filter id="erodef" x="0" y="0" width="100%" height="100%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.02 0.03" numOctaves="4" seed="19" result="t"/>
+              <feColorMatrix in="t" type="matrix"
+                values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0.8 0.45 0 0 -0.04" result="a"/>
+              <feComposite in="SourceGraphic" in2="a" operator="in"/>
+            </filter>
+          </defs>
+
+          <g id="pigment" filter="url(#handrough)" stroke-linecap="round" stroke-linejoin="round">
+            <g filter="url(#erodef)">
+              <!-- bison: filled pigment wash, heavy shoulder hump, small
+                   hindquarters — proportions taken from Palaeolithic cave
+                   painting rather than outline drawing -->
+              <g fill="#7E3418" opacity=".8" stroke="none">
+                <path d="M116 372 c-3 -28 3 -48 17 -60 c15 -14 36 -22 58 -27 c14 -3 24 -12 31 -25
+                  c8 -14 21 -20 36 -17 c17 3 29 14 38 27 c7 10 15 15 25 17 c9 2 12 8 8 13
+                  c-5 6 -15 5 -25 1 c-11 -4 -22 -4 -34 -1 c-17 4 -33 11 -49 19 c-19 9 -37 16 -53 21
+                  c-15 5 -25 15 -29 28 z"/>
+                <path d="M137 368 l11 3 l-6 46 l-11 -3 z"/>
+                <path d="M167 356 l10 3 l-7 44 l-10 -3 z"/>
+                <path d="M243 330 l10 3 l-8 42 l-10 -3 z"/>
+                <path d="M272 320 l10 3 l-9 40 l-10 -3 z"/>
+              </g>
+              <!-- horns, thin and separate the way pigment horns usually are -->
+              <g fill="none" stroke="#7E3418" stroke-width="4.5" opacity=".7">
+                <path d="M300 254 q10 -20 4 -34 M312 262 q18 -14 22 -30"/>
+              </g>
+
+              <!-- horse, ochre, half lost to the surface -->
+              <g fill="#9A631F" opacity=".66" stroke="none">
+                <path d="M366 486 c-2 -20 4 -33 16 -40 c14 -8 32 -12 48 -13 c11 -1 19 -7 25 -16
+                  c7 -10 17 -13 27 -10 c11 3 18 11 22 21 c3 7 8 11 15 12 c7 1 9 6 5 10
+                  c-4 4 -11 3 -18 0 c-8 -3 -16 -3 -25 -1 c-13 3 -25 9 -37 14 c-14 6 -28 11 -40 14
+                  c-11 3 -19 10 -22 19 z"/>
+                <path d="M381 484 l8 2 l-5 34 l-8 -2 z"/>
+                <path d="M406 476 l8 2 l-6 33 l-8 -2 z"/>
+                <path d="M456 458 l8 2 l-6 32 l-8 -2 z"/>
+              </g>
+
+              <!-- hunters: filled, elongated, mid-stride (Levantine manner),
+                   never stick figures -->
+              <g fill="#211D19" opacity=".78" stroke="none">
+                <path d="M258 484 c4 0 8 4 8 9 c0 4 -2 7 -5 9 l0 13 c0 4 4 7 9 9 l15 6
+                  c3 1 4 4 2 6 c-2 2 -5 2 -8 1 l-17 -8 l-2 19 l10 26 c1 4 -1 7 -4 7 c-3 0 -5 -2 -6 -5
+                  l-9 -23 l-8 21 c-1 3 -4 5 -7 4 c-3 -1 -4 -4 -3 -7 l9 -25 l0 -24 c-4 -2 -7 -6 -7 -11
+                  c0 -6 5 -11 11 -11 z"/>
+                <path d="M203 508 c4 0 7 3 7 8 c0 4 -2 6 -4 8 l0 12 c0 4 3 6 8 8 l12 5
+                  c2 1 3 3 2 5 c-2 2 -4 2 -7 1 l-14 -7 l-2 17 l9 23 c1 3 -1 6 -3 6 c-3 0 -5 -2 -5 -4
+                  l-8 -21 l-7 19 c-1 3 -3 4 -6 3 c-2 -1 -3 -3 -2 -6 l8 -22 l0 -21 c-4 -2 -6 -5 -6 -10
+                  c0 -5 4 -9 9 -9 z"/>
+              </g>
+              <!-- spears -->
+              <g fill="none" stroke="#2B2621" stroke-width="3" opacity=".5">
+                <path d="M286 512 L322 462 M226 528 L256 488"/>
+              </g>
+
+              <!-- hand stencil -->
+              <g fill="#7E3418" opacity=".55" stroke="none">
+                <path d="M414 214 q5 -23 12 -4 l2 20 q4 -25 12 -5 l1 21 q5 -21 12 -3 l-1 21 q7 -16 12 -1 l-4 23
+                  q12 -10 10 4 q-3 16 -16 26 q-14 11 -30 5 q-14 -5 -18 -23 l-2 -44 q0 -19 9 -19 z"/>
+              </g>
+              <!-- tally marks: the first stored data -->
+              <g stroke="#241F1B" stroke-width="4" opacity=".62" fill="none">
+                <path d="M120 452 l0 26 M133 450 l0 26 M146 452 l0 26 M159 450 l0 26 M115 478 l50 -22"/>
+              </g>
+              <!-- gathering dots -->
+              <g fill="#A6712F" opacity=".4" stroke="none">
+                <circle cx="352" cy="196" r="4"/><circle cx="372" cy="184" r="3.4"/>
+                <circle cx="392" cy="176" r="4"/><circle cx="332" cy="206" r="3.4"/>
+                <circle cx="412" cy="170" r="3.4"/>
+              </g>
+            </g>
+          </g>
+
+          <!-- the same strokes waking as gold: knowledge becoming computation -->
+          <g id="goldtrace" filter="url(#goldglow)" stroke-linecap="round" stroke-linejoin="round" fill="none">
+            <path class="gt" d="M116 372 c-3 -28 3 -48 17 -60 c15 -14 36 -22 58 -27 c14 -3 24 -12 31 -25
+              c8 -14 21 -20 36 -17 c17 3 29 14 38 27 c7 10 15 15 25 17" stroke="#F5D77A" stroke-width="2.4" opacity="0"/>
+            <path class="gt" d="M366 486 c-2 -20 4 -33 16 -40 c14 -8 32 -12 48 -13 c11 -1 19 -7 25 -16
+              c7 -10 17 -13 27 -10 c11 3 18 11 22 21" stroke="#F5D77A" stroke-width="2" opacity="0"/>
+            <path class="gt" d="M286 512 L322 462" stroke="#F5D77A" stroke-width="2" opacity="0"/>
+            <path class="gt" d="M115 478 l50 -22" stroke="#F5D77A" stroke-width="2" opacity="0"/>
+            <path class="gt" d="M258 484 c4 0 8 4 8 9 c0 4 -2 7 -5 9 l0 13 c0 4 4 7 9 9 l15 6" stroke="#F5D77A" stroke-width="1.8" opacity="0"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- released from the marks: binary and code symbols, not prose -->
+      <div class="frag bin" style="left:30%; top:34%" data-d="-70,-38" data-t="0.35">01001100 01000101</div>
+      <div class="frag sym" style="left:62%; top:24%" data-d="40,-56" data-t="0.375">&lt;/&gt;</div>
+      <div class="frag bin" style="left:67%; top:52%" data-d="78,4"  data-t="0.40">10110101 00110110</div>
+      <div class="frag sym" style="left:28%; top:58%" data-d="-76,26" data-t="0.425">{ }</div>
+      <div class="frag bin" style="left:52%; top:70%" data-d="14,62" data-t="0.45">0110 1001 1100</div>
+      <div class="frag code" style="left:44%; top:17%" data-d="-10,-62" data-t="0.475">if (system.stalls) disrupt();</div>
+      <div class="frag sym" style="left:73%; top:38%" data-d="86,-16" data-t="0.50">=&gt;</div>
+      <div class="frag code" style="left:22%; top:46%" data-d="-88,2" data-t="0.52">const future = learn(unknown);</div>
+
+      <div id="heat"></div>
+      <div id="veil"></div>
+
+      <div class="copy" data-in="0.00" data-out="0.15">
+        <h1>Everything you were taught<br>was built for a world that has already changed.</h1>
+      </div>
+      <div class="copy minor" data-in="0.20" data-out="0.34">
+        <h2>Knowledge once changed by generation.</h2>
+      </div>
+      <div class="copy minor" data-in="0.38" data-out="0.54">
+        <h2>Now it changes <span class="gold">every day</span>.</h2>
+      </div>
+    </div>
+
+    <!-- burn edge + embers live above the masked front layer -->
+    <svg id="burnrim" aria-hidden="true">
+      <path id="rim-char" d=""/>
+      <path id="rim-hot" d=""/>
+      <path id="rim-core" d=""/>
+    </svg>
+    <canvas id="embers" data-placeholder="ember particles"></canvas>
+
+    <div id="cue"><i></i>Scroll</div>
+  </div>
+</section>
+
+<!-- =============================== CHAPTER 2 · first frame (transition test) -->
+<section id="ch2intro" aria-label="Chapter 2 — The Old Classroom (first frame)">
+  <div class="interior" data-placeholder="chapter 2 first frame"></div>
+</section>
+
+<!-- ============================================ CHAPTER 2 (frozen, out of scope) -->
+<section id="ch2" class="track" style="height: 420vh" aria-label="Chapter 2 — The Old Classroom">
+  <div class="stage">
+    <div id="rotunda" class="plx" data-depth="1" data-placeholder="dome interior environment">
+      <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <g fill="none" stroke="rgba(184,178,166,.30)" stroke-width="2">
+          <path d="M 40 900 A 760 700 0 0 1 1560 900"/>
+          <path d="M 200 900 A 600 560 0 0 1 1400 900"/>
+        </g>
+        <g stroke="rgba(184,178,166,.18)" stroke-width="1">
+          <line x1="800" y1="200" x2="800" y2="560"/>
+          <line x1="500" y1="260" x2="440" y2="560"/>
+          <line x1="1100" y1="260" x2="1160" y2="560"/>
+        </g>
+        <circle cx="800" cy="214" r="40" fill="none" stroke="rgba(232,228,219,.35)" stroke-width="2"/>
+      </svg>
+    </div>
+    <svg id="deskfield" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" data-placeholder="examination desks"></svg>
+    <svg class="clockface plx" data-depth="2" style="left:9%; top:14%; width:70px;" viewBox="0 0 80 80" aria-hidden="true" data-placeholder="clock">
+      <circle cx="40" cy="40" r="36" fill="rgba(232,228,219,.06)" stroke="#B8B2A6" stroke-width="1.5"/>
+      <line class="hand-h" x1="40" y1="40" x2="40" y2="22" stroke="#E8E4DB" stroke-width="2.5"/>
+      <line class="hand-m" x1="40" y1="40" x2="40" y2="14" stroke="#B8B2A6" stroke-width="1.5"/>
+    </svg>
+    <svg class="clockface plx" data-depth="3" style="right:13%; top:34%; width:52px;" viewBox="0 0 80 80" aria-hidden="true" data-placeholder="clock">
+      <circle cx="40" cy="40" r="36" fill="rgba(232,228,219,.06)" stroke="#B8B2A6" stroke-width="1.5"/>
+      <line class="hand-h" x1="40" y1="40" x2="40" y2="22" stroke="#E8E4DB" stroke-width="2.5"/>
+      <line class="hand-m" x1="40" y1="40" x2="40" y2="14" stroke="#B8B2A6" stroke-width="1.5"/>
+    </svg>
+    <div class="certs plx" data-depth="2">
+      <div class="cert rv" data-rv="0.16 0.95" data-placeholder="certificate">Cert. A-113</div>
+      <div class="cert rv" data-rv="0.20 0.95" data-placeholder="certificate">Cert. A-113</div>
+      <div class="cert rv" data-rv="0.24 0.95" data-placeholder="certificate">Cert. A-113</div>
+    </div>
+    <div id="vermilion" data-placeholder="irregular object">
+      <svg viewBox="0 0 46 46" aria-hidden="true">
+        <path d="M23 3 L36 10 L43 24 L34 34 L38 43 L22 39 L9 43 L11 30 L3 20 L12 12 Z" fill="#E34A28"/>
+      </svg>
+    </div>
+    <div id="ch2-vignette"></div>
+    <div class="copy minor" data-in="0.10" data-out="0.42">
+      <h2>Education was optimized<br>for consistency.</h2>
+    </div>
+    <div class="copy minor" data-in="0.50" data-out="0.86">
+      <h2>Consistency is not<br>the same as <span class="gold">learning</span>.</h2>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ PORTAL 2 (frozen) -->
+<section id="portal2" class="track portal-track" style="height: 160vh" aria-label="Transition">
+  <div class="stage portal-stage">
+    <div class="portal-through" data-placeholder="next-chapter preview"
+         style="background: radial-gradient(ellipse 90% 70% at 60% 40%, #141318 0%, #0B0B0D 70%);"></div>
+    <canvas data-placeholder="gold particle field"></canvas>
+    <span class="portal-caption">Chapter III — The Glitch</span>
+  </div>
+</section>
+
+<!-- ==================================================== CHAPTER 3 (frozen) -->
+<section id="ch3" class="track" style="height: 420vh" aria-label="Chapter 3 — The Glitch">
+  <div class="stage">
+    <div id="orbits" class="plx" data-depth="1" data-placeholder="orbital knowledge diagram">
+      <svg viewBox="0 0 320 200" aria-hidden="true">
+        <ellipse cx="160" cy="100" rx="150" ry="56" fill="none" stroke="rgba(201,164,76,.35)" stroke-width="1"/>
+        <ellipse cx="160" cy="100" rx="106" ry="86" fill="none" stroke="rgba(184,178,166,.25)" stroke-width="1"
+                 transform="rotate(-24 160 100)"/>
+        <ellipse cx="160" cy="100" rx="60" ry="30" fill="none" stroke="rgba(0,229,208,.30)" stroke-width="1"
+                 transform="rotate(18 160 100)"/>
+        <circle cx="160" cy="100" r="5" fill="#C9A44C"/>
+      </svg>
+    </div>
+    <div class="plx" data-depth="2" style="position:absolute; inset:0;">
+      <div class="card rv" tabindex="0" data-rv="0.08 0.9" style="left:14%; top:18%; --rv-y:34px;" data-placeholder="learning module card">
+        <span class="chip"></span>Modular Learning<small>self-paced tracks</small></div>
+      <div class="card rv" tabindex="0" data-rv="0.14 0.9" style="right:12%; top:22%; --rv-y:34px; --rv-r:2deg;" data-placeholder="market map card">
+        <span class="chip"></span>Market Maps<small>where new economies open</small></div>
+      <div class="card rv" tabindex="0" data-rv="0.30 0.92" style="left:9%; top:56%; --rv-y:40px; --rv-b:6px;" data-placeholder="biotech card">
+        <span class="chip"></span>Biotech Forms<small>living systems literacy</small></div>
+      <div class="card rv" tabindex="0" data-rv="0.36 0.92" style="right:18%; top:60%; --rv-y:40px; --rv-s:.92;" data-placeholder="code card">
+        <span class="chip"></span>Code Fragments<small>build before you're ready</small></div>
+      <div class="card rv" tabindex="0" data-rv="0.52 0.94" style="left:33%; top:12%; --rv-y:-30px;" data-placeholder="creator tools card">
+        <span class="chip"></span>Creator Tools<small>publish as you learn</small></div>
+      <div class="card rv verm" tabindex="0" data-rv="0.58 0.94" style="right:34%; top:74%; --rv-y:44px; --rv-r:-3deg;" data-placeholder="community node card">
+        <span class="chip"></span>Community Nodes<small>people as curriculum</small></div>
+    </div>
+    <div class="plx" data-depth="3" style="position:absolute; inset:0;">
+      <svg id="gear" viewBox="0 0 80 80" aria-hidden="true" data-placeholder="mechanical wheel">
+        <g fill="none" stroke="#B8B2A6" stroke-width="2">
+          <circle cx="40" cy="40" r="22"/><circle cx="40" cy="40" r="7"/>
+          <g stroke-width="5">
+            <line x1="40" y1="6" x2="40" y2="16"/><line x1="40" y1="64" x2="40" y2="74"/>
+            <line x1="6" y1="40" x2="16" y2="40"/><line x1="64" y1="40" x2="74" y2="40"/>
+            <line x1="16" y1="16" x2="23" y2="23"/><line x1="57" y1="57" x2="64" y2="64"/>
+            <line x1="64" y1="16" x2="57" y2="23"/><line x1="23" y1="57" x2="16" y2="64"/>
+          </g>
+        </g>
+      </svg>
+      <div id="token" data-placeholder="vermilion learning token"><i></i></div>
+    </div>
+    <div class="copy" data-in="0.16" data-out="0.5">
+      <h2>Learning is no longer a room.</h2>
+    </div>
+    <div class="copy" data-in="0.56" data-out="0.9">
+      <h2>It is a <span class="gold">network</span>.</h2>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ CHAPTER 4 (frozen) -->
+<section id="ch4" class="track" style="height: 380vh" aria-label="Chapter 4 — The Community">
+  <div class="stage">
+    <svg id="constellation" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" data-placeholder="community network">
+      <g id="con-lines"></g>
+      <g id="con-nodes"></g>
+      <circle id="con-pass" class="pass" r="7" cx="-40" cy="-40"/>
+    </svg>
+    <div class="copy" data-in="0.10" data-out="0.46">
+      <h2>Learn with people building<br>what comes next.</h2>
+    </div>
+    <div class="copy" data-in="0.54" data-out="0.9">
+      <h2>Knowledge becomes powerful<br>when it moves <span class="gold">between people</span>.</h2>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ CHAPTER 5 (frozen) -->
+<section id="ch5" aria-label="Chapter 5 — The Invitation">
+  <div class="inner">
+    <svg id="key" viewBox="0 0 44 44" aria-hidden="true" data-placeholder="gold key">
+      <g fill="none" stroke="#C9A44C" stroke-width="2">
+        <circle cx="15" cy="15" r="9"/>
+        <path d="M21 21 L37 37 M31 31 L36 26 M27 35 L32 30"/>
+      </g>
+    </svg>
+    <h2 class="rv" data-rv="0 2">Not an institution.<br>A way through one.</h2>
+    <a class="cta rv" data-rv="0 2" href="#" style="--rv-y: 18px;">Enter GLITCH →</a>
+  </div>
+</section>
+
+<div id="debug" aria-hidden="true"></div>
+
+<script>
+(() => {
+'use strict';
+
+const $  = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = (t) => t * t * (3 - 2 * t);
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobile  = window.matchMedia('(max-width: 760px)').matches;
+const DEBUG = new URLSearchParams(location.search).has('debug');
+if (DEBUG) document.body.classList.add('debug');
+
+const hash = (i, k) => {
+  const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453;
+  return x - Math.floor(x);
+};
+
+/* ------------------------------------------- chapter 2 first frame scene */
+/* One scene, injected into both the back layer (inside ch1) and #ch2intro,
+   so the burn reveal and the section that follows are pixel-identical. */
+/* ------------------------------------------- chapter 2 first frame scene */
+/* A coffered dome built procedurally: 8 rings x 34 segments, each coffer
+   shaded against a single light so the vault reads as a real curved surface
+   rather than flat line-art. Michelangelo's Rebellious Slave stands at the
+   centre, lit by the oculus shaft. Same scene is injected into the layer
+   behind chapter 1 and into #ch2intro, so the burn reveal and the section
+   that follows are pixel-identical. */
+function buildInterior() {
+  const cx = 800, cy = 250, ky = 0.62;
+  const RINGS = [660, 566, 482, 406, 338, 278, 224, 176, 134];
+  const SEG = 34, LIGHT = -2.15;
+  const SH = [34, 28, 21], LIT = [236, 230, 216], GOLD = [201, 164, 76];
+  const mixc = (a, b, t) => 'rgb(' + Math.round(a[0] + (b[0] - a[0]) * t) + ',' +
+    Math.round(a[1] + (b[1] - a[1]) * t) + ',' + Math.round(a[2] + (b[2] - a[2]) * t) + ')';
+  const P = (R, a) => (cx + R * Math.cos(a)).toFixed(1) + ' ' + (cy + R * ky * Math.sin(a)).toFixed(1);
+
+  let coffers = '';
+  for (let r = 0; r < RINGS.length - 1; r++) {
+    const Ro = RINGS[r] - 5, Ri = RINGS[r + 1] + 5;
+    const glow = 1 - r / (RINGS.length - 1);
+    for (let sg = 0; sg < SEG; sg++) {
+      const a0 = sg / SEG * Math.PI * 2 + 0.011;
+      const a1 = (sg + 1) / SEG * Math.PI * 2 - 0.011;
+      const mid = (a0 + a1) / 2;
+      let b = 0.16 + 0.84 * Math.pow(Math.max(0, Math.cos(mid - LIGHT)), 1.45);
+      b = Math.min(1, (b * (0.46 + 0.54 * glow)) + glow * 0.20);
+      const face = mixc(SH, LIT, b);
+      const deep = mixc(SH, LIT, b * 0.20);
+      coffers +=
+        '<path d="M' + P(Ro, a0) + 'L' + P(Ro, a1) + 'L' + P(Ri, a1) + 'L' + P(Ri, a0) + 'Z" fill="' + face + '"/>' +
+        '<path d="M' + P(Ro - 16, a0 + 0.018) + 'L' + P(Ro - 16, a1 - 0.018) +
+        'L' + P(Ri + 14, a1 - 0.018) + 'L' + P(Ri + 14, a0 + 0.018) + 'Z" fill="' + deep + '"/>' +
+        '<path d="M' + P(Ro - 26, a0 + 0.03) + 'L' + P(Ro - 26, a1 - 0.03) +
+        'L' + P(Ri + 24, a1 - 0.03) + 'L' + P(Ri + 24, a0 + 0.03) + 'Z" fill="' +
+        mixc(SH, GOLD, 0.30 + b * 0.5) + '" opacity=".55"/>';
+    }
+  }
+  let moldings = '';
+  for (let r = 0; r < RINGS.length; r++) {
+    moldings += '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + RINGS[r] +
+      '" ry="' + (RINGS[r] * ky).toFixed(1) + '" fill="none" stroke="rgba(201,164,76,' +
+      (0.30 + 0.06 * r).toFixed(2) + ')" stroke-width="' + (5 - r * 0.35).toFixed(1) + '"/>';
+  }
+  /* drum windows just under the vault, throwing the real light into the hall */
+  let windows = '';
+  for (let i = 0; i < 11; i++) {
+    const x = 190 + i * 122;
+    windows += '<path d="M' + x + ' 470 L' + x + ' 402 q22 -30 44 0 L' + (x + 44) + ' 470 Z" fill="#F2E4BE" opacity=".5"/>' +
+      '<path d="M' + x + ' 470 L' + x + ' 402 q22 -30 44 0 L' + (x + 44) + ' 470 Z" fill="none" stroke="#8A6A2A" stroke-width="3"/>';
+  }
+  /* arcade below the cornice */
+  let arcade = '';
+  for (let i = 0; i < 7; i++) {
+    const x = 60 + i * 226, w = 168;
+    arcade += '<path d="M' + x + ' 792 L' + x + ' 640 q' + (w / 2) + ' -104 ' + w + ' 0 L' + (x + w) + ' 792 Z" fill="#120C07"/>' +
+      '<path d="M' + x + ' 792 L' + x + ' 640 q' + (w / 2) + ' -104 ' + w + ' 0 L' + (x + w) + ' 792 Z" fill="none" stroke="#B49250" stroke-width="2" opacity=".55"/>' +
+      '<rect x="' + (x + w + 8) + '" y="560" width="42" height="232" fill="url(#colm)"/>' +
+      '<rect x="' + (x + w + 4) + '" y="548" width="50" height="16" fill="#C9A44C" opacity=".55"/>';
+  }
+
+  return '' +
+  '<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
+  '<defs>' +
+    '<linearGradient id="colm" x1="0" y1="0" x2="1" y2="0">' +
+      '<stop offset="0" stop-color="#3A3227"/><stop offset=".35" stop-color="#B9AE97"/>' +
+      '<stop offset=".62" stop-color="#8C8371"/><stop offset="1" stop-color="#2C261D"/></linearGradient>' +
+    '<radialGradient id="ocul" cx=".5" cy=".46" r=".55">' +
+      '<stop offset="0" stop-color="#FFFFFF"/><stop offset=".34" stop-color="#FFF6DE"/>' +
+      '<stop offset=".72" stop-color="#E8CE95" stop-opacity=".85"/>' +
+      '<stop offset="1" stop-color="#C9A44C" stop-opacity=".35"/></radialGradient>' +
+    '<linearGradient id="shaft" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="#FFF3D2" stop-opacity=".40"/>' +
+      '<stop offset=".6" stop-color="#F5D77A" stop-opacity=".10"/>' +
+      '<stop offset="1" stop-color="#F5D77A" stop-opacity="0"/></linearGradient>' +
+    '<linearGradient id="stat" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="#8F8877"/><stop offset=".2" stop-color="#5B5546"/>' +
+      '<stop offset=".55" stop-color="#2C2822"/><stop offset="1" stop-color="#121110"/></linearGradient>' +
+    '<linearGradient id="floorg" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="#241A0F"/><stop offset="1" stop-color="#0C0805"/></linearGradient>' +
+    '<linearGradient id="archg" x1="0" y1="0" x2="0" y2="1">' +'<stop offset="0" stop-color="#241B12"/><stop offset="1" stop-color="#0D0906"/></linearGradient>' +'<linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">' +'<stop offset="0" stop-color="#FFF3D6" stop-opacity=".16"/>' +'<stop offset=".55" stop-color="#E8CE95" stop-opacity=".05"/>' +'<stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient>' +'<clipPath id="vault"><rect x="0" y="0" width="1600" height="472"/></clipPath>' +
+  '</defs>' +
+  '<rect width="1600" height="900" fill="#100A06"/>' +
+  '<g clip-path="url(#vault)">' + coffers + moldings +
+    '<ellipse cx="' + cx + '" cy="' + cy + '" rx="92" ry="' + (92 * ky).toFixed(1) + '" fill="url(#ocul)"/>' +
+    '<ellipse cx="' + cx + '" cy="' + cy + '" rx="92" ry="' + (92 * ky).toFixed(1) +
+      '" fill="none" stroke="#C9A44C" stroke-width="3.5" opacity=".8"/>' +
+  '</g>' +
+  windows +
+  /* cornice */
+  '<rect x="0" y="466" width="1600" height="34" fill="#1A1209"/>' +
+  '<rect x="0" y="470" width="1600" height="7" fill="#C9A44C" opacity=".5"/>' +
+  '<rect x="0" y="492" width="1600" height="4" fill="#8A6A2A" opacity=".6"/>' +
+  '<rect x="0" y="500" width="1600" height="52" fill="#150E08"/>' +
+  arcade +
+  /* floor + reflection */
+  '<rect y="792" width="1600" height="108" fill="url(#floorg)"/>' +
+  '<ellipse cx="800" cy="812" rx="300" ry="16" fill="#F5D77A" opacity=".10"/>' +
+  '<rect x="756" y="792" width="88" height="108" fill="#F5D77A" opacity=".06"/>' +
+  /* light shaft from the oculus onto the figure */
+  '<path d="M690 262 L910 262 L1010 830 L590 830 Z" fill="url(#shaft)"/>' +
+  /* ---- Michelangelo, Rebellious Slave (placeholder silhouette) ---- */
+  '<g transform="translate(800 486) scale(0.80)">' +
+    '<g fill="url(#stat)">' +
+      /* head, turned and tipped back - the twist that makes it a Slave */
+      '<ellipse cx="2" cy="24" rx="11.5" ry="14" transform="rotate(-22 2 24)"/>' +
+      '<path d="M-6 36 q6 4 12 0 l2 14 q-8 4 -16 0 z"/>' +
+      /* torso, tapering to the waist */
+      '<path d="M-30 52 q30 -10 58 2 q6 26 2 50 q-4 26 -10 40 q-22 8 -44 -2 q-8 -20 -8 -46 q0 -30 2 -44 z"/>' +
+      /* left arm raised and bound over the head */
+      '<path d="M-30 58 q-16 10 -18 34 q-2 20 6 30 q6 7 11 1 q-7 -15 -4 -31 q3 -16 13 -25 z"/>' +
+      /* right arm bound behind the back */
+      '<path d="M28 56 q16 8 18 30 q2 18 -6 28 q-6 6 -11 0 q6 -14 3 -28 q-3 -14 -12 -22 z"/>' +
+      '<path d="M-26 140 q26 10 52 -2 q5 18 1 30 q-26 10 -55 2 q-2 -18 2 -30 z"/>' +
+      /* weight-bearing leg, and the forward bent leg */
+      '<path d="M-23 168 q12 6 21 2 q6 34 2 64 q-2 20 -7 34 l-19 -2 q4 -32 5 -56 q2 -24 -2 -42 z"/>' +
+      '<path d="M6 170 q14 4 23 -2 q8 28 4 60 q-3 22 -12 38 l-18 -4 q7 -28 7 -52 q0 -22 -4 -40 z"/>' +
+    '</g>' +
+    /* rim light along the lit contour only - the figure stays dark stone */
+    '<g fill="#CFC7B4" opacity=".3">' +
+      '<path d="M-30 52 q9 -5 15 -6 q-7 20 -9 47 q-2 29 3 51 l-9 2 q-7 -22 -7 -49 q0 -29 7 -45 z"/>' +
+      '<path d="M-23 168 q6 4 11 3 q-6 27 -6 52 q0 25 4 44 l-10 -1 q-4 -27 -3 -50 q0 -27 4 -48 z"/>' +
+      '<path d="M-30 58 q-13 9 -15 30 q-2 17 4 26 q-8 -4 -9 -22 q-1 -22 20 -34 z"/>' +
+    '</g>' +
+    /* the raw block it is still fused into */
+    '<path d="M-40 258 q40 12 84 0 l8 42 q-52 12 -104 0 z" fill="#2E2921"/>' +
+    '<path d="M-40 258 q40 12 84 0 l3 15 q-48 11 -90 0 z" fill="#413A2F" opacity=".8"/>' +
+    '<ellipse cx="0" cy="300" rx="66" ry="9" fill="#000" opacity=".55"/>' +
+  '</g>' +
+  '<rect width="1600" height="900" fill="url(#haze)" style="mix-blend-mode:soft-light"/>' +
+  '<rect x="716" y="792" width="168" height="18" fill="#1C150C"/>' +
+  '</svg>' +
+  '<span class="caption">Chapter II - The Old Classroom</span>';
+}
+const INTERIOR_SVG = buildInterior();
+$$('.interior').forEach((el) => { el.innerHTML = INTERIOR_SVG; });
+
+/* ---------------------------------------------------------- chapter model */
+const chapters = ['ch1','ch2intro','ch2','portal2','ch3','ch4','ch5'].map((id) => {
+  const el = document.getElementById(id);
+  return { id, el, top: 0, height: 0 };
+});
+function measure() {
+  for (const c of chapters) { c.top = c.el.offsetTop; c.height = c.el.offsetHeight; }
+}
+function localP(c, sy) {
+  const range = c.height - innerHeight;
+  return range > 0 ? clamp01((sy - c.top) / range) : clamp01((sy - c.top) / innerHeight + 1);
+}
+function visible(c, sy) {
+  return sy + innerHeight > c.top && sy < c.top + c.height;
+}
+
+/* -------------------------------------------------------------- pointer */
+let pmx = 0, pmy = 0, tmx = 0, tmy = 0;
+if (!mobile && !reduced) {
+  addEventListener('pointermove', (e) => {
+    tmx = (e.clientX / innerWidth - 0.5) * 8;
+    tmy = (e.clientY / innerHeight - 0.5) * 8;
+  }, { passive: true });
+}
+
+/* -------------------------------------------------- copy + reveal system */
+function bindRanges(root) {
+  return $$('.copy', root).map((el) => ({
+    el, from: +el.dataset.in, to: +el.dataset.out, on: false,
+  }));
+}
+function paintRanges(list, p) {
+  for (const c of list) {
+    const want = p >= c.from && p < c.to;
+    if (want !== c.on) { c.on = want; c.el.classList.toggle('on', want); }
+  }
+}
+const rvs = $$('.rv').map((el) => {
+  const [from, to] = (el.dataset.rv || '0 1').split(' ').map(Number);
+  const sec = el.closest('.track, #ch5');
+  return { el, from, to, sec, on: false };
+});
+function paintRvs(sy) {
+  for (const r of rvs) {
+    const c = chapters.find((x) => x.el === r.sec);
+    const p = c ? localP(c, sy) : 1;
+    const want = p >= r.from && p < r.to;
+    if (want !== r.on) { r.on = want; r.el.classList.toggle('on', want); }
+  }
+}
+
+/* ---------------------------------------------------------------- video */
+/* The marble plate, scrubbed exactly as before. It runs across 0-0.70 of the
+   chapter so the stone has settled before the burn begins. */
+const video = $('#bg');
+const net = navigator.connection || {};
+const thrifty = net.saveData === true || ['slow-2g','2g','3g'].includes(net.effectiveType);
+video.src = thrifty ? 'assets/video/hero-lite.mp4' : 'assets/video/hero.mp4';
+let duration = 0, lastSeek = -1;
+video.addEventListener('loadedmetadata', () => { duration = video.duration || 0; });
+let primed = false;
+function prime() {
+  if (primed) return; primed = true;
+  const pr = video.play();
+  if (pr && pr.then) pr.then(() => video.pause()).catch(() => {}); else video.pause();
+}
+video.addEventListener('loadeddata', prime, { once: true });
+['pointerdown','touchstart','wheel','keydown'].forEach((e) =>
+  addEventListener(e, prime, { once: true, passive: true }));
+
+/* ============================================================ CHAPTER 1 */
+const ch1 = chapters[0];
+const ch1Copies = bindRanges(ch1.el);
+const cue = $('#cue');
+const caveworld = $('#caveworld');
+const heat = $('#heat');
+const frags = $$('.frag').map((el) => ({
+  el,
+  d: el.dataset.d.split(',').map(Number),
+  t0: +el.dataset.t,
+}));
+const goldTraces = $$('.gt').map((p) => {
+  const len = p.getTotalLength();
+  p.style.strokeDasharray = len;
+  p.style.strokeDashoffset = len;
+  return { p, len };
+});
+const rimChar = $('#rim-char'), rimHot = $('#rim-hot'), rimCore = $('#rim-core');
+const embers = $('#embers');
+const ectx = embers.getContext('2d');
+let EW = 0, EH = 0;
+function sizeEmbers() {
+  const r = embers.getBoundingClientRect();
+  EW = embers.width = Math.round(r.width * devicePixelRatio);
+  EH = embers.height = Math.round(r.height * devicePixelRatio);
+}
+sizeEmbers(); addEventListener('resize', sizeEmbers);
+
+/* ---- the burn blob: seeded harmonics -> irregular, organic, reversible.
+   Returned as an SVG path in CSS pixels; used for both the evenodd hole
+   clip on #caveworld and the incandescent rim strokes. */
+const HARM = [[3, .14, 0.7], [5, .10, 2.4], [7, .065, 4.9], [11, .04, 1.6]];
+function burnGeom(pb) {
+  const W = innerWidth, H = innerHeight;
+  const rmax = Math.hypot(W, H) / 2;
+  const cx = W * .54 + W * .02 * Math.sin(pb * 2.1);
+  const cy = H * .46 + H * .03 * Math.sin(pb * 1.7 + 2);
+  const R = 1.45 * rmax * Math.pow(pb, 1.6);
+  const ampK = .55 + .8 * pb;
+  return { cx, cy, R, ampK };
+}
+function blobPath(g) {
+  const N = 72;
+  let d = '';
+  for (let i = 0; i <= N; i++) {
+    const th = (i % N) / N * Math.PI * 2;
+    let r = g.R;
+    for (const [k, a, ph] of HARM) r += g.R * a * g.ampK * Math.sin(k * th + ph);
+    const x = (g.cx + Math.cos(th) * r).toFixed(1);
+    const y = (g.cy + Math.sin(th) * r).toFixed(1);
+    d += (i ? 'L' : 'M') + x + ' ' + y;
+  }
+  return d + 'Z';
+}
+function paintBurn(p, t) {
+  const pb = clamp01((p - .73) / .27);
+  if (pb <= 0.003) {
+    caveworld.style.clipPath = 'none';
+    rimChar.style.opacity = rimHot.style.opacity = rimCore.style.opacity = 0;
+    ectx.clearRect(0, 0, EW, EH);
+    return;
+  }
+  const g = burnGeom(pb);
+  if (g.R < 6) g.R = 6;
+  const blob = blobPath(g);
+  caveworld.style.clipPath =
+    `path(evenodd, "M0 0H${innerWidth}V${innerHeight}H0Z ${blob}")`;
+  /* rim: char outside, hot gold-orange at the lip; all fade near the end */
+  const end = 1 - smooth(clamp01((pb - .82) / .18));
+  rimChar.setAttribute('d', blob); rimHot.setAttribute('d', blob); rimCore.setAttribute('d', blob);
+  rimChar.style.opacity = (.85 * end).toFixed(2);
+  rimHot.style.opacity  = ((.8 + .2 * Math.sin(t * 9)) * end).toFixed(2);
+  rimCore.style.opacity = (.9 * end).toFixed(2);
+  /* embers, ash, sparse antique-gold particles along the rim */
+  ectx.clearRect(0, 0, EW, EH);
+  if (reduced) return;
+  const dpr = devicePixelRatio;
+  const n = mobile ? 26 : 48;
+  for (let i = 0; i < n; i++) {
+    const h1 = hash(i, 5), h2 = hash(i, 6), h3 = hash(i, 7);
+    const th = h1 * Math.PI * 2;
+    let r = g.R;
+    for (const [k, a, ph] of HARM) r += g.R * a * g.ampK * Math.sin(k * th + ph);
+    const life = (h2 + t * (0.25 + h3 * 0.4)) % 1;
+    const dist = life * (60 + h3 * 90);
+    const x = (g.cx + Math.cos(th) * (r + dist)) * dpr;
+    const y = (g.cy + Math.sin(th) * (r + dist) - life * 26) * dpr;
+    const a = (1 - life) * end * (pb > .06 ? 1 : pb / .06);
+    if (i % 5 === 0) {              /* ash */
+      ectx.fillStyle = `rgba(140,130,120,${(a * .35).toFixed(3)})`;
+      ectx.fillRect(x, y, 1.6 * dpr, 1.6 * dpr);
+    } else if (i % 9 === 0) {       /* antique gold */
+      ectx.fillStyle = `rgba(201,164,76,${(a * .8).toFixed(3)})`;
+      ectx.beginPath(); ectx.arc(x, y, 1.4 * dpr, 0, 7); ectx.fill();
+    } else {                        /* ember */
+      ectx.fillStyle = `rgba(${224 - life * 90 | 0},${118 - life * 70 | 0},47,${(a * .8).toFixed(3)})`;
+      ectx.beginPath(); ectx.arc(x, y, (1 + h2) * dpr, 0, 7); ectx.fill();
+    }
+  }
+  /* very brief cyan fringe at two disruption moments only */
+  if ((p > .775 && p < .787) || (p > .893 && p < .905)) {
+    ectx.strokeStyle = 'rgba(0,229,208,.65)';
+    ectx.lineWidth = dpr;
+    for (let s = 0; s < 2; s++) {
+      const th0 = (s ? 3.9 : 1.1) + pb;
+      ectx.beginPath();
+      for (let k = 0; k <= 10; k++) {
+        const th = th0 + k * .028;
+        let r = g.R;
+        for (const [kk, a, ph] of HARM) r += g.R * a * g.ampK * Math.sin(kk * th + ph);
+        const x = (g.cx + Math.cos(th) * r) * dpr, y = (g.cy + Math.sin(th) * r) * dpr;
+        k ? ectx.lineTo(x, y) : ectx.moveTo(x, y);
+      }
+      ectx.stroke();
+    }
+  }
+}
+function paintCh1(p, t) {
+  /* marble scrub: unchanged behaviour, mapped to the first 70% */
+  if (duration) {
+    const time = Math.min(clamp01(p / 0.70) * duration, duration - 0.001);
+    if (lastSeek < 0 || Math.abs(time - lastSeek) > 0.008) {
+      video.currentTime = time; lastSeek = time;
+    }
+  }
+  /* 18–35%: gold wakes inside the marks and travels through them */
+  const tr = smooth(clamp01((p - .18) / .17));
+  goldTraces.forEach(({ p: path, len }, i) => {
+    const local = smooth(clamp01(tr * 1.5 - i * .17));
+    path.style.strokeDashoffset = len * (1 - local);
+    path.style.opacity = local > 0 ? (0.55 + 0.35 * local).toFixed(2) : 0;
+  });
+  /* 35–55%: code released from the marks, drifting outward at depth */
+  for (const f of frags) {
+    const e = smooth(clamp01((p - f.t0) / .09));
+    const gone = smooth(clamp01((p - .68) / .06));
+    const o = e * (1 - gone);
+    f.el.style.opacity = (o * .92).toFixed(2);
+    const k = .3 + e * .7;
+    f.el.style.transform =
+      `translate(${(f.d[0] * k).toFixed(1)}px, ${(f.d[1] * k).toFixed(1)}px)`;
+  }
+  /* 55–73%: one irregular heat point gathers at the future burn centre */
+  const hp = smooth(clamp01((p - .55) / .15)) * (1 - smooth(clamp01((p - .73) / .04)));
+  heat.style.opacity = hp.toFixed(2);
+  const hg = burnGeom(0);
+  heat.style.left = hg.cx + 'px';
+  heat.style.top = hg.cy + 'px';
+  heat.style.transform = `translate(-50%,-50%) scale(${(.35 + hp * .85).toFixed(2)})`;
+  /* 73–100%: the burn-through */
+  paintBurn(p, t);
+  paintRanges(ch1Copies, p);
+  if (cue) cue.style.opacity = p > .03 ? '0' : '1';
+}
+
+/* ==================================================== frozen chapters 2–4 */
+const ch2 = chapters[2];
+const ch2Copies = bindRanges(ch2.el);
+const deskfield = $('#deskfield');
+const DESKS = [];
+{
+  const cols = 6, rows = 4;
+  for (let i = 0; i < cols * rows; i++) {
+    const r = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    r.innerHTML = `<rect width="86" height="46" fill="rgba(232,228,219,.08)" stroke="rgba(184,178,166,.55)" stroke-width="1.2"/>
+                   <rect y="46" width="86" height="7" fill="rgba(184,178,166,.25)"/>`;
+    deskfield.appendChild(r);
+    const col = i % cols, row = (i / cols) | 0;
+    DESKS.push({
+      el: r,
+      sx: 120 + hash(i, 1) * 1320, sy: 380 + hash(i, 2) * 420, sr: (hash(i, 3) - .5) * 40,
+      gx: 330 + col * 170, gy: 430 + row * 116, gr: 0,
+    });
+  }
+}
+const hands = $$('.clockface').map((c) => ({ h: $('.hand-h', c), m: $('.hand-m', c) }));
+const verm = $('#vermilion');
+const vign = $('#ch2-vignette');
+function paintCh2(p) {
+  const q = smooth(clamp01((p - 0.12) / 0.45));
+  const squeeze = smooth(clamp01((p - 0.62) / 0.28));
+  for (const d of DESKS) {
+    const x = lerp(d.sx, d.gx, q);
+    const y = lerp(d.sy, d.gy - squeeze * 26, q);
+    const r = lerp(d.sr, 0, q);
+    d.el.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${r.toFixed(1)})`);
+    d.el.setAttribute('opacity', clamp01(p * 6).toFixed(2));
+  }
+  for (const c of hands) {
+    c.h.setAttribute('transform', `rotate(${(p * 720).toFixed(1)} 40 40)`);
+    c.m.setAttribute('transform', `rotate(${(p * 2160).toFixed(1)} 40 40)`);
+  }
+  const rebel = smooth(clamp01((p - 0.55) / 0.3));
+  verm.style.transform =
+    `translate(${(rebel * 34).toFixed(1)}vw, ${(-rebel * 20).toFixed(1)}vh) rotate(${(rebel * 260).toFixed(0)}deg)`;
+  vign.style.opacity = smooth(clamp01((p - 0.5) / 0.4)).toFixed(2);
+  paintRanges(ch2Copies, p);
+}
+
+function makePortal(sec, seed) {
+  const canvas = $('canvas', sec);
+  const through = $('.portal-through', sec);
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0;
+  function size() {
+    const r = canvas.getBoundingClientRect();
+    W = canvas.width = Math.round(r.width * devicePixelRatio);
+    H = canvas.height = Math.round(r.height * devicePixelRatio);
+  }
+  size(); addEventListener('resize', size);
+  const N = mobile ? 90 : 170;
+  function paint(p, t) {
+    ctx.clearRect(0, 0, W, H);
+    const open = smooth(clamp01((p - 0.25) / 0.6));
+    const half = open * 0.46;
+    const jag = (k) => half * (0.82 + 0.18 * Math.sin(k * 9.3 + seed * 7));
+    const pts = [];
+    for (let k = 0; k <= 8; k++) pts.push(`${(50 - jag(k) * 100).toFixed(2)}% ${k * 12.5}%`);
+    for (let k = 8; k >= 0; k--) pts.push(`${(50 + jag(k + .5) * 100).toFixed(2)}% ${k * 12.5}%`);
+    through.style.clipPath = `polygon(${pts.join(',')})`;
+    const fade = Math.sin(Math.PI * clamp01(p));
+    for (let i = 0; i < N; i++) {
+      const h1 = hash(i, seed), h2 = hash(i, seed + 1), h3 = hash(i, seed + 2);
+      const side = h1 < 0.5 ? -1 : 1;
+      const x = W * (0.5 + side * (0.04 + h2 * 0.46) * (0.35 + open));
+      const y = H * ((h3 + p * (0.22 + h1 * 0.35)) % 1);
+      const r = (0.8 + h2 * 2.2) * devicePixelRatio;
+      const tw = 0.55 + 0.45 * Math.sin(t * (1 + h1 * 2) + i);
+      if (i % 13 === 0) {
+        ctx.fillStyle = `rgba(232,228,219,${(0.5 * fade * tw).toFixed(3)})`;
+        ctx.fillRect(x, y, r * 2.4, r * 1.5);
+      } else {
+        ctx.fillStyle = `rgba(${i % 7 ? '201,164,76' : '245,215,122'},${(0.75 * fade * tw).toFixed(3)})`;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+      }
+    }
+  }
+  return { paint };
+}
+const portal2 = makePortal($('#portal2'), 11);
+
+const ch3 = chapters[4];
+const ch3Copies = bindRanges(ch3.el);
+const orbits = $('#orbits svg');
+const gear = $('#gear');
+const token = $('#token');
+function paintCh3(p) {
+  orbits.style.transform = `rotate(${(p * 40).toFixed(1)}deg)`;
+  if (gear) gear.style.transform = `rotate(${(p * 540).toFixed(0)}deg)`;
+  const a = p * Math.PI * 2 - Math.PI / 2;
+  token.style.left = `calc(50% + ${(Math.cos(a) * 30).toFixed(2)}vw)`;
+  token.style.top  = `calc(46% + ${(Math.sin(a) * 15).toFixed(2)}vh)`;
+  paintRanges(ch3Copies, p);
+}
+
+const ch4 = chapters[5];
+const ch4Copies = bindRanges(ch4.el);
+const NODE_TARGETS = [
+  [420, 300], [700, 210], [1010, 280], [1240, 420], [1090, 630],
+  [790, 700], [500, 620], [320, 470], [820, 450],
+];
+const ENTER_FROM = [
+  [-120, 120], [640, -140], [1100, -140], [1760, 300], [1760, 760],
+  [820, 1060], [300, 1060], [-140, 620], [-140, -100],
+];
+const LINKS = [[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,8],[7,8],[0,1],[2,3],[4,5],[6,7],[1,2],[5,6]];
+const conNodes = [], conLines = [];
+{
+  const gn = $('#con-nodes'), gl = $('#con-lines');
+  NODE_TARGETS.forEach((t, i) => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.innerHTML = `<circle class="halo" r="26"/><circle class="node" r="16"/><text y="4">${'ABCDEFGHI'[i]}</text>`;
+    g.setAttribute('aria-label', `Community member ${'ABCDEFGHI'[i]} (placeholder)`);
+    gn.appendChild(g);
+    conNodes.push(g);
+  });
+  LINKS.forEach(() => {
+    const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    gl.appendChild(l); conLines.push(l);
+  });
+}
+const conPass = $('#con-pass');
+const nodePos = NODE_TARGETS.map(() => [0, 0]);
+function paintCh4(p) {
+  const spread = Math.sin(Math.PI * clamp01((p - 0.6) / 0.3)) * 60;
+  const arr = [];
+  NODE_TARGETS.forEach((t, i) => {
+    const delay = i === NODE_TARGETS.length - 1 ? 0.02 : 0.07 + i * 0.035;
+    const arrive = smooth(clamp01((p - delay) / 0.16));
+    arr[i] = arrive;
+    const dx = t[0] - 800, dy = t[1] - 450;
+    const dist = Math.hypot(dx, dy) || 1;
+    const x = lerp(ENTER_FROM[i][0], t[0], arrive) + dx / dist * spread;
+    const y = lerp(ENTER_FROM[i][1], t[1], arrive) + dy / dist * spread;
+    nodePos[i] = [x, y];
+    conNodes[i].setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
+    conNodes[i].setAttribute('opacity', arrive.toFixed(2));
+  });
+  LINKS.forEach(([a, b], i) => {
+    const l = conLines[i];
+    const w = smooth(clamp01((p - 0.28 - i * 0.02) / 0.2)) * Math.min(arr[a], arr[b]);
+    l.setAttribute('x1', nodePos[a][0]); l.setAttribute('y1', nodePos[a][1]);
+    l.setAttribute('x2', lerp(nodePos[a][0], nodePos[b][0], w));
+    l.setAttribute('y2', lerp(nodePos[a][1], nodePos[b][1], w));
+    l.setAttribute('opacity', (w * .8).toFixed(2));
+  });
+  const route = [0, 8, 4, 8, 2];
+  const seg = clamp01((p - 0.35) / 0.5) * (route.length - 1);
+  const si = Math.min(route.length - 2, seg | 0);
+  const st = seg - si;
+  conPass.setAttribute('cx', lerp(nodePos[route[si]][0], nodePos[route[si + 1]][0], st));
+  conPass.setAttribute('cy', lerp(nodePos[route[si]][1], nodePos[route[si + 1]][1], st));
+  conPass.setAttribute('opacity', p > 0.35 && p < 0.9 ? 1 : 0);
+  paintRanges(ch4Copies, p);
+}
+
+/* ---------------------------------------------------------- chapter nav */
+const navBtns = $$('#chapnav button');
+const navBar = $('#chapnav .bar i');
+navBtns.forEach((b) => b.addEventListener('click', () => {
+  document.getElementById(b.dataset.go).scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+}));
+const NAV_MAP = { ch1: 0, ch2intro: 1, ch2: 1, portal2: 2, ch3: 2, ch4: 3, ch5: 4 };
+function paintNav(sy) {
+  const mid = sy + innerHeight * 0.5;
+  let active = 0;
+  for (const c of chapters) if (mid >= c.top) active = NAV_MAP[c.id];
+  navBtns.forEach((b, i) => b.setAttribute('aria-current', i === active ? 'true' : 'false'));
+  const total = document.body.scrollHeight - innerHeight;
+  navBar.style.width = `${(clamp01(sy / total) * 100).toFixed(1)}%`;
+}
+
+const debugEl = $('#debug');
+function paintDebug(sy) {
+  if (!DEBUG) return;
+  const lines = chapters.filter((c) => visible(c, sy))
+    .map((c) => `${c.id.padEnd(8)} ${(localP(c, sy) * 100).toFixed(1)}%`);
+  debugEl.textContent = lines.join('\n') || '—';
+}
+
+/* ----------------------------------------------------------- main loop */
+/* The eased follower is what restores the original scrub smoothness: every
+   painter consumes syE, not raw scrollY. */
+let syE = scrollY;
+const EASE = 0.12;
+let t0 = performance.now();
+function loop(now) {
+  const t = (now - t0) / 1000;
+  syE += (scrollY - syE) * EASE;
+  if (Math.abs(scrollY - syE) < 0.4) syE = scrollY;
+  pmx += (tmx - pmx) * 0.08; pmy += (tmy - pmy) * 0.08;
+  document.documentElement.style.setProperty('--mx', pmx.toFixed(2) + 'px');
+  document.documentElement.style.setProperty('--my', pmy.toFixed(2) + 'px');
+  for (const c of chapters) {
+    if (!visible(c, syE)) continue;
+    const p = localP(c, syE);
+    if (c.id === 'ch1') paintCh1(p, t);
+    else if (c.id === 'ch2') paintCh2(p);
+    else if (c.id === 'portal2') portal2.paint(p, t);
+    else if (c.id === 'ch3') paintCh3(p);
+    else if (c.id === 'ch4') paintCh4(p);
+  }
+  paintRvs(syE);
+  paintNav(scrollY);
+  paintDebug(syE);
+  requestAnimationFrame(loop);
+}
+
+measure();
+addEventListener('resize', measure);
+
+if (reduced) {
+  /* Static, readable states; the burn becomes a fixed irregular cut once the
+     reader passes the transition point — no embers, no animation. */
+  paintCh1(0.5, 0); paintCh2(0.6); paintCh3(0.5); paintCh4(0.55);
+  portal2.paint(0.55, 0);
+  $$('.rv').forEach((el) => el.classList.add('on'));
+  let cut = false;
+  function reducedPaint() {
+    const sy = scrollY;
+    const p1 = localP(ch1, sy);
+    paintRanges(ch1Copies, p1);
+    const wantCut = p1 >= 0.7;
+    if (wantCut !== cut) {
+      cut = wantCut;
+      if (cut) {
+        const g = burnGeom(0.62);
+        const blob = blobPath(g);
+        caveworld.style.clipPath =
+          `path(evenodd, "M0 0H${innerWidth}V${innerHeight}H0Z ${blob}")`;
+        rimChar.setAttribute('d', blob); rimChar.style.opacity = .8;
+        rimHot.setAttribute('d', blob); rimHot.style.opacity = .55;
+      } else {
+        caveworld.style.clipPath = 'none';
+        rimChar.style.opacity = rimHot.style.opacity = 0;
+      }
+    }
+    if (visible(ch2, sy)) paintRanges(ch2Copies, localP(ch2, sy));
+    if (visible(ch3, sy)) paintRanges(ch3Copies, localP(ch3, sy));
+    if (visible(ch4, sy)) paintRanges(ch4Copies, localP(ch4, sy));
+    paintNav(sy);
+  }
+  addEventListener('scroll', reducedPaint, { passive: true });
+  reducedPaint();
+} else {
+  requestAnimationFrame(loop);
+}
+})();
+</script>
+</body>
+</html>
