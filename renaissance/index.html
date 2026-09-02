@@ -15,6 +15,11 @@
   --s2ink:#09090B; --marble:#E8E1D4; --stoneg:#9C968C;
   --agold:#B9923F; --lgold:#F0C767; --uv:#6D22A8; --hotm:#FF2E88;
   --mx:0px; --my:0px;
+  /* the hall art-frame, shared by #envW (the real S2 content) and by
+     #tideHall/#tideHallFg (hero's crossfade preview of the same scene).
+     Both MUST resolve to the same box or the handoff visibly reframes. */
+  --hallW: max(100vw,192.2svh);
+  --hallDX: 0%;
   --f-disp:"Archivo Black","Archivo",sans-serif;
   --f-body:"Archivo",sans-serif;
   --f-serif:"Cormorant Garamond",Georgia,serif;
@@ -101,10 +106,15 @@ body{margin:0;font-family:var(--f-body);color:var(--ivory);overflow-x:hidden;bac
 #h2beat h2 em{font-style:normal;color:var(--dgold)}
 #tide{position:absolute;inset:0;z-index:9;pointer-events:none;visibility:hidden;
   -webkit-mask:url(#tideMask); mask:url(#tideMask)}
-#tideHall{position:absolute;left:50%;top:50%;
-  transform:translate(-50%,calc(-50% + var(--tideRise,0px)));
+/* tideHall/tideHallFg mirror #envW's own hallBg+hallFg pair pixel-for-pixel
+   (same two source images, same sizing formula) so the crossfade preview and
+   the real #s2 content align exactly at the handoff — using a different
+   source (the flat hall-interior.png) here previously left a visible jump
+   in framing the instant #s2stage took over */
+#tideHall,#tideHallFg{position:absolute;left:50%;top:50%;
+  transform:translate(calc(-50% + var(--hallDX)),calc(-50% + var(--tideRise,0px)));
   translate:calc(var(--mx)*6) calc(var(--my)*4);
-  width:max(100vw,192.2svh);aspect-ratio:1414/736}
+  width:var(--hallW);aspect-ratio:1414/736}
 #tideCrest{position:absolute;inset:0;width:100%;height:100%;z-index:10;pointer-events:none;
   filter:blur(5px) drop-shadow(0 0 22px rgba(255,248,228,.5));visibility:hidden}
 #dbg{position:absolute;inset:0;z-index:40;pointer-events:none;display:none}
@@ -118,8 +128,9 @@ body.debug #dbg{display:block}
 #s2{height:560vh;position:relative;z-index:2;margin-top:-100vh}
 #s2stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0A0C}
 /* the hall: an art-frame wrapper so overlay coordinates always match the image */
-#envW{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:max(100vw,192.2svh);aspect-ratio:1414/736;pointer-events:none;will-change:transform}
+#envW{position:absolute;left:50%;top:50%;
+  transform:translate(calc(-50% + var(--hallDX)),-50%);
+  width:var(--hallW);aspect-ratio:1414/736;pointer-events:none;will-change:transform}
 /* two depth plates cut from the one painting, so the dome and the man+table
    can travel at different speeds under the cursor */
 #hallBg,#hallFg{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -513,11 +524,50 @@ body.debug #dbg{display:block}
 .cx:nth-child(2) .cxFrame{rotate:-.5deg}
 .cx:nth-child(3) .cxFrame{rotate:.4deg}
 .cx:nth-child(4) .cxFrame{rotate:.55deg}
+
+/* ===================== SECTION 6 — OUR PARTNERS ===================== */
+/* The courses wall pins itself and the partners panel rides up over it, so
+   the two overlap the way the reference does: a raised card inset from every
+   edge with the previous section still showing in the gutter around it. */
+#s5{position:sticky;top:0;height:100svh;padding:0;
+  display:grid;place-items:center;overflow:hidden}
+#s6{position:relative;z-index:6;padding:9svh 0 12svh;background:transparent;
+  display:grid;place-items:center;min-height:100svh}
+/* a faint, creamy card rather than the dark wood of the courses wall behind
+   it — the bookshelf photo itself supplies all the wood/label texture */
+#s6panel{position:relative;width:min(1180px,92vw);margin:0 auto;
+  border-radius:16px;overflow:hidden;
+  padding:clamp(18px,2.6vw,34px);
+  background:linear-gradient(168deg,#F2ECDD 0%,#EBE3CD 60%,#E4D9BC 100%);
+  box-shadow:0 -2px 0 rgba(255,255,255,.5) inset,
+             0 40px 90px rgba(0,0,0,.55), 0 8px 26px rgba(0,0,0,.45),
+             0 0 0 1px rgba(120,98,60,.12)}
+#s6shelf{display:block;width:100%;height:auto}
+
 /* ============================= mobile ============================= */
 @media (max-width:760px){
   #stage :is(#sky,#treesL,#treesR,#foliage,#statue,#fem,#male,#dust){transform:none!important}
   #appleInner,#flecks{transform:none!important}
-  #envW{transform:translate(-50%,-50%)!important}
+  /* Portrait can't cover 100svh with a 1.92:1 painting AND keep the scene
+     readable: at cover zoom the art is ~4.2x the viewport width, so the
+     visible slice is only fx .38-.62 — the apple's impact point (fx .455)
+     is in frame but the masked man (face at fx .72) is rendered ~164px off
+     the right edge, i.e. the section's whole character is invisible. The two
+     are .267 of the art apart = 433px at that zoom, wider than the 390px
+     viewport, so no amount of panning shows both. Widen the frame instead
+     (visible slice becomes ~.35 of the art), bottom-anchor it so the table
+     keeps the floor, and let the dark vault take the space above. */
+  :root{--hallW: max(115vw,118svh); --hallDX: -7.25%}
+  #envW,#tideHall,#tideHallFg{top:auto;bottom:0;aspect-ratio:auto;height:88svh}
+  #envW{transform:translate(calc(-50% + var(--hallDX)),0)!important}
+  #tideHall,#tideHallFg{transform:translate(calc(-50% + var(--hallDX)),var(--tideRise,0px))}
+  /* taller box than the art's own ratio now, so crop instead of stretch —
+     keeps the same horizontal framing (both figures in shot) while cutting
+     into the mostly-empty upper dome instead of leaving blank space above it */
+  #hallBg,#hallFg,#tideHall,#tideHallFg{object-fit:cover;object-position:50% 18%}
+  #envW,#tideHall,#tideHallFg{
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 60px);
+            mask-image:linear-gradient(to bottom,transparent 0,#000 60px)}
   #s2ui{translate:0 0}
   #statueW{top:38%} #statue{height:46vh}
   #femW{left:24%;top:72%} #fem{height:26vh}
@@ -529,8 +579,9 @@ body.debug #dbg{display:block}
   #h1beat,#h2beat{top:16%;width:92vw}
   #h1beat h1{font-size:clamp(21px,6.6vw,30px)}
   #h2beat h2{font-size:clamp(24px,7.6vw,34px)}
-  #s2ui{max-width:92vw;padding:8vh 20px 0}
-  #bigH{font-size:clamp(38px,11vw,54px)}
+  #s2ui{max-width:92vw;padding:4vh 20px 0}
+  #bigH{font-size:clamp(20px,6.4vw,26px);margin-bottom:1.2vh}
+  #supp{font-size:12px}
   #s2scrim{width:100%;background:linear-gradient(to bottom,rgba(10,9,11,.55),transparent 45%)}
   #appleStageW{width:64vw}
   .apiece.far{display:none}
@@ -540,10 +591,10 @@ body.debug #dbg{display:block}
   #s3bg{object-position:55% 62%}
   #lapPar{transform:translate(-50%,-50%)!important}
   #s3ui{max-width:100vw;padding:6vh 20px 0;translate:0 0}
-  #mKick{position:static;text-align:left;margin:0 0 2vh;font-size:13px}
-  #mH{position:static;font-size:clamp(30px,9.5vw,38px);max-width:100%;margin:0 0 2.4vh}
-  #mLines{position:static;max-width:100%;text-align:left}
-  #mLines span{font-size:15px}
+  #mKick{position:static;text-align:left;margin:0 0 1.4vh;font-size:9px}
+  #mH{position:static;font-size:clamp(17px,5.2vw,21px);max-width:100%;margin:0 0 1.6vh}
+  #mLines{position:static;max-width:100%;text-align:left;gap:.6vh}
+  #mLines span{font-size:9.5px}
   /* section 5 */
   #s5{padding:11vh 0 12vh}
   #s5in{max-width:100vw;padding:0 20px}
@@ -574,6 +625,10 @@ body.debug #dbg{display:block}
   #filmClip{overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;
     scrollbar-width:none;padding:0 20px;-webkit-mask-image:none;mask-image:none}
   #filmClip::-webkit-scrollbar{display:none}
+  /* section 6 — same panel, just a narrower crop of the shelf photo */
+  #s5{height:auto;min-height:100svh;padding:11vh 0 12vh}
+  #s6{padding:6svh 0 10svh}
+  #s6panel{width:94vw;border-radius:12px;padding:14px}
   #filmRow{gap:14px;transform:none!important}
   .fr{width:32vw;scroll-snap-align:center}
 }
@@ -618,7 +673,8 @@ body.debug #dbg{display:block}
       </defs>
     </svg>
     <div id="tide">
-      <img id="tideHall" src="../assets/renaissance/hall-interior.png" alt="">
+      <img id="tideHall" src="../assets/renaissance/hall-bg.png" alt="">
+      <img id="tideHallFg" src="../assets/renaissance/hall-fg.png" alt="">
     </div>
     <svg id="tideCrest" aria-hidden="true"><path id="crestPath" fill="none" stroke="#FBF2DC" stroke-width="7" opacity=".38"/></svg>
     <svg id="dbg" width="100%" height="100%" aria-hidden="true">
@@ -907,6 +963,13 @@ body.debug #dbg{display:block}
   </div>
 </section>
 
+<!-- ======================= SECTION 6 — OUR PARTNERS ======================= -->
+<section id="s6" aria-label="Our partners">
+  <div id="s6panel">
+    <img id="s6shelf" src="../assets/renaissance/bookshell.png" alt="A wooden card-catalog drawer, filed with blank index cards, reading Our Partners">
+  </div>
+</section>
+
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
@@ -970,8 +1033,6 @@ const tl2 = gsap.timeline({
   scrollTrigger: { trigger: '#s2', start: 'top top', end: 'bottom bottom', scrub: (reduced||TEST) ? true : 0.6 },
 });
 tl2
-/* 0-.15 the hall establishes while the apple keeps falling */
-.fromTo('#envW', { scale: 1.045 }, { scale: 1, duration: .16, immediateRender: false }, 0)
 /* .15-.32 the headline reveals out of the architecture */
 .to('#bigH', { clipPath: 'inset(0% 0 0% 0)', duration: .16, ease: 'power1.out' }, .15)
 .to('#supp', { opacity: 1, duration: .06 }, .30)
