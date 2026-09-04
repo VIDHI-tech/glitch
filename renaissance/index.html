@@ -368,7 +368,9 @@ body.debug #dbg{display:block}
 #s4grain{z-index:11;opacity:.34}
 
 /* ===================== SECTION 5 — COURSES ===================== */
-#s5{position:relative;z-index:5;padding:16vh 0 18vh;background:#0A0908;overflow:hidden}
+#courseRun{position:relative;z-index:5;margin-top:-33.333svh;background:#0A0908}
+#s5{position:sticky;top:0;z-index:5;height:100svh;padding:12vh 0 10vh;
+  background:#0A0908;overflow:hidden;display:flex;align-items:center}
 #s5wall{position:absolute;inset:0;pointer-events:none;
   background:url(../assets/renaissance/dome-bg.jpg) center 44%/220% auto no-repeat;
   filter:brightness(.62) saturate(.8) contrast(1.04)}
@@ -448,7 +450,8 @@ body.debug #dbg{display:block}
 #s4grain{z-index:11;opacity:.34}
 
 /* ===================== SECTION 5 — COURSES ===================== */
-#s5{position:relative;z-index:5;padding:16vh 0 18vh;background:#0A0908;overflow:hidden}
+#s5{position:sticky;top:0;z-index:5;height:100svh;padding:12vh 0 10vh;
+  background:#0A0908;overflow:hidden;display:flex;align-items:center}
 #s5wall{position:absolute;inset:0;pointer-events:none;
   background:url(../assets/renaissance/dome-bg.jpg) center 44%/220% auto no-repeat;
   filter:brightness(.62) saturate(.8) contrast(1.04)}
@@ -642,6 +645,10 @@ body.debug #dbg{display:block}
     scrollbar-width:none;padding:0 20px;-webkit-mask-image:none;mask-image:none}
   #filmClip::-webkit-scrollbar{display:none}
   /* section 6 — same panel, just a narrower crop of the shelf photo */
+  #courseRun{margin-top:-33.333svh}
+  #s5{height:100svh;padding:7svh 0 7svh;align-items:flex-start}
+  #s5wall{background-size:260% auto;background-position:center 32%}
+  .cxSub{margin-bottom:3.4vh}
   /* the curtain's copy must sit exactly where the real section puts its
      content — this padding is asymmetric, so plain centering lands ~4px off */
   #s6{padding:6svh 0 10svh}
@@ -942,14 +949,15 @@ body.debug #dbg{display:block}
   </div>
 </section>
 
-<!-- ======================= SECTION 5 — COURSES ======================= -->
-<section id="s5" aria-label="Courses">
-  <div id="s5wall"></div>
-  <div id="s5in" class="s5in">
-    <p id="cxKick" class="cxKick">COURSES</p>
-    <h2 id="cxH" class="cxH">CHOOSE <em>YOUR PATH.</em></h2>
-    <p id="cxSub" class="cxSub">Every course runs inside the cohort — live sessions, build labs, and a brief you actually ship.</p>
-    <div id="cxGrid" class="cxGrid">
+<div id="courseRun">
+  <!-- ======================= SECTION 5 — COURSES ======================= -->
+  <section id="s5" aria-label="Courses">
+    <div id="s5wall"></div>
+    <div id="s5in" class="s5in">
+      <p id="cxKick" class="cxKick">COURSES</p>
+      <h2 id="cxH" class="cxH">CHOOSE <em>YOUR PATH.</em></h2>
+      <p id="cxSub" class="cxSub">Every course runs inside the cohort — live sessions, build labs, and a brief you actually ship.</p>
+      <div id="cxGrid" class="cxGrid">
         <figure class="cx feat">
           <div class="cxFrame">
           <span class="cxTag">MONA LISA</span>
@@ -991,17 +999,18 @@ body.debug #dbg{display:block}
             </div>
           </div>
         </figure>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ======================= SECTION 6 — OUR PARTNERS ======================= -->
-<section id="s6" aria-label="Our partners">
-  <div id="s6panel">
-    <img id="s6paper" src="../assets/renaissance/paper.png" alt="">
-    <img id="s6shelf" src="../assets/renaissance/bookshell.png" alt="A wooden card-catalog drawer, filed with blank index cards, reading Our Partners">
-  </div>
-</section>
+  <!-- ======================= SECTION 6 — OUR PARTNERS ======================= -->
+  <section id="s6" aria-label="Our partners">
+    <div id="s6panel">
+      <img id="s6paper" src="../assets/renaissance/paper.png" alt="">
+      <img id="s6shelf" src="../assets/renaissance/bookshell.png" alt="A wooden card-catalog drawer, filed with blank index cards, reading Our Partners">
+    </div>
+  </section>
+</div>
 
 <!-- ======================= SECTION 7 — FOOTER ======================= -->
 <footer id="s7" aria-label="Footer">
@@ -1234,10 +1243,13 @@ tl4
 .to('#tvW',   { opacity: 1, duration: .04 }, .30)
 .fromTo('#tvOn', { opacity: 0, scaleY: .2 }, { opacity: .95, scaleY: 1, duration: .014 }, .31)
 .to('#tvOn',  { opacity: 0, scaleY: 30, duration: .035 }, .324)
-.to('#filmKick', { opacity: 1, duration: .03 }, .62)
-.to('.fr', { opacity: 1, y: 0, duration: .05, stagger: .022 }, .65)
 .to({}, { duration: .02 });
-gsap.set('.fr', { y: 26 });
+if (document.querySelector('.fr')) {
+  gsap.set('.fr', { y: 26 });
+  tl4
+  .to('#filmKick', { opacity: 1, duration: .03 }, .62)
+  .to('.fr', { opacity: 1, y: 0, duration: .05, stagger: .022 }, .65);
+}
 
 /* =================== SECTION 5 — courses reveal =================== */
 if (document.getElementById('cxGrid')) {
@@ -1939,6 +1951,7 @@ const ftVeilEl = document.getElementById('ftVeil');
 const ftVigEl = document.getElementById('ftVig');
 const ftUiEl = document.getElementById('ftUi');
 const s6El = document.getElementById('s6');
+const s6PanelEl = document.getElementById('s6panel');
 const FT_TILT = -30;      /* degrees, tilted to the left on arrival */
 const FT_ZOOM = 1.25;     /* and zoomed, both unwinding to square as it lands */
 /* A rotated rectangle only keeps covering its own frame if it is also scaled
@@ -1957,12 +1970,26 @@ function ftMaskPos(el, p, drift) {
   const x = (drift * 100).toFixed(2);
   el.style.maskPosition = el.style.webkitMaskPosition = `${x}% ${y}%`;
 }
+function syncCoursePartnerPin() {
+  if (!s6El || !s6PanelEl) return;
+  const panelCenter = s6PanelEl.offsetTop + s6PanelEl.offsetHeight / 2;
+  const releaseAt = Math.ceil(panelCenter + innerHeight / 2);
+  s6El.style.minHeight = Math.max(releaseAt, innerHeight * .72) + 'px';
+}
+addEventListener('resize', syncCoursePartnerPin);
+addEventListener('orientationchange', () => setTimeout(syncCoursePartnerPin, 180));
+if (s6PanelEl) {
+  const imgs = s6PanelEl.querySelectorAll('img');
+  imgs.forEach((img) => img.complete ? null : img.addEventListener('load', syncCoursePartnerPin, { once:true }));
+  syncCoursePartnerPin();
+}
 let ftOn = false;
 function s7Frame() {
   const sy = scrollY, vh = innerHeight;
   /* u counts viewports of scroll from the moment the Partners panel's bottom
      edge sits on the viewport bottom */
-  const u = (sy - (s6El.offsetTop + s6El.offsetHeight - vh)) / vh;
+  const s6Top = s6El.getBoundingClientRect().top + sy;
+  const u = (sy - (s6Top + s6El.offsetHeight - vh)) / vh;
   if (u <= -0.06) {
     if (ftOn) { ftOn = false; s7stage.style.visibility = 'hidden'; }
     return;
