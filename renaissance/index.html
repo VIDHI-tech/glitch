@@ -15,9 +15,7 @@
   --s2ink:#09090B; --marble:#E8E1D4; --stoneg:#9C968C;
   --agold:#B9923F; --lgold:#F0C767; --uv:#6D22A8; --hotm:#FF2E88;
   --mx:0px; --my:0px;
-  /* the hall art-frame, shared by #envW (the real S2 content) and by
-     #tideHall/#tideHallFg (hero's crossfade preview of the same scene).
-     Both MUST resolve to the same box or the handoff visibly reframes. */
+ 
   --hallW: max(100vw,192.2svh);
   --hallDX: 0%;
   --f-disp:"Archivo Black","Archivo",sans-serif;
@@ -36,19 +34,24 @@ body{margin:0;font-family:var(--f-body);color:var(--ivory);overflow-x:hidden;bac
   filter:saturate(.88) brightness(1.05) contrast(.98);
   translate:calc(var(--mx)*8) calc(var(--my)*5)}
 #treesL{inset:-4% 55% -4% -4%;
-  background:url(../assets/renaissance/background.jpg) 0% 30%/260% auto no-repeat;
+  background:url(../assets/renaissance/background.jpg) 0% 30% no-repeat;
+  /* 260% of this element's 53vw box = 137.8vw; 152svh is what it takes to
+     cover the box's height at the plate's 1.383 aspect */
+  background-size:max(137.8vw,152svh) auto;
   filter:saturate(.9) brightness(.92);
   -webkit-mask-image:linear-gradient(to right,#000 62%,transparent 96%);
           mask-image:linear-gradient(to right,#000 62%,transparent 96%);
   translate:calc(var(--mx)*14) calc(var(--my)*9)}
 #treesR{inset:-4% -4% -4% 62%;
-  background:url(../assets/renaissance/background.jpg) 100% 12%/300% auto no-repeat;
+  background:url(../assets/renaissance/background.jpg) 100% 12% no-repeat;
+  background-size:max(138vw,152svh) auto;
   filter:saturate(.9) brightness(.9);
   -webkit-mask-image:linear-gradient(to left,#000 58%,transparent 95%);
           mask-image:linear-gradient(to left,#000 58%,transparent 95%);
   translate:calc(var(--mx)*-14) calc(var(--my)*9)}
 #foliage{inset:72% -6% -8% -6%;
-  background:url(../assets/renaissance/background.jpg) center 100%/140% auto no-repeat;
+  background:url(../assets/renaissance/background.jpg) center 100% no-repeat;
+  background-size:max(156.8vw,52svh) auto;
   filter:saturate(.85) brightness(.62) contrast(1.05);
   -webkit-mask-image:linear-gradient(to top,#000 68%,transparent 100%);
           mask-image:linear-gradient(to top,#000 68%,transparent 100%);
@@ -60,11 +63,11 @@ body{margin:0;font-family:var(--f-body);color:var(--ivory);overflow-x:hidden;bac
   -webkit-mask-image:linear-gradient(to bottom,#000 82%,transparent 98%);
           mask-image:linear-gradient(to bottom,#000 82%,transparent 98%);
   filter:sepia(.14) saturate(.92) brightness(1.02) contrast(1.02) drop-shadow(0 22px 40px rgba(10,14,10,.6))}
-#femW{left:20%;top:52%;z-index:7;transform:translate(-50%,-50%)}
+#femW{left:16%;top:52%;z-index:7}
 #femP{translate:calc(var(--mx)*30) calc(var(--my)*19)}
 #fem{height:48vh;display:block;
   filter:drop-shadow(0 18px 32px rgba(10,14,10,.5))}
-#maleW{left:82%;top:50%;z-index:7;transform:translate(-50%,-50%)}
+#maleW{left:82%;top:50%;z-index:7}
 #maleP{translate:calc(var(--mx)*32) calc(var(--my)*20)}
 #male{height:50vh;display:block;
   filter:drop-shadow(0 18px 32px rgba(10,14,10,.5))}
@@ -97,20 +100,16 @@ body{margin:0;font-family:var(--f-body);color:var(--ivory);overflow-x:hidden;bac
 #brand b i{font-style:normal;color:var(--dgold)}
 #brand span{font:500 9px/1.5 var(--f-body);letter-spacing:.24em;color:var(--plaster)}
 .beat{position:absolute;left:clamp(24px,5vw,80px);text-align:left;opacity:0}
-#h1beat{top:15%;width:min(430px,34vw)}
+#h1beat{top:max(15%,82px);width:min(430px,34vw)}
 #h1beat h1{font:800 clamp(24px,3.4vw,46px)/1.06 var(--f-disp);letter-spacing:.02em;margin:0;
   color:var(--ivory);text-shadow:0 3px 34px rgba(10,14,10,.75)}
-#h2beat{top:15%;width:min(430px,34vw)}
+#h2beat{top:max(15%,82px);width:min(430px,34vw)}
 #h2beat h2{font:800 clamp(28px,4vw,54px)/1.04 var(--f-disp);margin:0;color:var(--ivory);
   text-shadow:0 3px 34px rgba(10,14,10,.8)}
 #h2beat h2 em{font-style:normal;color:var(--dgold)}
 #tide{position:absolute;inset:0;z-index:9;pointer-events:none;visibility:hidden;
   -webkit-mask:url(#tideMask); mask:url(#tideMask)}
-/* tideHall/tideHallFg mirror #envW's own hallBg+hallFg pair pixel-for-pixel
-   (same two source images, same sizing formula) so the crossfade preview and
-   the real #s2 content align exactly at the handoff — using a different
-   source (the flat hall-interior.png) here previously left a visible jump
-   in framing the instant #s2stage took over */
+ 
 #tideHall,#tideHallFg{position:absolute;left:50%;top:50%;
   transform:translate(calc(-50% + var(--hallDX)),calc(-50% + var(--tideRise,0px)));
   translate:calc(var(--mx)*6) calc(var(--my)*4);
@@ -126,13 +125,10 @@ body.debug #dbg{display:block}
 
 /* ===================== SECTION 2 — WHAT IS GLITCH? ===================== */
 #s2{height:560vh;position:relative;z-index:2;margin-top:-100vh}
-#s2stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0A0C}
-/* the hall: an art-frame wrapper so overlay coordinates always match the image */
+#s2stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0A0C} 
 #envW{position:absolute;left:50%;top:50%;
   transform:translate(calc(-50% + var(--hallDX)),-50%);
-  width:var(--hallW);aspect-ratio:1414/736;pointer-events:none;will-change:transform}
-/* two depth plates cut from the one painting, so the dome and the man+table
-   can travel at different speeds under the cursor */
+  width:var(--hallW);aspect-ratio:1414/736;pointer-events:none;will-change:transform} 
 #hallBg,#hallFg{position:absolute;inset:0;width:100%;height:100%;display:block}
 #hallBg{translate:calc(var(--mx)*8) calc(var(--my)*5)}
 #hallFg{translate:calc(var(--mx)*18) calc(var(--my)*11)}
@@ -193,15 +189,9 @@ body.debug #dbg{display:block}
 #s3bgGrad{position:absolute;inset:0;pointer-events:none;background:
   linear-gradient(to bottom,#0B0A0C 0%,rgba(11,10,12,0) 26%),
   radial-gradient(ellipse 95% 72% at 50% 108%,rgba(5,5,6,.6),transparent 62%)}
-/* --- the marble laptop: a real slab-and-hinge object, not a flat card --- */
-/* the laptop is one continuous object: fixed, with left/top/width written by
-   the same deterministic frame writer that drives the apple, so it can travel
-   out of the vault and land in the cohort room without ever being duplicated */
+ 
 #lapMask{position:fixed;inset:0;z-index:55;pointer-events:none}
-/* the photographed rest pose: a real 3/4-back plate (genuine slab thickness,
-   not the flat CSS lid) that the animated CSS-3D laptop crossfades into once
-   it has actually settled on his lap. Positioned in raw viewport px each
-   frame from the same lap anchor, independent of #lapPar's own box. */
+ 
 #lapPlate{position:absolute;left:0;top:0;width:0;aspect-ratio:1086/625;
   opacity:0;pointer-events:none;will-change:transform,opacity,left,top,width}
 #lapPar{position:absolute;left:50%;top:65.5%;width:min(34vw,56vh);
@@ -235,11 +225,7 @@ body.debug #dbg{display:block}
   background-size:280% 280%}
 #lidIn{opacity:0}
 #lidInC{position:absolute;inset:0;transform:scaleY(-1);border-radius:3.5%/4.8%;overflow:hidden}
-/* the screen side of the lid is marble ONLY — the lid art's own painted gold
-   border and slab bevels are cropped out (150% = the centre of the plate), so
-   the frame reads as one clean surface and the single gold hairline around the
-   glass is the only border. Painting the whole plate here put a second gold
-   line and a marble strip outside the glass: the "extra strips" at the edges. */
+ 
 #bezel{position:absolute;inset:0;border-radius:3.5%/4.8%;
   background:url(../assets/renaissance/laptop-lid.png) center/150% auto;
   filter:brightness(.96)}
@@ -309,9 +295,6 @@ body.debug #dbg{display:block}
 #lapGlow{position:absolute;left:0;top:0;width:24vw;aspect-ratio:2/1;
   transform:translate(-50%,-46%);opacity:0;pointer-events:none;mix-blend-mode:screen;
   background:radial-gradient(ellipse,rgba(255,238,196,.5),rgba(240,199,103,.18) 44%,transparent 72%)}
-#lapShade{position:fixed;z-index:54;pointer-events:none;opacity:0;border-radius:50%;
-  background:radial-gradient(ellipse,rgba(24,18,10,.62),rgba(24,18,10,.28) 52%,transparent 76%);
-  filter:blur(6px)}
 #lapCast{position:absolute;left:0;top:0;width:15vw;aspect-ratio:4/1;
   transform:translate(-50%,-6%);opacity:0;pointer-events:none;border-radius:50%;
   background:radial-gradient(ellipse,rgba(28,22,14,.6),transparent 70%)}
@@ -387,29 +370,27 @@ body.debug #dbg{display:block}
 /* ===================== SECTION 5 — COURSES ===================== */
 #s5{position:relative;z-index:5;padding:16vh 0 18vh;background:#0A0908;overflow:hidden}
 #s5wall{position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 74% 54% at 20% 10%,rgba(150,130,102,.26),transparent 64%),
-    radial-gradient(ellipse 64% 50% at 86% 80%,rgba(112,102,90,.20),transparent 68%),
-    linear-gradient(163deg,#2A2521 0%,#1A1614 46%,#100D0C 100%)}
+  background:url(../assets/renaissance/dome-bg.jpg) center 44%/220% auto no-repeat;
+  filter:brightness(.62) saturate(.8) contrast(1.04)}
 /* coarse plaster tooth, then a finer grain over the top */
 #s5wall::after{content:'';position:absolute;inset:0;opacity:.85;mix-blend-mode:overlay;
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23r)' opacity='0.75'/%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   background-size:520px 520px,180px 180px}
-/* uneven staining, like damp on old plaster */
-#s5wall::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+/* the gilt frames must stay legible against a painted ceiling, so the dome is
+   graded down and vignetted rather than shown at full strength */
+#s5wall::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:
-    radial-gradient(ellipse 34% 26% at 12% 30%,rgba(0,0,0,.5),transparent 70%),
-    radial-gradient(ellipse 28% 34% at 68% 8%,rgba(0,0,0,.42),transparent 72%),
-    radial-gradient(ellipse 40% 30% at 88% 62%,rgba(0,0,0,.5),transparent 74%)}
-#s5in{position:relative;z-index:2;max-width:min(1280px,92vw);margin:0 auto}
-#cxKick{margin:0 0 1.8vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-body);
+    radial-gradient(ellipse 82% 66% at 50% 42%,rgba(8,7,6,0) 55%,rgba(8,7,6,.30) 100%),
+    linear-gradient(180deg,rgba(8,7,6,.20) 0%,rgba(8,7,6,0) 22%,rgba(8,7,6,.22) 100%)}
+.s5in{position:relative;z-index:2;max-width:min(1280px,92vw);margin:0 auto}
+.cxKick{margin:0 0 1.8vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-body);
   letter-spacing:.44em;color:var(--lgold)}
-#cxH{margin:0 0 1.6vh;font:800 clamp(28px,3.6vw,54px)/1.04 var(--f-disp);color:var(--marble)}
-#cxH em{font-style:normal;color:var(--lgold)}
-#cxSub{margin:0 0 7vh;font:400 clamp(13px,1.1vw,16px)/1.55 var(--f-body);color:#C9C1B0;max-width:46ch}
-#cxGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,1.8vw,30px)}
+.cxH{margin:0 0 1.6vh;font:800 clamp(28px,3.6vw,54px)/1.04 var(--f-disp);color:var(--marble)}
+.cxH em{font-style:normal;color:var(--lgold)}
+.cxSub{margin:0 0 7vh;font:400 clamp(13px,1.1vw,16px)/1.55 var(--f-body);color:#C9C1B0;max-width:46ch}
+.cxGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,1.8vw,30px)}
 /* an old gallery frame: weathered gilt, deep rebate, canvas sunk inside */
 .cx{margin:0;opacity:0;will-change:transform,opacity}
 /* a reverse cassetta frame, Italian ca. 1630 (oak, carved and gilt over a
@@ -469,29 +450,27 @@ body.debug #dbg{display:block}
 /* ===================== SECTION 5 — COURSES ===================== */
 #s5{position:relative;z-index:5;padding:16vh 0 18vh;background:#0A0908;overflow:hidden}
 #s5wall{position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 74% 54% at 20% 10%,rgba(150,130,102,.26),transparent 64%),
-    radial-gradient(ellipse 64% 50% at 86% 80%,rgba(112,102,90,.20),transparent 68%),
-    linear-gradient(163deg,#2A2521 0%,#1A1614 46%,#100D0C 100%)}
+  background:url(../assets/renaissance/dome-bg.jpg) center 44%/220% auto no-repeat;
+  filter:brightness(.62) saturate(.8) contrast(1.04)}
 /* coarse plaster tooth, then a finer grain over the top */
 #s5wall::after{content:'';position:absolute;inset:0;opacity:.85;mix-blend-mode:overlay;
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23r)' opacity='0.75'/%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   background-size:520px 520px,180px 180px}
-/* uneven staining, like damp on old plaster */
-#s5wall::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+/* the gilt frames must stay legible against a painted ceiling, so the dome is
+   graded down and vignetted rather than shown at full strength */
+#s5wall::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:
-    radial-gradient(ellipse 34% 26% at 12% 30%,rgba(0,0,0,.5),transparent 70%),
-    radial-gradient(ellipse 28% 34% at 68% 8%,rgba(0,0,0,.42),transparent 72%),
-    radial-gradient(ellipse 40% 30% at 88% 62%,rgba(0,0,0,.5),transparent 74%)}
-#s5in{position:relative;z-index:2;max-width:min(1280px,92vw);margin:0 auto}
-#cxKick{margin:0 0 1.8vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-body);
+    radial-gradient(ellipse 82% 66% at 50% 42%,rgba(8,7,6,0) 55%,rgba(8,7,6,.30) 100%),
+    linear-gradient(180deg,rgba(8,7,6,.20) 0%,rgba(8,7,6,0) 22%,rgba(8,7,6,.22) 100%)}
+.s5in{position:relative;z-index:2;max-width:min(1280px,92vw);margin:0 auto}
+.cxKick{margin:0 0 1.8vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-body);
   letter-spacing:.44em;color:var(--lgold)}
-#cxH{margin:0 0 1.6vh;font:800 clamp(28px,3.6vw,54px)/1.04 var(--f-disp);color:var(--marble)}
-#cxH em{font-style:normal;color:var(--lgold)}
-#cxSub{margin:0 0 7vh;font:400 clamp(13px,1.1vw,16px)/1.55 var(--f-body);color:#C9C1B0;max-width:46ch}
-#cxGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,1.8vw,30px)}
+.cxH{margin:0 0 1.6vh;font:800 clamp(28px,3.6vw,54px)/1.04 var(--f-disp);color:var(--marble)}
+.cxH em{font-style:normal;color:var(--lgold)}
+.cxSub{margin:0 0 7vh;font:400 clamp(13px,1.1vw,16px)/1.55 var(--f-body);color:#C9C1B0;max-width:46ch}
+.cxGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,1.8vw,30px)}
 /* an old gallery frame: weathered gilt, deep rebate, canvas sunk inside */
 .cx{margin:0;opacity:0;will-change:transform,opacity}
 .cxFrame{position:relative;padding:clamp(15px,1.6vw,27px);border-radius:2px;
@@ -526,57 +505,94 @@ body.debug #dbg{display:block}
 .cx:nth-child(4) .cxFrame{rotate:.55deg}
 
 /* ===================== SECTION 6 — OUR PARTNERS ===================== */
-/* The courses wall pins itself and the partners panel rides up over it, so
-   the two overlap the way the reference does: a raised card inset from every
-   edge with the previous section still showing in the gutter around it. */
-#s5{position:sticky;top:0;height:100svh;padding:0;
-  display:grid;place-items:center;overflow:hidden}
+/* No card, no frame: the parchment is shown whole, at its own aspect ratio,
+   with the bookshelf photo resting on top of it. Cropping it to a panel box
+   cut the curled edges and the painted flourishes off. */
 #s6{position:relative;z-index:6;padding:9svh 0 12svh;background:transparent;
   display:grid;place-items:center;min-height:100svh}
-/* a faint, creamy card rather than the dark wood of the courses wall behind
-   it — the bookshelf photo itself supplies all the wood/label texture */
-#s6panel{position:relative;width:min(1180px,92vw);margin:0 auto;
-  border-radius:16px;overflow:hidden;
-  padding:clamp(18px,2.6vw,34px);
-  background:linear-gradient(168deg,#F2ECDD 0%,#EBE3CD 60%,#E4D9BC 100%);
-  box-shadow:0 -2px 0 rgba(255,255,255,.5) inset,
-             0 40px 90px rgba(0,0,0,.55), 0 8px 26px rgba(0,0,0,.45),
-             0 0 0 1px rgba(120,98,60,.12)}
-#s6shelf{display:block;width:100%;height:auto}
+#s6panel{position:relative;width:min(1180px,94vw);margin:0 auto}
+/* the parchment sets the panel's size — width-driven, height free, so no
+   part of the illustration is ever cropped */
+#s6paper{display:block;width:100%;height:auto}
+#s6shelf{position:absolute;left:50%;top:53%;width:76%;height:auto;
+  transform:translate(-50%,-50%)}
+
+
+/* ===================== SECTION 7 — FOOTER ===================== */
+ 
+#s7{position:relative;z-index:7;height:320svh;background:transparent}
+#s7stage{position:fixed;inset:0;overflow:hidden;pointer-events:none;
+  visibility:hidden;background:transparent} 
+.ftMask{
+  -webkit-mask-image:url(../assets/renaissance/ink-front.png);
+          mask-image:url(../assets/renaissance/ink-front.png);
+  -webkit-mask-repeat:no-repeat;  mask-repeat:no-repeat;
+  -webkit-mask-size:120% 300%;    mask-size:120% 300%;
+  -webkit-mask-position:0% 0%;    mask-position:0% 0%;
+  will-change:-webkit-mask-position,mask-position} 
+#ftVeil{position:absolute;inset:0;z-index:1;opacity:0;
+  background:linear-gradient(to top,rgba(3,3,5,.92) 0%,rgba(3,3,5,.55) 34%,rgba(3,3,5,0) 78%)} 
+#ftBody{position:absolute;inset:0;z-index:2}
+#ftInk{position:absolute;inset:0;background:#050506} 
+#ftScene{position:absolute;inset:0;transform-origin:50% 50%;
+  will-change:transform;backface-visibility:hidden}
+.ftL{position:absolute;inset:0;width:100%;height:100%;display:block;
+  object-fit:cover;object-position:50% 50%} 
+#ftReal{position:absolute;inset:0;opacity:0;will-change:opacity,filter}
+#ftBg{z-index:1} #ftTable{z-index:2} #ftMan{z-index:3} 
+#ftEdge{position:absolute;inset:0;z-index:3;will-change:opacity,filter}
+#ftEdge .ftL{object-fit:cover} 
+#ftEdgeGlow{position:absolute;inset:0;
+  filter:drop-shadow(0 0 3px rgba(214,232,255,.55)) drop-shadow(0 0 10px rgba(150,190,255,.28))} 
+#ftVig{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse 96% 90% at 50% 46%,transparent 54%,rgba(0,0,0,.66) 100%)}
+/* --- footer copy --- */
+#ftUi{position:absolute;left:0;right:0;bottom:0;z-index:6;opacity:0;
+  padding:clamp(20px,3vw,44px) clamp(20px,4vw,72px) clamp(18px,2.6vw,38px);
+  background:linear-gradient(to top,rgba(6,6,8,.96) 0%,rgba(6,6,8,.88) 38%,rgba(6,6,8,.62) 68%,transparent 100%);
+  will-change:opacity}
+#ftRow{display:flex;align-items:flex-end;justify-content:space-between;
+  gap:clamp(16px,3vw,48px);flex-wrap:wrap}
+#ftBrand b{display:block;font:800 clamp(20px,2.4vw,34px)/1 var(--f-disp);
+  letter-spacing:.22em;color:var(--marble)}
+#ftBrand span{display:block;margin-top:.7em;
+  font:600 clamp(8px,.72vw,10px)/1.5 var(--f-body);letter-spacing:.24em;color:var(--lgold)}
+#ftNav{display:flex;gap:clamp(18px,3.4vw,64px)}
+#ftNav ul{list-style:none;margin:0;padding:0}
+#ftNav li{margin:0 0 .55em}
+#ftNav b{display:block;margin:0 0 1em;
+  font:700 clamp(8px,.68vw,10px)/1 var(--f-body);letter-spacing:.26em;color:var(--lgold)}
+#ftNav a{font:400 clamp(11px,.92vw,14px)/1 var(--f-body);color:#D7CFC0;
+  text-decoration:none;transition:color .25s ease}
+#ftNav a:hover{color:var(--marble)}
+#ftFine{width:100%;margin-top:clamp(14px,2vw,26px);padding-top:clamp(10px,1.2vw,16px);
+  border-top:1px solid rgba(226,201,150,.16);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font:400 clamp(9px,.72vw,11px)/1.5 var(--f-body);letter-spacing:.08em;color:#8E877C}
 
 /* ============================= mobile ============================= */
 @media (max-width:760px){
   #stage :is(#sky,#treesL,#treesR,#foliage,#statue,#fem,#male,#dust){transform:none!important}
-  #appleInner,#flecks{transform:none!important}
-  /* Portrait can't cover 100svh with a 1.92:1 painting AND keep the scene
-     readable: at cover zoom the art is ~4.2x the viewport width, so the
-     visible slice is only fx .38-.62 — the apple's impact point (fx .455)
-     is in frame but the masked man (face at fx .72) is rendered ~164px off
-     the right edge, i.e. the section's whole character is invisible. The two
-     are .267 of the art apart = 433px at that zoom, wider than the 390px
-     viewport, so no amount of panning shows both. Widen the frame instead
-     (visible slice becomes ~.35 of the art), bottom-anchor it so the table
-     keeps the floor, and let the dark vault take the space above. */
+  #appleInner,#flecks{transform:none!important} 
   :root{--hallW: max(115vw,118svh); --hallDX: -7.25%}
   #envW,#tideHall,#tideHallFg{top:auto;bottom:0;aspect-ratio:auto;height:88svh}
   #envW{transform:translate(calc(-50% + var(--hallDX)),0)!important}
-  #tideHall,#tideHallFg{transform:translate(calc(-50% + var(--hallDX)),var(--tideRise,0px))}
-  /* taller box than the art's own ratio now, so crop instead of stretch —
-     keeps the same horizontal framing (both figures in shot) while cutting
-     into the mostly-empty upper dome instead of leaving blank space above it */
+  #tideHall,#tideHallFg{transform:translate(calc(-50% + var(--hallDX)),var(--tideRise,0px))} 
   #hallBg,#hallFg,#tideHall,#tideHallFg{object-fit:cover;object-position:50% 18%}
   #envW,#tideHall,#tideHallFg{
     -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 60px);
             mask-image:linear-gradient(to bottom,transparent 0,#000 60px)}
   #s2ui{translate:0 0}
+}
+@media (max-width:760px){
   #statueW{top:38%} #statue{height:46vh}
-  #femW{left:24%;top:72%} #fem{height:26vh}
-  #maleW{left:79%;top:74%} #male{height:27vh}
+  #femW{left:15%;top:72%} #fem{width:40vw;height:auto}
+  #maleW{left:85%;top:74%} #male{width:34vw;height:auto}
   #appleW{left:55%;top:35%} #appleInner{width:46px}
   #brand{left:20px;top:18px;flex-direction:column;gap:6px}
   #brand b{font-size:17px;letter-spacing:.3em}
   #brand span{font-size:7.5px;letter-spacing:.18em}
-  #h1beat,#h2beat{top:16%;width:92vw}
+  #h1beat,#h2beat{top:max(12%,76px);width:92vw}
   #h1beat h1{font-size:clamp(21px,6.6vw,30px)}
   #h2beat h2{font-size:clamp(24px,7.6vw,34px)}
   #s2ui{max-width:92vw;padding:4vh 20px 0}
@@ -597,13 +613,13 @@ body.debug #dbg{display:block}
   #mLines span{font-size:9.5px}
   /* section 5 */
   #s5{padding:11vh 0 12vh}
-  #s5in{max-width:100vw;padding:0 20px}
-  #cxH{font-size:clamp(24px,7vw,30px)}
-  #cxSub{font-size:13px;margin-bottom:4.5vh}
-  #cxGrid{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  .s5in{max-width:100vw;padding:0 20px}
+  .cxH{font-size:clamp(24px,7vw,30px)}
+  .cxSub{font-size:13px;margin-bottom:4.5vh}
+  .cxGrid{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;
     scroll-snap-type:x mandatory;scrollbar-width:none;gap:20px;
     margin:0 -20px;padding:0 20px 6px}
-  #cxGrid::-webkit-scrollbar{display:none}
+  .cxGrid::-webkit-scrollbar{display:none}
   .cx{flex:0 0 62vw;scroll-snap-align:center}
   /* section 4 */
   #s4{height:300vh}
@@ -626,11 +642,29 @@ body.debug #dbg{display:block}
     scrollbar-width:none;padding:0 20px;-webkit-mask-image:none;mask-image:none}
   #filmClip::-webkit-scrollbar{display:none}
   /* section 6 — same panel, just a narrower crop of the shelf photo */
-  #s5{height:auto;min-height:100svh;padding:11vh 0 12vh}
+  /* the curtain's copy must sit exactly where the real section puts its
+     content — this padding is asymmetric, so plain centering lands ~4px off */
   #s6{padding:6svh 0 10svh}
-  #s6panel{width:94vw;border-radius:12px;padding:14px}
+  #s6panel{width:94vw}
+ 
+  #ftScene{inset:0 0 auto 0;height:52svh}
+  .ftL{object-position:50% 42%}
+  #ftUi{top:calc(52svh - 26px);background:linear-gradient(to top,#060608 0%,#060608 88%,rgba(6,6,8,0) 100%);
+    padding:40px 20px 22px;display:flex;align-items:center}
+  #ftRow{width:100%}
+  #ftRow{flex-direction:column;align-items:flex-start;gap:20px}
+  #ftNav{gap:22px;flex-wrap:wrap}
+  #ftNav a{font-size:12px}
+  #ftFine{flex-direction:column;gap:6px;margin-top:16px}
   #filmRow{gap:14px;transform:none!important}
   .fr{width:32vw;scroll-snap-align:center}
+}
+ 
+@media (max-width:760px) and (max-height:480px){
+  #h1beat,#h2beat{top:max(10%,68px);width:44vw}
+  #h1beat h1{font-size:clamp(16px,3.4vw,22px)}
+  #h2beat h2{font-size:clamp(18px,4vw,25px)}
+  #statue{height:52vh} #fem{width:22vw;height:auto} #male{width:17vw;height:auto}
 }
 @media (prefers-reduced-motion:reduce){
   .mote{display:none}
@@ -757,7 +791,6 @@ body.debug #dbg{display:block}
 </section>
 
 <!-- ============ the continuous laptop (fixed, single writer) ============ -->
-<i id="lapShade" aria-hidden="true"></i>
 <div id="lapMask" aria-hidden="true">
     <div id="lapPar">
       <div id="lapShadow"></div>
@@ -912,17 +945,16 @@ body.debug #dbg{display:block}
 <!-- ======================= SECTION 5 — COURSES ======================= -->
 <section id="s5" aria-label="Courses">
   <div id="s5wall"></div>
-  <div id="s5in">
-    <p id="cxKick">COURSES</p>
-    <h2 id="cxH">CHOOSE <em>YOUR PATH.</em></h2>
-    <p id="cxSub">Every course runs inside the cohort — live sessions, build labs, and a brief you actually ship.</p>
-    <div id="cxGrid">
+  <div id="s5in" class="s5in">
+    <p id="cxKick" class="cxKick">COURSES</p>
+    <h2 id="cxH" class="cxH">CHOOSE <em>YOUR PATH.</em></h2>
+    <p id="cxSub" class="cxSub">Every course runs inside the cohort — live sessions, build labs, and a brief you actually ship.</p>
+    <div id="cxGrid" class="cxGrid">
         <figure class="cx feat">
           <div class="cxFrame">
           <span class="cxTag">MONA LISA</span>
             <div class="cxArt" data-course="FOUNDATIONS">
-              <video src="../assets/courses/course-1.mp4" poster="../assets/courses/course-1.jpg"
-                     muted loop playsinline preload="metadata"></video>
+              <video src="../assets/courses/course-1.mp4" muted loop playsinline></video>
               <i class="scan"></i>
               <span class="cxPlay"></span>
               <figcaption class="cxLabel"><b>FOUNDATIONS</b><span>POST-AI &nbsp;·&nbsp; 12:04</span></figcaption>
@@ -932,7 +964,7 @@ body.debug #dbg{display:block}
         <figure class="cx ">
           <div class="cxFrame">
             <div class="cxArt" data-course="TECH &amp; CODE">
-              <!-- <video src="../assets/courses/course-2.mp4" poster="../assets/courses/course-2.jpg" muted loop playsinline></video> -->
+              <video src="../assets/courses/course-2.mp4" muted loop playsinline></video>
               <i class="scan"></i>
               <span class="cxPlay"></span>
               <figcaption class="cxLabel"><b>TECH &amp; CODE</b><span>THE NEW STACK &nbsp;·&nbsp; 18:22</span></figcaption>
@@ -942,7 +974,7 @@ body.debug #dbg{display:block}
         <figure class="cx ">
           <div class="cxFrame">
             <div class="cxArt" data-course="AI &amp; DESIGN">
-              <!-- <video src="../assets/courses/course-3.mp4" poster="../assets/courses/course-3.jpg" muted loop playsinline></video> -->
+              <video src="../assets/courses/mona-lisa.mp4" muted loop playsinline></video>
               <i class="scan"></i>
               <span class="cxPlay"></span>
               <figcaption class="cxLabel"><b>AI &amp; DESIGN</b><span>TASTE &amp; TOOLS &nbsp;·&nbsp; 15:47</span></figcaption>
@@ -966,9 +998,69 @@ body.debug #dbg{display:block}
 <!-- ======================= SECTION 6 — OUR PARTNERS ======================= -->
 <section id="s6" aria-label="Our partners">
   <div id="s6panel">
+    <img id="s6paper" src="../assets/renaissance/paper.png" alt="">
     <img id="s6shelf" src="../assets/renaissance/bookshell.png" alt="A wooden card-catalog drawer, filed with blank index cards, reading Our Partners">
   </div>
 </section>
+
+<!-- ======================= SECTION 7 — FOOTER ======================= -->
+<footer id="s7" aria-label="Footer">
+  <div id="s7stage">
+    <div id="ftVeil" aria-hidden="true"></div>
+    <div id="ftBody" class="ftMask">
+      <div id="ftInk" aria-hidden="true"></div>
+      <div id="ftScene">
+        <div id="ftReal" aria-hidden="true">
+        <img class="ftL" id="ftBg"    src="../assets/renaissance/footer-bg.png" alt="">
+        <img class="ftL" id="ftTable" src="../assets/renaissance/monitor-table.png" alt="">
+        <img class="ftL" id="ftMan"   src="../assets/renaissance/man-filled.png"
+             alt="A figure in Renaissance dress, seen from behind, reaching toward a tablet on a desk beneath an open sky">
+      </div>
+      </div>
+    </div>
+    <div id="ftEdge" class="ftMask" aria-hidden="true">
+      <div id="ftEdgeGlow">
+        <img class="ftL" src="../assets/renaissance/footer-bg-edge.png" alt="">
+        <img class="ftL" src="../assets/renaissance/monitor-table-edge.png" alt="">
+        <img class="ftL" src="../assets/renaissance/man-edge.png" alt="">
+      </div>
+    </div>
+    <div id="ftVig" aria-hidden="true"></div>
+
+    <div id="ftUi">
+      <div id="ftRow">
+        <div id="ftBrand">
+          <b>GLITCH</b>
+          <span>CATCH WHAT COMES NEXT</span>
+        </div>
+        <nav id="ftNav" aria-label="Footer">
+          <ul>
+            <b>PROGRAM</b>
+            <li><a href="#s4">The Cohort</a></li>
+            <li><a href="#s5">Courses</a></li>
+            <li><a href="#s6">Partners</a></li>
+          </ul>
+          <ul>
+            <b>GLITCH</b>
+            <li><a href="#s3">Our Mission</a></li>
+            <li><a href="#s2">What is GLITCH</a></li>
+            <li><a href="#hero">Start Here</a></li>
+          </ul>
+          <ul>
+            <b>CONNECT</b>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">hello@glitch.edu</a></li>
+          </ul>
+        </nav>
+        <p id="ftFine">
+          <span>© 2026 GLITCH — a for-profit community, not an institution.</span>
+          <span>Terms · Privacy</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -1009,7 +1101,12 @@ const tl1 = gsap.timeline({
   defaults: { ease: 'none' },
   scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom bottom', scrub: (reduced||TEST) ? true : 0.6 },
 });
-const femX  = mobile ? 8 : 17, maleX = mobile ? -7 : -19;
+/* centre the two figures through GSAP rather than CSS: parsing a CSS
+   translate(-50%,-50%) it sometimes stores xPercent:-50 and sometimes a
+   pixel x, and in the latter case the x tweens below overwrite the
+   centering instead of composing with it */
+gsap.set('#femW,#maleW',{xPercent:-50,yPercent:-50});
+const femX  = mobile ? 8 : 10, maleX = mobile ? -16 : -15.5;
 tl1
 .to({}, { duration: .10 })
 .to('#femW',  { x: () => femX*.28*vw(), duration: .15 }, .10)
@@ -1059,20 +1156,27 @@ tl2
 /* ---- the pieces: authored positions from the owner's broken-apple render.
    Impact physics: fragments RISE from the collision, big pieces stay near
    the table, small ones travel farther, then all slow into suspension. */
+/* the fragments' cx/cy used to be lifted straight off the owner's shatter
+   render — i.e. their EXPLODED positions — so "home" (x:0,y:0) was returning
+   them to the scattered pose, not the reconstructed apple: the gap next to
+   the bite never closed no matter how far you scrolled. Re-derived by
+   template-matching each fragment's marble/gold texture against
+   apple-marble-n.png (the same apple, whole) placed in this same frame, so
+   home now actually sits inside the missing wedge. */
 const PIECES = [
   { n:'apple-body',    cx:.366, cy:.490, w:.479 },
-  { n:'apple-frag-1',  cx:.692, cy:.552, w:.180 },
-  { n:'apple-frag-2',  cx:.623, cy:.698, w:.140 },
-  { n:'apple-frag-3',  cx:.640, cy:.384, w:.144 },
-  { n:'apple-frag-4',  cx:.817, cy:.421, w:.111 },
-  { n:'apple-frag-5',  cx:.686, cy:.808, w:.099 },
-  { n:'apple-frag-6',  cx:.736, cy:.294, w:.099 },
-  { n:'apple-frag-7',  cx:.545, cy:.605, w:.075 },
-  { n:'apple-frag-8',  cx:.646, cy:.218, w:.083 },
-  { n:'apple-frag-9',  cx:.794, cy:.711, w:.066 },
-  { n:'apple-frag-10', cx:.863, cy:.616, w:.054 },
-  { n:'apple-frag-11', cx:.816, cy:.569, w:.050 },
-  { n:'apple-frag-12', cx:.743, cy:.738, w:.034 },
+  { n:'apple-frag-1',  cx:.386, cy:.496, w:.180 },
+  { n:'apple-frag-2',  cx:.470, cy:.424, w:.140 },
+  { n:'apple-frag-3',  cx:.437, cy:.426, w:.144 },
+  { n:'apple-frag-4',  cx:.476, cy:.439, w:.111 },
+  { n:'apple-frag-5',  cx:.485, cy:.416, w:.099 },
+  { n:'apple-frag-6',  cx:.425, cy:.450, w:.099 },
+  { n:'apple-frag-7',  cx:.478, cy:.423, w:.075 },
+  { n:'apple-frag-8',  cx:.432, cy:.443, w:.083 },
+  { n:'apple-frag-9',  cx:.439, cy:.520, w:.066 },
+  { n:'apple-frag-10', cx:.430, cy:.450, w:.054 },
+  { n:'apple-frag-11', cx:.514, cy:.452, w:.050 },
+  { n:'apple-frag-12', cx:.424, cy:.343, w:.034 },
 ];
 {
   const wrap = document.getElementById('apieces');
@@ -1137,15 +1241,23 @@ gsap.set('.fr', { y: 26 });
 
 /* =================== SECTION 5 — courses reveal =================== */
 if (document.getElementById('cxGrid')) {
+  /* #s4's sticky wave already finishes revealing a fully-formed, empty dome
+     right as its pin releases — if the Courses title/frames only start fading
+     in once #s5 has visibly scrolled most of the way into view (the old
+     'top 80%'/'top 85%'), there's a stretch of plain, undecorated dome in
+     between that reads as the same background appearing twice. Firing while
+     #s5 is still below the fold (percentages > 100%) lets the title and
+     frames arrive as soon as the wave resolves, so the handoff reads as one
+     continuous reveal rather than dome -> dead air -> dome again. */
   gsap.set('.cx', { y: 96 });
   gsap.to('.cx', {
     opacity: 1, y: 0, duration: reduced ? 0 : .85, ease: 'power3.out',
     stagger: reduced ? 0 : .16,
-    scrollTrigger: { trigger: '#cxGrid', start: 'top 85%', once: true },
+    scrollTrigger: { trigger: '#cxGrid', start: 'top 145%', once: true },
   });
   gsap.from(['#cxKick', '#cxH', '#cxSub'], {
     opacity: 0, y: 18, duration: reduced ? 0 : .6, ease: 'power2.out', stagger: .08,
-    scrollTrigger: { trigger: '#s5in', start: 'top 80%', once: true },
+    scrollTrigger: { trigger: '#s5in', start: 'top 165%', once: true },
   });
   /* the films idle until you look at them */
   document.querySelectorAll('.cx').forEach((c) => {
@@ -1492,7 +1604,6 @@ const lapPar = document.getElementById('lapPar');
 const lapMask = document.getElementById('lapMask');
 const s4bg = document.getElementById('s4bg');
 const lapGlow = document.getElementById('lapGlow');
-const lapShade = document.getElementById('lapShade');
 const lapCast = document.getElementById('lapCast');
 /* the statue's lap, measured on the campus art: the laptop is aimed here, so
    the two stay locked together at any viewport size */
@@ -1506,68 +1617,8 @@ const filmClip = document.getElementById('filmClip');
 
 /* the cohort room: everything here is a pure function of scroll, so the
    landing plays backwards exactly as it played forwards */
-/* Foreground occlusion: a mask cut from the campus plate marking the statue's
-   forearm, hand and the robe fold that must read IN FRONT of the laptop. It is
-   applied to the laptop itself rather than pasted as an overlay, so the real
-   photo shows through with the section's own grade and vignette intact.
-   Depth order it produces: background > statue+students > screen behind his
-   hands > base on the lap > forearm and robe folds in front. */
-function maskLap(fly) {
-  if (fly <= 0) {
-    if (lapShade) lapShade.style.opacity = 0;
-    lapMask.style.maskImage = lapMask.style.webkitMaskImage = '';
-    return;
-  }
-  const bg = s4bg.getBoundingClientRect();
-  if (!bg.width) return;
-  /* The no-repeat mask blanks anything outside the art frame, and the only
-     thing inside #lapMask is the laptop — so the art has to cover THE LAPTOP,
-     not the whole viewport. Testing the viewport dropped the occlusion for the
-     last stretch of scroll, where the sticky stage has ridden up and the art no
-     longer reaches the bottom of the screen: his robe stopped covering the base
-     exactly as the laptop was leaving. The lid's 3D transform escapes #lapPar's
-     border box, so measure the faces themselves. */
-  const lidR = document.getElementById('lidOut').getBoundingClientRect();
-  const deckR = deckPlaneEl.getBoundingClientRect();
-  const lx0 = Math.min(lidR.left, deckR.left),  lx1 = Math.max(lidR.right, deckR.right);
-  const ly0 = Math.min(lidR.top, deckR.top),    ly1 = Math.max(lidR.bottom, deckR.bottom);
-  const covers = bg.left <= lx0 && bg.top <= ly0
-              && bg.right >= lx1 && bg.bottom >= ly1;
-  if (!covers) {
-    lapMask.style.maskImage = lapMask.style.webkitMaskImage = '';
-    if (lapShade) lapShade.style.opacity = 0;
-    return;
-  }
-  lapMask.style.maskImage = lapMask.style.webkitMaskImage =
-    'url(../assets/renaissance/lap-occluder.png)';
-  lapMask.style.maskRepeat = lapMask.style.webkitMaskRepeat = 'no-repeat';
-  lapMask.style.maskSize = lapMask.style.webkitMaskSize =
-    `${bg.width.toFixed(1)}px ${bg.height.toFixed(1)}px`;
-  lapMask.style.maskPosition = lapMask.style.webkitMaskPosition =
-    `${bg.left.toFixed(1)}px ${bg.top.toFixed(1)}px`;
-
-  /* the shadow it casts into the drapery, occluded by the same forearm */
-  if (lapShade) {
-    const deck = document.getElementById('deckPlane').getBoundingClientRect();
-    const w = deck.width * 1.04, h = deck.height * 1.5;
-    const cx = deck.left + deck.width / 2, cy = deck.bottom - deck.height * .12;
-    lapShade.style.width = w.toFixed(1) + 'px';
-    lapShade.style.height = h.toFixed(1) + 'px';
-    lapShade.style.left = (cx - w / 2).toFixed(1) + 'px';
-    lapShade.style.top = (cy - h / 2).toFixed(1) + 'px';
-    lapShade.style.opacity = easeIO(seg(fly, .62, 1)).toFixed(3);
-    lapShade.style.maskImage = lapShade.style.webkitMaskImage =
-      'url(../assets/renaissance/lap-occluder.png)';
-    lapShade.style.maskRepeat = lapShade.style.webkitMaskRepeat = 'no-repeat';
-    lapShade.style.maskSize = lapShade.style.webkitMaskSize =
-      `${bg.width.toFixed(1)}px ${bg.height.toFixed(1)}px`;
-    lapShade.style.maskPosition = lapShade.style.webkitMaskPosition =
-      `${(bg.left - cx + w / 2).toFixed(1)}px ${(bg.top - cy + h / 2).toFixed(1)}px`;
-  }
-}
 
 function s4Frame(fly, p4) {
-  maskLap(fly);
   const near = clamp01(fly);
   /* the screen's warmth arrives on his lap as the laptop settles into it */
   const rest = easeIO(seg(near, .66, 1));
@@ -1695,13 +1746,19 @@ function appleFrame(time) {
   appleInner.style.translate = '';
   lapWrapEl.style.opacity = 0;
   lapShadowEl.style.opacity = 0;
+  lapMask.style.opacity = 1;
 
   let lxPx = null, lx, ty, rot, w, sparkO = 0, squash = 1;
   if (fp <= 0) {
     const drop = 12 * easeIO(seg(p1,.45,.62)) + 6 * easeIO(seg(p1,.62,.75))
                + 16 * easeIn2(seg(p1,.75,.90));
     lx = 53 - 2.5 * easeIO(seg(p1,.40,.60));
-    ty = 26 + drop;
+    /* Portrait needs the headline where the apple used to float — four lines
+       at 92vw run right under it — so the apple starts lower there. The fall is
+       rescaled to still land on 60vh, which is where the flight phase picks up
+       (it lerps from .59*innerHeight), otherwise the handoff would jump. */
+    const TY0 = (mobile && innerHeight > innerWidth) ? 40 : 26;
+    ty = TY0 + drop * ((60 - TY0) / 34);
     rot = 5*easeIO(seg(p1,.35,.55)) + 9*easeIO(seg(p1,.55,.75)) + 10*easeIn2(seg(p1,.75,.95));
     w = aSizeS1(p1);
     sparkO = .45*easeIO(seg(p1,.35,.55)) + .25*easeIO(seg(p1,.55,.75)) - .4*easeIO(seg(p1,.86,1));
@@ -1871,6 +1928,80 @@ function blinkLoop() {
 if (!reduced) { blinkLoop(); setTimeout(() => { if (s2Visible()) blinkOnce(false); }, 1500); }
 
 /* ------------------ main ticker ------------------ */
+/* =================== SECTION 7 — the footer bleeds into Courses =================== */
+const s7El = document.getElementById('s7');
+const s7stage = document.getElementById('s7stage');
+const ftScene = document.getElementById('ftScene');
+const ftBodyEl = document.getElementById('ftBody');
+const ftRealEl = document.getElementById('ftReal');
+const ftEdgeEl = document.getElementById('ftEdge');
+const ftVeilEl = document.getElementById('ftVeil');
+const ftVigEl = document.getElementById('ftVig');
+const ftUiEl = document.getElementById('ftUi');
+const s6El = document.getElementById('s6');
+const FT_TILT = -30;      /* degrees, tilted to the left on arrival */
+const FT_ZOOM = 1.25;     /* and zoomed, both unwinding to square as it lands */
+/* A rotated rectangle only keeps covering its own frame if it is also scaled
+   up by this much — without it the corners of the stage would show through as
+   black wedges over the resolved artwork, i.e. visible rectangular clipping. */
+function ftCover(deg, w, h) {
+  const r = Math.abs(deg) * Math.PI / 180, c = Math.cos(r), sn = Math.sin(r);
+  return Math.max((w * c + h * sn) / w, (w * sn + h * c) / h);
+}
+/* The ink plate is 3 viewports tall with its ragged front sitting between
+   0.40 and 0.62 of its height, so sliding mask-position-y from 0% (window on
+   the plate's clear top third) to 100% (window on its solid bottom third)
+   walks that front all the way up the screen. */
+function ftMaskPos(el, p, drift) {
+  const y = (clamp01(p) * 100).toFixed(2);
+  const x = (drift * 100).toFixed(2);
+  el.style.maskPosition = el.style.webkitMaskPosition = `${x}% ${y}%`;
+}
+let ftOn = false;
+function s7Frame() {
+  const sy = scrollY, vh = innerHeight;
+  /* u counts viewports of scroll from the moment the Partners panel's bottom
+     edge sits on the viewport bottom */
+  const u = (sy - (s6El.offsetTop + s6El.offsetHeight - vh)) / vh;
+  if (u <= -0.06) {
+    if (ftOn) { ftOn = false; s7stage.style.visibility = 'hidden'; }
+    return;
+  }
+  if (!ftOn) { ftOn = true; s7stage.style.visibility = 'visible'; }
+
+  /* 1 — the ink front climbs; the traces run a step ahead of it so white
+     edges and dust surface over Courses before the black gets there */
+  const ink = clamp01(u / 1.65);
+  const drift = 0.5 + 0.5 * Math.sin(u * 1.1);      /* slow lateral wander */
+  ftMaskPos(ftBodyEl, ink, drift);
+  ftMaskPos(ftEdgeEl, clamp01(ink + 0.085), drift);
+  /* the tide of lost light that precedes everything */
+  ftVeilEl.style.opacity = (easeIO(clamp01(u / 1.25)) * 0.9).toFixed(3);
+
+  /* 2 — the tilt and the zoom unwind across the takeover */
+  const t = easeIO(clamp01(u / 1.75));
+  const deg = FT_TILT * (1 - t);
+  /* measure the UNtransformed layout box — getBoundingClientRect() returns the
+     already-rotated bounding box, which would feed back into its own scale */
+  const sw = ftScene.offsetWidth || 1, sh = ftScene.offsetHeight || 1;
+  const sc = Math.max(ftCover(deg, sw, sh) * 1.015, lerp(FT_ZOOM, 1, t));
+  ftScene.style.transform = `rotate(${deg.toFixed(3)}deg) scale(${sc.toFixed(4)})`;
+
+  /* 3 — inside the ink, the plates resolve from a dim grayscale ghost to full
+     colour, and the traces hand over once the shapes can carry the image */
+  const g = easeIO(clamp01((u - 1.35) / 1.15));
+  ftRealEl.style.opacity = easeIO(clamp01((u - 1.15) / 0.9)).toFixed(3);
+  ftRealEl.style.filter =
+    `grayscale(${(1 - g).toFixed(3)}) brightness(${(0.34 + 0.66 * g).toFixed(3)}) contrast(${(1.35 - 0.35 * g).toFixed(3)})`;
+  ftEdgeEl.style.opacity = (1 - easeIO(clamp01((u - 1.6) / 1.0))).toFixed(3);
+  ftVigEl.style.opacity = easeIO(clamp01((u - 1.5) / 0.8)).toFixed(3);
+
+  /* 4 — the copy is last to arrive, once the picture is real */
+  const ui = easeIO(clamp01((u - 2.25) / 0.5));
+  ftUiEl.style.opacity = ui.toFixed(3);
+  s7stage.style.pointerEvents = ui > 0.9 ? 'auto' : 'none';
+}
+
 gsap.ticker.add((t) => {
   /* frame-rate independent damping, so the feel is identical at 60 and 120Hz */
   const dt = Math.min(.05, PX.last ? t - PX.last : .016); PX.last = t;
@@ -1885,6 +2016,7 @@ gsap.ticker.add((t) => {
   PX.cx = ncx; PX.cy = ncy;
 
   const { fp } = appleFrame(t);
+  s7Frame();
 
   const s2Top = s2El.offsetTop;
   const s2p = clamp01((scrollY - s2Top)/(s2El.offsetHeight - innerHeight));

@@ -57,7 +57,7 @@
 - **Layout**: `grid-template-columns: repeat(2, 1fr)` for 4 frames (2×2)
 - **Animation**: Staggered scroll-driven entrance like Section 4 (bottom → top), one-by-one appearance
 - **Background**: SVG noise/turbulence texture on `#s5wall` (user requested rough texture)
-- **Videos**: `course-1.mp4` (Mona Lisa, 960px, crf 27); courses 2-6 need video wiring
+- **Videos**: `course1.mp4` (Mona Lisa, 960px, crf 27); courses 2-6 need video wiring
 
 ---
 
@@ -169,7 +169,7 @@ This proves the scroll state machine is fully reversible.
 ✅ No console errors, all animations reversible (0–0.057% pixel diff on reverse)
 
 ### Pending
-- [ ] Wire videos for courses 2–6 (currently only course-1.mp4 active in first frame)
+- [ ] Wire videos for courses 2–6 (currently only course1.mp4 active in first frame)
 - [ ] Mobile responsiveness check (captured at 375×812 mobile; layout verified)
 - [ ] Browser pane unusable (reports 0×0 viewport); inspection via headless puppeteer rig only
 
@@ -194,7 +194,7 @@ This proves the scroll state machine is fully reversible.
 - **Laptop Deck**: `/Users/vidhipalnesto/marble-scroll/assets/renaissance/laptop-deck.png`
 - **Frame (Antique)**: `/Users/vidhipalnesto/marble-scroll/assets/renaissance/frame-antique.png`
 - **Occluder Mask**: `/Users/vidhipalnesto/marble-scroll/assets/renaissance/lap-occluder.png`
-- **Course Video 1**: `/Users/vidhipalnesto/marble-scroll/assets/courses/course-1.mp4`
+- **Course Video 1**: `/Users/vidhipalnesto/marble-scroll/assets/courses/course1.mp4`
 - **Build/Keying**: `/private/tmp/.../scratchpad/rig/` (puppeteer, image processing scripts)
 
 ---
