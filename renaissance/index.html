@@ -6,7 +6,8 @@
 <title>GLITCH — Catch What Comes Next</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Archivo+Black&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+ 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..700&family=Cinzel:wght@400..900&family=EB+Garamond:ital,wght@0,400..800;1,400..600&display=swap">
 <style>
 :root{
   --ivory:#E9DFC9; --plaster:#C9B995; --cypress:#10261F;
@@ -18,10 +19,15 @@
  
   --hallW: max(100vw,192.2svh);
   --hallDX: 0%;
-  --f-disp:"Archivo Black","Archivo",sans-serif;
-  --f-body:"Archivo",sans-serif;
-  --f-serif:"Cormorant Garamond",Georgia,serif;
+  --f-disp:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --f-caps:"Cinzel","Trajan Pro",Georgia,serif;
+  --f-body:"EB Garamond",Georgia,"Times New Roman",serif;
+  --f-serif:"EB Garamond",Georgia,serif;
 }
+/* Garamond sets a good deal smaller than Archivo at the same px, and Bodoni's
+   hairlines need optical sizing to survive at display sizes. */
+body{font-size:17px;font-optical-sizing:auto}
+#bigH,#mH,#cH,.cxH,#h1beat h1,#h2beat h2,#ftBrand b{font-optical-sizing:auto}
 *{box-sizing:border-box}
 html{background:var(--s2ink)}
 body{margin:0;font-family:var(--f-body);color:var(--ivory);overflow-x:hidden;background:var(--s2ink)}
@@ -96,9 +102,9 @@ body{margin:0;font-family:var(--f-body);color:var(--ivory);overflow-x:hidden;bac
   background:radial-gradient(ellipse 82% 74% at 50% 48%,transparent 54%,rgba(13,18,14,.62) 100%)}
 #ui{position:absolute;inset:0;z-index:12;pointer-events:none; translate:calc(var(--mx)*-7) calc(var(--my)*-4)}
 #brand{position:absolute;left:44px;top:34px;display:flex;align-items:baseline;gap:14px}
-#brand b{font:800 22px/1 var(--f-disp);letter-spacing:.34em;color:var(--ivory)}
+#brand b{font:800 22px/1 var(--f-caps);letter-spacing:.34em;color:var(--ivory)}
 #brand b i{font-style:normal;color:var(--dgold)}
-#brand span{font:500 9px/1.5 var(--f-body);letter-spacing:.24em;color:var(--plaster)}
+#brand span{font:500 10px/1.6 var(--f-caps);letter-spacing:.24em;color:var(--plaster)}
 .beat{position:absolute;left:clamp(24px,5vw,80px);text-align:left;opacity:0}
 #h1beat{top:max(15%,82px);width:min(430px,34vw)}
 #h1beat h1{font:800 clamp(24px,3.4vw,46px)/1.06 var(--f-disp);letter-spacing:.02em;margin:0;
@@ -119,7 +125,7 @@ body{margin:0;font-family:var(--f-body);color:var(--ivory);overflow-x:hidden;bac
 #dbg{position:absolute;inset:0;z-index:40;pointer-events:none;display:none}
 body.debug #dbg{display:block}
 #cue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
-  font:500 9px/1 var(--f-body);letter-spacing:.26em;color:var(--plaster);
+  font:500 9px/1 var(--f-caps);letter-spacing:.26em;color:var(--plaster);
   display:flex;flex-direction:column;align-items:center;gap:8px}
 #cue i{width:1px;height:30px;background:linear-gradient(var(--plaster),transparent)}
 
@@ -170,13 +176,13 @@ body.debug #dbg{display:block}
   color:var(--marble);text-shadow:0 4px 40px rgba(0,0,0,.75);
   clip-path:inset(0 0 100% 0);will-change:clip-path}
 #bigH em{font-style:normal;color:var(--lgold)}
-#supp{font:400 clamp(16px,1.7vw,23px)/1.4 var(--f-serif);font-style:italic;color:#E4DCCB;
+#supp{font:400 clamp(18px,1.85vw,26px)/1.42 var(--f-serif);font-style:italic;color:#E4DCCB;
   margin:0 0 2.6vh;max-width:34ch;opacity:0;text-shadow:0 2px 18px rgba(0,0,0,.8)}
-#defn{font:400 clamp(14px,1.35vw,18px)/1.55 var(--f-body);color:var(--marble);
+#defn{font:400 clamp(16px,1.5vw,20px)/1.55 var(--f-body);color:var(--marble);
   margin:0 0 2.2vh;max-width:38ch;opacity:0;text-shadow:0 2px 14px rgba(0,0,0,.8)}
 #defn b{color:var(--lgold);font-weight:600}
 #lines{display:flex;flex-direction:column;gap:.8vh;opacity:0}
-#lines span{font:700 clamp(13px,1.3vw,17px)/1.4 var(--f-body);letter-spacing:.05em;color:var(--marble)}
+#lines span{font:600 clamp(15px,1.4vw,19px)/1.4 var(--f-body);letter-spacing:.05em;color:var(--marble)}
 #lines span em{font-style:normal;font-weight:400;color:var(--agold)}
 
 /* ===================== SECTION 3 — OUR MISSION ===================== */
@@ -236,8 +242,7 @@ body.debug #dbg{display:block}
   box-shadow:inset 0 0 46px rgba(0,0,0,.85), inset 0 0 0 2px rgba(185,146,63,.28)}
 #glassSheen{position:absolute;inset:0;mix-blend-mode:screen;opacity:.35;
   background:linear-gradient(115deg,transparent 42%,rgba(214,222,240,.14) 50%,transparent 60%)}
-/* the apple's reflection lying on the glass: mirrored, dim, fading downward
-   into the dark screen, and gone the instant the apple crosses the plane */
+ 
 #reflWrap{position:absolute;left:50%;top:6%;width:24%;transform:translateX(-50%);opacity:0;
   -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,.35) 46%,transparent 80%);
           mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,.35) 46%,transparent 80%)}
@@ -253,14 +258,14 @@ body.debug #dbg{display:block}
   transform:translate(-50%,-50%) scale(.2);opacity:0;
   border:2px solid rgba(240,199,103,.85);mix-blend-mode:screen}
 #screenWord{position:absolute;left:50%;top:74%;transform:translateX(-50%);
-  font:600 clamp(9px,.9vw,14px)/1 var(--f-body);letter-spacing:.6em;text-indent:.6em;
+  font:600 clamp(9px,.9vw,14px)/1 var(--f-caps);letter-spacing:.6em;text-indent:.6em;
   color:var(--lgold);opacity:0;text-shadow:0 0 14px rgba(240,199,103,.6)}
 /* --- mission copy --- */
 #s3ui{position:absolute;inset:0;z-index:12;pointer-events:none;
   padding:9vh clamp(20px,3vw,56px) 0;
   translate:calc(var(--mx)*-5) calc(var(--my)*-3)}
 #mKick{position:absolute;top:9vh;left:0;right:0;text-align:center;
-  font:600 clamp(11px,.95vw,13px)/1 var(--f-body);letter-spacing:.44em;
+  font:600 clamp(11px,.95vw,13px)/1 var(--f-caps);letter-spacing:.44em;
   color:var(--lgold);margin:0;opacity:0}
 #mH{position:absolute;top:36vh;left:clamp(20px,3vw,56px);max-width:27vw;
   font:800 clamp(24px,3.4vw,52px)/1.08 var(--f-disp);margin:0;color:var(--marble);
@@ -268,7 +273,7 @@ body.debug #dbg{display:block}
 #mH em{font-style:normal;color:var(--lgold)}
 #mLines{position:absolute;top:36vh;right:clamp(20px,3vw,56px);max-width:26vw;
   display:flex;flex-direction:column;gap:1vh;opacity:0;text-align:right}
-#mLines span{font:700 clamp(12px,1.1vw,15px)/1.45 var(--f-body);letter-spacing:.14em;color:var(--marble)}
+#mLines span{font:600 clamp(14px,1.2vw,17px)/1.45 var(--f-body);letter-spacing:.14em;color:var(--marble)}
 #mLines b{color:var(--lgold);font-weight:700}
 #s3vig{position:absolute;inset:0;z-index:10;pointer-events:none;
   background:radial-gradient(ellipse 100% 92% at 50% 44%,transparent 60%,rgba(4,4,5,.62) 100%)}
@@ -277,8 +282,7 @@ body.debug #dbg{display:block}
 /* ===================== SECTION 4 — THE COHORT ===================== */
 #s4{height:380vh;position:relative;z-index:4;background:#0B0A0C}
 #s4stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0A0C}
-/* the campus is an art-frame: it is sized and placed so the seated statue's lap
-   lands at a known viewport point, and the laptop is aimed at that same point */
+ 
 #s4bgW{position:absolute;--s4w:max(104vw,158vh);width:var(--s4w);
   height:calc(var(--s4w) / 1.5024);
   left:calc(21vw - 0.2134 * var(--s4w));
@@ -315,7 +319,7 @@ body.debug #dbg{display:block}
 #filmW{position:absolute;left:72%;top:82%;width:52vw;z-index:6;
   transform:translate(-50%,-50%); translate:calc(var(--mx)*-13) calc(var(--my)*-8);
   will-change:transform}
-#filmKick{margin:0 0 1.3vh;font:600 clamp(9px,.78vw,12px)/1 var(--f-body);
+#filmKick{margin:0 0 1.3vh;font:600 clamp(9px,.78vw,12px)/1 var(--f-caps);
   letter-spacing:.4em;color:var(--lgold);opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.9)}
 #filmClip{overflow:hidden;
   -webkit-mask-image:linear-gradient(to right,transparent,#000 3.5%,#000 95%,transparent);
@@ -356,12 +360,12 @@ body.debug #dbg{display:block}
 #s4ui{position:absolute;left:0;top:0;z-index:12;pointer-events:none;
   padding:6.5vh 0 0 clamp(26px,5vw,80px);max-width:29vw;
   translate:calc(var(--mx)*-5) calc(var(--my)*-3)}
-#cKick{margin:0 0 2vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-body);
+#cKick{margin:0 0 2vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-caps);
   letter-spacing:.44em;color:var(--lgold);opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.9)}
 #cH{margin:0 0 2.4vh;font:800 clamp(24px,3.2vw,48px)/1.04 var(--f-disp);color:var(--marble);
   text-shadow:0 4px 30px rgba(0,0,0,.95);clip-path:inset(0 0 100% 0);will-change:clip-path}
 #cH em{font-style:normal;color:var(--lgold)}
-#cSub{margin:0;font:400 clamp(13px,1.1vw,16px)/1.55 var(--f-body);color:#E4DCCB;
+#cSub{margin:0;font:400 clamp(15px,1.25vw,19px)/1.55 var(--f-body);color:#E4DCCB;
   max-width:30ch;opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.95)}
 #s4vig{position:absolute;inset:0;z-index:10;pointer-events:none;
   background:radial-gradient(ellipse 104% 96% at 50% 46%,transparent 54%,rgba(6,5,7,.66) 100%)}
@@ -373,31 +377,27 @@ body.debug #dbg{display:block}
   background:#0A0908;overflow:hidden;display:flex;align-items:center}
 #s5wall{position:absolute;inset:0;pointer-events:none;
   background:url(../assets/renaissance/dome-bg.jpg) center 44%/220% auto no-repeat;
-  filter:brightness(.62) saturate(.8) contrast(1.04)}
-/* coarse plaster tooth, then a finer grain over the top */
+  filter:brightness(.62) saturate(.8) contrast(1.04)} 
 #s5wall::after{content:'';position:absolute;inset:0;opacity:.85;mix-blend-mode:overlay;
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23r)' opacity='0.75'/%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   background-size:520px 520px,180px 180px}
-/* the gilt frames must stay legible against a painted ceiling, so the dome is
-   graded down and vignetted rather than shown at full strength */
+ 
 #s5wall::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:
     radial-gradient(ellipse 82% 66% at 50% 42%,rgba(8,7,6,0) 55%,rgba(8,7,6,.30) 100%),
     linear-gradient(180deg,rgba(8,7,6,.20) 0%,rgba(8,7,6,0) 22%,rgba(8,7,6,.22) 100%)}
 .s5in{position:relative;z-index:2;max-width:min(1280px,92vw);margin:0 auto}
-.cxKick{margin:0 0 1.8vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-body);
+.cxKick{margin:0 0 1.8vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-caps);
   letter-spacing:.44em;color:var(--lgold)}
 .cxH{margin:0 0 1.6vh;font:800 clamp(28px,3.6vw,54px)/1.04 var(--f-disp);color:var(--marble)}
 .cxH em{font-style:normal;color:var(--lgold)}
-.cxSub{margin:0 0 7vh;font:400 clamp(13px,1.1vw,16px)/1.55 var(--f-body);color:#C9C1B0;max-width:46ch}
+.cxSub{margin:0 0 7vh;font:400 clamp(15px,1.25vw,19px)/1.55 var(--f-body);color:#C9C1B0;max-width:46ch}
 .cxGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,1.8vw,30px)}
-/* an old gallery frame: weathered gilt, deep rebate, canvas sunk inside */
+ 
 .cx{margin:0;opacity:0;will-change:transform,opacity}
-/* a reverse cassetta frame, Italian ca. 1630 (oak, carved and gilt over a
-   brown-red bole) from the Met's open-access collection — keyed out, warmed,
-   and 9-sliced so it holds a 9:16 opening without distorting the carving */
+ 
 .cxFrame{position:relative;
   border-style:solid;
   border-width:clamp(19px,2.05vw,35px) clamp(19px,2.02vw,35px)
@@ -427,23 +427,23 @@ body.debug #dbg{display:block}
 .cxLabel b{display:block;font:800 clamp(12px,1.05vw,17px)/1.12 var(--f-disp);color:#F2EADA;
   text-shadow:0 2px 10px rgba(0,0,0,.95)}
 .cxLabel span{display:block;margin-top:.55em;white-space:nowrap;
-  font:600 clamp(7px,.52vw,9px)/1 var(--f-body);
+  font:600 clamp(7px,.52vw,9px)/1 var(--f-caps);
   letter-spacing:.2em;color:var(--lgold);opacity:.92}
 .cxTag{position:absolute;top:0;left:0;z-index:5;transform:translate(6%,-42%);
   padding:.42em .8em;border-radius:2px;background:linear-gradient(180deg,#D8B863,#8E6E27);
-  font:700 clamp(7px,.56vw,9px)/1 var(--f-body);letter-spacing:.2em;color:#221A08;
+  font:700 clamp(7px,.56vw,9px)/1 var(--f-caps);letter-spacing:.2em;color:#221A08;
   box-shadow:0 4px 12px rgba(0,0,0,.6)}
 
 /* ---------- section copy ---------- */
 #s4ui{position:absolute;left:0;top:0;z-index:12;pointer-events:none;
   padding:6.5vh 0 0 clamp(26px,5vw,80px);max-width:29vw;
   translate:calc(var(--mx)*-5) calc(var(--my)*-3)}
-#cKick{margin:0 0 2vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-body);
+#cKick{margin:0 0 2vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-caps);
   letter-spacing:.44em;color:var(--lgold);opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.9)}
 #cH{margin:0 0 2.4vh;font:800 clamp(24px,3.2vw,48px)/1.04 var(--f-disp);color:var(--marble);
   text-shadow:0 4px 30px rgba(0,0,0,.95);clip-path:inset(0 0 100% 0);will-change:clip-path}
 #cH em{font-style:normal;color:var(--lgold)}
-#cSub{margin:0;font:400 clamp(13px,1.1vw,16px)/1.55 var(--f-body);color:#E4DCCB;
+#cSub{margin:0;font:400 clamp(15px,1.25vw,19px)/1.55 var(--f-body);color:#E4DCCB;
   max-width:30ch;opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.95)}
 #s4vig{position:absolute;inset:0;z-index:10;pointer-events:none;
   background:radial-gradient(ellipse 104% 96% at 50% 46%,transparent 54%,rgba(6,5,7,.66) 100%)}
@@ -455,24 +455,23 @@ body.debug #dbg{display:block}
 #s5wall{position:absolute;inset:0;pointer-events:none;
   background:url(../assets/renaissance/dome-bg.jpg) center 44%/220% auto no-repeat;
   filter:brightness(.62) saturate(.8) contrast(1.04)}
-/* coarse plaster tooth, then a finer grain over the top */
+ 
 #s5wall::after{content:'';position:absolute;inset:0;opacity:.85;mix-blend-mode:overlay;
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23r)' opacity='0.75'/%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   background-size:520px 520px,180px 180px}
-/* the gilt frames must stay legible against a painted ceiling, so the dome is
-   graded down and vignetted rather than shown at full strength */
+ 
 #s5wall::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:
     radial-gradient(ellipse 82% 66% at 50% 42%,rgba(8,7,6,0) 55%,rgba(8,7,6,.30) 100%),
     linear-gradient(180deg,rgba(8,7,6,.20) 0%,rgba(8,7,6,0) 22%,rgba(8,7,6,.22) 100%)}
 .s5in{position:relative;z-index:2;max-width:min(1280px,92vw);margin:0 auto}
-.cxKick{margin:0 0 1.8vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-body);
+.cxKick{margin:0 0 1.8vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-caps);
   letter-spacing:.44em;color:var(--lgold)}
 .cxH{margin:0 0 1.6vh;font:800 clamp(28px,3.6vw,54px)/1.04 var(--f-disp);color:var(--marble)}
 .cxH em{font-style:normal;color:var(--lgold)}
-.cxSub{margin:0 0 7vh;font:400 clamp(13px,1.1vw,16px)/1.55 var(--f-body);color:#C9C1B0;max-width:46ch}
+.cxSub{margin:0 0 7vh;font:400 clamp(15px,1.25vw,19px)/1.55 var(--f-body);color:#C9C1B0;max-width:46ch}
 .cxGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,1.8vw,30px)}
 /* an old gallery frame: weathered gilt, deep rebate, canvas sunk inside */
 .cx{margin:0;opacity:0;will-change:transform,opacity}
@@ -508,17 +507,21 @@ body.debug #dbg{display:block}
 .cx:nth-child(4) .cxFrame{rotate:.55deg}
 
 /* ===================== SECTION 6 — OUR PARTNERS ===================== */
-/* No card, no frame: the parchment is shown whole, at its own aspect ratio,
-   with the bookshelf photo resting on top of it. Cropping it to a panel box
-   cut the curled edges and the painted flourishes off. */
-#s6{position:relative;z-index:6;padding:9svh 0 12svh;background:transparent;
-  display:grid;place-items:center;min-height:100svh}
-#s6panel{position:relative;width:min(1180px,94vw);margin:0 auto}
-/* the parchment sets the panel's size — width-driven, height free, so no
-   part of the illustration is ever cropped */
+ 
+#s6{position:relative;z-index:6;padding:12svh 0 0;background:transparent}
+#s6panel{position:sticky;top:50%;width:min(1180px,94vw);margin:0 auto;
+  transform:translateY(-50%)}
+ 
 #s6paper{display:block;width:100%;height:auto}
 #s6shelf{position:absolute;left:50%;top:53%;width:76%;height:auto;
-  transform:translate(-50%,-50%)}
+  transform:translate(-50%,-50%);will-change:transform,opacity,filter}
+ 
+#s6burn{position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;opacity:0;
+  filter:drop-shadow(0 0 18px rgba(255,138,42,.30))}
+ 
+#s6dust{position:absolute;inset:-12% -14%;width:128%;height:124%;
+  pointer-events:none;opacity:0}
 
 
 /* ===================== SECTION 7 — FOOTER ===================== */
@@ -526,13 +529,10 @@ body.debug #dbg{display:block}
 #s7{position:relative;z-index:7;height:320svh;background:transparent}
 #s7stage{position:fixed;inset:0;overflow:hidden;pointer-events:none;
   visibility:hidden;background:transparent} 
-.ftMask{
-  -webkit-mask-image:url(../assets/renaissance/ink-front.png);
-          mask-image:url(../assets/renaissance/ink-front.png);
-  -webkit-mask-repeat:no-repeat;  mask-repeat:no-repeat;
-  -webkit-mask-size:120% 300%;    mask-size:120% 300%;
-  -webkit-mask-position:0% 0%;    mask-position:0% 0%;
-  will-change:-webkit-mask-position,mask-position} 
+ 
+#ftBody{-webkit-mask:url(#inkMaskA); mask:url(#inkMaskA)}
+#ftEdge{-webkit-mask:url(#inkMaskB); mask:url(#inkMaskB)} 
+#ftSpark{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0}
 #ftVeil{position:absolute;inset:0;z-index:1;opacity:0;
   background:linear-gradient(to top,rgba(3,3,5,.92) 0%,rgba(3,3,5,.55) 34%,rgba(3,3,5,0) 78%)} 
 #ftBody{position:absolute;inset:0;z-index:2}
@@ -556,22 +556,22 @@ body.debug #dbg{display:block}
   will-change:opacity}
 #ftRow{display:flex;align-items:flex-end;justify-content:space-between;
   gap:clamp(16px,3vw,48px);flex-wrap:wrap}
-#ftBrand b{display:block;font:800 clamp(20px,2.4vw,34px)/1 var(--f-disp);
+#ftBrand b{display:block;font:800 clamp(20px,2.4vw,34px)/1 var(--f-caps);
   letter-spacing:.22em;color:var(--marble)}
 #ftBrand span{display:block;margin-top:.7em;
-  font:600 clamp(8px,.72vw,10px)/1.5 var(--f-body);letter-spacing:.24em;color:var(--lgold)}
+  font:600 clamp(8px,.72vw,10px)/1.5 var(--f-caps);letter-spacing:.24em;color:var(--lgold)}
 #ftNav{display:flex;gap:clamp(18px,3.4vw,64px)}
 #ftNav ul{list-style:none;margin:0;padding:0}
 #ftNav li{margin:0 0 .55em}
 #ftNav b{display:block;margin:0 0 1em;
-  font:700 clamp(8px,.68vw,10px)/1 var(--f-body);letter-spacing:.26em;color:var(--lgold)}
-#ftNav a{font:400 clamp(11px,.92vw,14px)/1 var(--f-body);color:#D7CFC0;
+  font:700 clamp(8px,.68vw,10px)/1 var(--f-caps);letter-spacing:.26em;color:var(--lgold)}
+#ftNav a{font:400 clamp(13px,1.05vw,16px)/1 var(--f-body);color:#D7CFC0;
   text-decoration:none;transition:color .25s ease}
 #ftNav a:hover{color:var(--marble)}
 #ftFine{width:100%;margin-top:clamp(14px,2vw,26px);padding-top:clamp(10px,1.2vw,16px);
   border-top:1px solid rgba(226,201,150,.16);
   display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
-  font:400 clamp(9px,.72vw,11px)/1.5 var(--f-body);letter-spacing:.08em;color:#8E877C}
+  font:400 clamp(11px,.82vw,13px)/1.5 var(--f-body);letter-spacing:.08em;color:#8E877C}
 
 /* ============================= mobile ============================= */
 @media (max-width:760px){
@@ -651,8 +651,11 @@ body.debug #dbg{display:block}
   .cxSub{margin-bottom:3.4vh}
   /* the curtain's copy must sit exactly where the real section puts its
      content — this padding is asymmetric, so plain centering lands ~4px off */
-  #s6{padding:6svh 0 10svh}
-  #s6panel{width:94vw}
+  /* portrait: the sheet is wide and short, so it pins a little above centre to
+     leave the erosion room to throw shards downward into Courses */
+  #s6{padding:8svh 0 0}
+  #s6panel{width:94vw;top:46%}
+  #s6shelf{width:88%}
  
   #ftScene{inset:0 0 auto 0;height:52svh}
   .ftL{object-position:50% 42%}
@@ -1008,11 +1011,43 @@ body.debug #dbg{display:block}
     <div id="s6panel">
       <img id="s6paper" src="../assets/renaissance/paper.png" alt="">
       <img id="s6shelf" src="../assets/renaissance/bookshell.png" alt="A wooden card-catalog drawer, filed with blank index cards, reading Our Partners">
+      <canvas id="s6burn" aria-hidden="true"></canvas>
+      <canvas id="s6dust" aria-hidden="true"></canvas>
     </div>
+    <!-- the scroll the panel stays pinned across. It has to be a real box
+         INSIDE #s6: a sticky element is constrained to its containing block's
+         content box, so padding on #s6 would lengthen the page without giving
+         the panel anywhere to stick. -->
+    <div id="s6run" aria-hidden="true"></div>
   </section>
 </div>
 
 <!-- ======================= SECTION 7 — FOOTER ======================= -->
+<!-- the ink fronts: two blurred paths, B running ahead of A so the white
+     traces surface over Courses before the black body reaches them -->
+<svg id="inkDefs" width="1" height="1" aria-hidden="true"
+     style="position:fixed;left:-9999px;top:0;overflow:visible;pointer-events:none">
+  <defs>
+    <filter id="inkSoft" x="-20%" y="-60%" width="140%" height="220%">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+    <filter id="inkSoft2" x="-20%" y="-60%" width="140%" height="220%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
+    <!-- Each mask is a blurred band around the front plus a plain rect for the
+         solid area beneath it. Filling the whole lower screen with the blurred
+         path instead puts every one of those pixels through the Gaussian on
+         every frame, which was by far the most expensive thing here. -->
+    <mask id="inkMaskA" maskUnits="userSpaceOnUse" x="-400" y="-900" width="6000" height="6000">
+      <path id="inkPathA" fill="#fff" filter="url(#inkSoft)"/>
+      <rect id="inkRectA" fill="#fff"/>
+    </mask>
+    <mask id="inkMaskB" maskUnits="userSpaceOnUse" x="-400" y="-900" width="6000" height="6000">
+      <path id="inkPathB" fill="#fff" filter="url(#inkSoft2)"/>
+      <rect id="inkRectB" fill="#fff"/>
+    </mask>
+  </defs>
+</svg>
 <footer id="s7" aria-label="Footer">
   <div id="s7stage">
     <div id="ftVeil" aria-hidden="true"></div>
@@ -1035,6 +1070,7 @@ body.debug #dbg{display:block}
       </div>
     </div>
     <div id="ftVig" aria-hidden="true"></div>
+    <canvas id="ftSpark" aria-hidden="true"></canvas>
 
     <div id="ftUi">
       <div id="ftRow">
@@ -1940,7 +1976,15 @@ function blinkLoop() {
 if (!reduced) { blinkLoop(); setTimeout(() => { if (s2Visible()) blinkOnce(false); }, 1500); }
 
 /* ------------------ main ticker ------------------ */
-/* =================== SECTION 7 — the footer bleeds into Courses =================== */
+/* ================= THE ENDGAME — Partners -> Courses -> Footer =================
+   One anchor drives all three beats: uRaw, the number of viewports scrolled
+   past the moment the Partners panel pins itself at the centre of the screen.
+     uRaw 0.05 .. 0.95   the parchment erodes into Courses
+     uRaw 1.05 ..        the ink rises out of Courses and becomes the footer
+   Everything below is a pure function of that number, so every state reverses
+   exactly on the way back up. #courseRun stays alive across the whole span, so
+   Courses is pinned and visible underneath from the first shard to the moment
+   the black has covered it.                                                  */
 const s7El = document.getElementById('s7');
 const s7stage = document.getElementById('s7stage');
 const ftScene = document.getElementById('ftScene');
@@ -1952,81 +1996,352 @@ const ftVigEl = document.getElementById('ftVig');
 const ftUiEl = document.getElementById('ftUi');
 const s6El = document.getElementById('s6');
 const s6PanelEl = document.getElementById('s6panel');
-const FT_TILT = -30;      /* degrees, tilted to the left on arrival */
-const FT_ZOOM = 1.25;     /* and zoomed, both unwinding to square as it lands */
+const s6PaperEl = document.getElementById('s6paper');
+const s6BurnEl = document.getElementById('s6burn');
+const s6ShelfEl = document.getElementById('s6shelf');
+const s6DustEl = document.getElementById('s6dust');
+const s6RunEl = document.getElementById('s6run');
+const s5El = document.getElementById('s5');
+const s5InEl = document.getElementById('s5in');
+const inkPathA = document.getElementById('inkPathA');
+const inkPathB = document.getElementById('inkPathB');
+const inkRectA = document.getElementById('inkRectA');
+const inkRectB = document.getElementById('inkRectB');
+const ftSparkEl = document.getElementById('ftSpark');
+const dctx = s6DustEl ? s6DustEl.getContext('2d') : null;
+const bctx = s6BurnEl ? s6BurnEl.getContext('2d') : null;
+const sctx = ftSparkEl ? ftSparkEl.getContext('2d') : null;
+/* a much gentler arrival than the old -30deg/1.25: a big tilt made the footer
+   read as a separate panel swinging in, which is the one thing it must not do */
+const FT_TILT = -9;
+const FT_ZOOM = 1.12;
+const INK_DELAY = 1.05;   /* the last shard is gone before the black starts */
+const INK_SPAN  = 1.30;   /* viewports the black takes to cover the screen   */
 /* A rotated rectangle only keeps covering its own frame if it is also scaled
-   up by this much — without it the corners of the stage would show through as
-   black wedges over the resolved artwork, i.e. visible rectangular clipping. */
+   up by this much — without it the corners of the stage show through as black
+   wedges over the resolved artwork, i.e. visible rectangular clipping. */
 function ftCover(deg, w, h) {
   const r = Math.abs(deg) * Math.PI / 180, c = Math.cos(r), sn = Math.sin(r);
   return Math.max((w * c + h * sn) / w, (w * sn + h * c) / h);
 }
-/* The ink plate is 3 viewports tall with its ragged front sitting between
-   0.40 and 0.62 of its height, so sliding mask-position-y from 0% (window on
-   the plate's clear top third) to 100% (window on its solid bottom third)
-   walks that front all the way up the screen. */
-function ftMaskPos(el, p, drift) {
-  const y = (clamp01(p) * 100).toFixed(2);
-  const x = (drift * 100).toFixed(2);
-  el.style.maskPosition = el.style.webkitMaskPosition = `${x}% ${y}%`;
+
+/* ---------------------- Part 2: the parchment burns ---------------------- */
+/* A static burn field, built once: value-noise fbm biased by distance from the
+   centre so the sheet catches at its edges and the middle is the last to go.
+   Per frame we only threshold it, which is cheap enough to do in JS as long as
+   the field is kept small and scaled up on the way out — a soft, slightly
+   blobby burn edge is what paper does anyway. */
+const BURN_W = 192, BURN_H = 160;
+const h2 = (a, b) => { const x = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return x - Math.floor(x); };
+let burnMap = null, burnCv = null, charCv = null, rimCv = null,
+    burnImg = null, charImg = null, rimImg = null;
+function vnoise(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const a = h2(xi, yi), b = h2(xi + 1, yi), c = h2(xi, yi + 1), d = h2(xi + 1, yi + 1);
+  return (a * (1 - u) + b * u) * (1 - v) + (c * (1 - u) + d * u) * v;
 }
+function fbm(x, y) {
+  let s = 0, amp = .5, f = 1;
+  for (let o = 0; o < 4; o++) { s += amp * vnoise(x * f, y * f); f *= 2; amp *= .5; }
+  return s / .9375;
+}
+function buildBurn() {
+  if (burnMap) return;
+  burnMap = new Float32Array(BURN_W * BURN_H);
+  for (let y = 0; y < BURN_H; y++) for (let x = 0; x < BURN_W; x++) {
+    const u = x / BURN_W, v = y / BURN_H;
+    /* 0 in the middle, ~1 out at the corners */
+    const d = Math.min(1.15, Math.hypot((u - .5) * 1.12, v - .5) / .62);
+    /* the noise has to carry nearly as much weight as the radial bias, or the
+       front stays a smooth oval and reads as a hole being scaled rather than
+       flame eating along the grain */
+    const n = fbm(u * 5.6, v * 5.6) * .74 + fbm(u * 13.0, v * 13.0) * .26;
+    burnMap[y * BURN_W + x] = Math.max(0, Math.min(1, (1 - d) * .52 + n * .48));
+  }
+  const mk = () => { const c = document.createElement('canvas');
+    c.width = BURN_W; c.height = BURN_H; return c; };
+  burnCv = mk(); charCv = mk(); rimCv = mk();
+  burnImg = burnCv.getContext('2d').createImageData(BURN_W, BURN_H);
+  charImg = charCv.getContext('2d').createImageData(BURN_W, BURN_H);
+  rimImg  = rimCv.getContext('2d').createImageData(BURN_W, BURN_H);
+}
+const RIM = .042, CHAR = .15;
+function burnLayers(t) {
+  const M = burnImg.data, C = charImg.data, R = rimImg.data;
+  for (let i = 0, j = 0; i < burnMap.length; i++, j += 4) {
+    const bm = burnMap[i], dz = bm - t;
+    /* hole: opaque here, and this buffer is used with destination-out */
+    const hole = dz <= 0 ? 1 : dz < .022 ? 1 - dz / .022 : 0;
+    M[j] = M[j + 1] = M[j + 2] = 255; M[j + 3] = (hole * 255) | 0;
+    /* Char scorching the paper ahead of the hole. Carried as brown-with-alpha
+       and composited source-atop, NOT as an opaque plate under 'multiply':
+       canvas blend modes composite alpha as well as colour, so multiplying a
+       full-bleed plate paints the parchment's transparent surround solid. */
+    const ck = dz > 0 && dz < CHAR ? 1 - dz / CHAR : 0;
+    const c2 = ck * ck;
+    C[j] = 62; C[j + 1] = 34; C[j + 2] = 14; C[j + 3] = (215 * c2) | 0;
+    /* the ember line on the lip of the hole (added) */
+    const rk = dz > 0 && dz < RIM ? 1 - dz / RIM : 0;
+    const r2 = rk * rk;
+    R[j] = 255; R[j + 1] = (64 + 140 * rk) | 0; R[j + 2] = (8 + 52 * r2) | 0;
+    R[j + 3] = (205 * r2) | 0;
+  }
+  burnCv.getContext('2d').putImageData(burnImg, 0, 0);
+  charCv.getContext('2d').putImageData(charImg, 0, 0);
+  rimCv.getContext('2d').putImageData(rimImg, 0, 0);
+}
+let bW = 0, bH = 0;
+function sizeBurn() {
+  if (!s6BurnEl || !s6PanelEl) return;
+  const w = s6PanelEl.offsetWidth, h = s6PanelEl.offsetHeight;
+  if (!w || !h) return;
+  const dpr = Math.min(devicePixelRatio, 2);
+  bW = s6BurnEl.width = Math.round(w * dpr);
+  bH = s6BurnEl.height = Math.round(h * dpr);
+}
+let dW = 0, dH = 0;
+function sizeDust() { if (!s6DustEl) return; const r = s6DustEl.getBoundingClientRect();
+  if (!r.width) return;
+  dW = s6DustEl.width = Math.round(r.width * devicePixelRatio);
+  dH = s6DustEl.height = Math.round(r.height * devicePixelRatio); }
+function paintS6Dust(q) {
+  if (!dctx) return;
+  if (!dW) sizeDust();
+  if (!dW) return;
+  dctx.clearRect(0, 0, dW, dH);
+  const N = mobile ? 90 : 170, DPR = devicePixelRatio;
+  for (let i = 0; i < N; i++) {
+    const hx = h2(i, 3), hy = h2(i, 5), hs = h2(i, 7), hd = h2(i, 11);
+    /* each ash flake lifts off the spot it was burnt from */
+    const ox = .10 + hx * .80, oy = .10 + hy * .80;
+    const d = Math.min(1, Math.hypot((ox - .5) * 1.12, oy - .5) / .62);
+    const bm = Math.max(0, Math.min(1, (1 - d) * .60 + fbm(ox * 4.2, oy * 4.2) * .40));
+    const e = clamp01((q * 1.16 - bm) / .34);
+    if (e <= 0 || e >= 1) continue;
+    /* smoke rises and drifts; embers fall */
+    const up = hs > .74 ? .26 : -.34;
+    const x = (ox + (hd - .5) * e * .26) * dW;
+    const y = (oy + up * e * e + (hd - .5) * e * .05) * dH;
+    const a = Math.sin(e * Math.PI) * (.45 + hs * .55);
+    if (a <= .012) continue;
+    dctx.fillStyle = hs > .82 ? 'rgba(255,178,74,' + a.toFixed(3) + ')'
+                   : hs > .62 ? 'rgba(196,92,30,' + (a * .8).toFixed(3) + ')'
+                              : 'rgba(74,66,60,' + (a * .7).toFixed(3) + ')';
+    dctx.beginPath();
+    dctx.arc(x, y, (.7 + hs * 2.0) * DPR * (1 - .3 * e), 0, 7);
+    dctx.fill();
+  }
+}
+let partnersOn = false;
+function paintPartners(q) {
+  if (!s6BurnEl || !bctx) return;
+  if (q <= 0) {
+    if (partnersOn) {
+      partnersOn = false;
+      s6BurnEl.style.opacity = '0'; s6DustEl.style.opacity = '0';
+      s6PaperEl.style.opacity = '1'; s6ShelfEl.style.opacity = '1';
+    }
+    return;
+  }
+  buildBurn();
+  if (!bW) sizeBurn();
+  if (!bW) return;
+  if (!partnersOn) {
+    partnersOn = true;
+    /* the canvas redraws both plates at their own boxes, so handing over from
+       the two <img>s is invisible at q just past zero */
+    s6BurnEl.style.opacity = '1'; s6DustEl.style.opacity = '1';
+    s6PaperEl.style.opacity = '0'; s6ShelfEl.style.opacity = '0';
+  }
+  /* run the front slightly past 1 so the last flecks are gone before the ink */
+  burnLayers(q * 1.16);
+  bctx.clearRect(0, 0, bW, bH);
+  bctx.globalCompositeOperation = 'source-over';
+  if (s6PaperEl.complete) bctx.drawImage(s6PaperEl, 0, 0, bW, bH);
+  if (s6ShelfEl.complete && s6ShelfEl.naturalWidth) {
+    const sw = bW * (mobile ? .88 : .76);
+    const sh = sw * (s6ShelfEl.naturalHeight / s6ShelfEl.naturalWidth);
+    bctx.drawImage(s6ShelfEl, (bW - sw) / 2, bH * .53 - sh / 2, sw, sh);
+  }
+  bctx.globalCompositeOperation = 'source-atop';
+  bctx.drawImage(charCv, 0, 0, bW, bH);
+  bctx.globalCompositeOperation = 'destination-out';
+  bctx.drawImage(burnCv, 0, 0, bW, bH);
+  bctx.globalCompositeOperation = 'lighter';
+  bctx.drawImage(rimCv, 0, 0, bW, bH);
+  bctx.globalCompositeOperation = 'source-over';
+  paintS6Dust(q);
+}
+
+/* ---------------------- Part 3: the ink rises out of Courses ---------------------- */
+/* Tendrils that reach up ahead of the body. Without them the front is still a
+   wave — recognisably a horizontal line with a wobble — rather than something
+   creeping through the composition. */
+const FING = [];
+for (let k = 0; k < 6; k++) FING.push({
+  x: (k + .5) / 6 + (h2(k, 71) - .5) * .13,
+  w: .055 + h2(k, 73) * .075,
+  h: .10 + h2(k, 79) * .17,
+  ph: h2(k, 83) * 6.283 });
+function inkY(x01, lvl, p) {
+  const H = innerHeight, T = x01 * 6.2832;
+  const a = .062 * Math.sin(T * 0.62 + p * 1.9)
+          + .041 * Math.sin(T * 1.17 - p * 2.7 + 1.1)
+          + .026 * Math.sin(T * 1.94 + p * 3.8 + 0.5)
+          + .015 * Math.sin(T * 3.30 - p * 5.1 + 2.3)
+          + .008 * Math.sin(T * 5.70 + p * 7.0 + 1.4);
+  let f = 0;
+  for (const g of FING) { const d = (x01 - g.x) / g.w;
+    f += g.h * Math.exp(-d * d) * (.675 + .325 * Math.sin(g.ph + p * 1.3)); }
+  /* the fingers only mean anything while the front is actually travelling */
+  f *= .15 + .85 * Math.sin(Math.min(1, Math.max(0, lvl)) * Math.PI);
+  return H * (1 - lvl) + a * H - f * H;
+}
+/* Draws one front as a blurred band plus a solid rect beneath it. sd is the
+   blur's stdDeviation, and the band has to clear it on both sides or the
+   Gaussian's falloff shows up as a light seam where the two meet. */
+const INK_N = 72;
+const inkYs = new Array(INK_N + 1);
+function paintInk(pathEl, rectEl, lvl, p, sd) {
+  const W = innerWidth, H = innerHeight;
+  let lo = 1e9, hi = -1e9;
+  for (let i = 0; i <= INK_N; i++) {
+    const y = Math.max(-340, inkY(i / INK_N, lvl, p));
+    inkYs[i] = y; if (y < lo) lo = y; if (y > hi) hi = y;
+  }
+  const bandBottom = hi + sd * 4;
+  let d = '';
+  for (let i = 0; i <= INK_N; i++) d += (i ? 'L' : 'M') + (i / INK_N * W).toFixed(1) + ' ' + inkYs[i].toFixed(1);
+  const foot = (bandBottom + sd * 3).toFixed(1);
+  pathEl.setAttribute('d', d + 'L' + W + ' ' + foot + 'L0 ' + foot + 'Z');
+  rectEl.setAttribute('x', -400);
+  rectEl.setAttribute('y', bandBottom.toFixed(1));
+  rectEl.setAttribute('width', W + 800);
+  rectEl.setAttribute('height', Math.max(0, H + 700 - bandBottom).toFixed(1));
+}
+function sizeInkMask(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.setAttribute('x', -400); m.setAttribute('y', -900);
+  m.setAttribute('width', innerWidth + 800); m.setAttribute('height', innerHeight + 1800);
+}
+let spW = 0, spH = 0;
+function sizeSpark() { if (!ftSparkEl) return;
+  spW = ftSparkEl.width = Math.round(innerWidth * devicePixelRatio);
+  spH = ftSparkEl.height = Math.round(innerHeight * devicePixelRatio); }
+function paintSpark(u, lvl) {
+  if (!sctx) return;
+  if (!spW) sizeSpark();
+  if (!spW) return;
+  const vis = clamp01(u / .35) * (1 - clamp01((u - 2.1) / .9));
+  if (vis <= .01) { if (ftSparkEl.style.opacity !== '0') ftSparkEl.style.opacity = '0'; return; }
+  ftSparkEl.style.opacity = vis.toFixed(3);
+  sctx.clearRect(0, 0, spW, spH);
+  const N = mobile ? 70 : 130, DPR = devicePixelRatio, H = innerHeight;
+  for (let i = 0; i < N; i++) {
+    const hx = h2(i, 17), hy = h2(i, 19), hs = h2(i, 23);
+    /* motes live inside the black, densest just under its leading edge */
+    const front = inkY(hx, lvl, u) / H;
+    const y01 = front + hy * (1.06 - front) - u * .045;
+    if (y01 < front - .01 || y01 > 1.04) continue;
+    const a = (1 - clamp01((y01 - front) / .30)) * (.55 + hs * .45) * vis;
+    if (a <= .012) continue;
+    sctx.fillStyle = hs > .82 ? 'rgba(246,236,206,' + a.toFixed(3) + ')'
+                              : 'rgba(232,240,252,' + (a * .9).toFixed(3) + ')';
+    sctx.beginPath();
+    sctx.arc(hx * spW, y01 * spH, (.5 + hs * 1.5) * DPR, 0, 7);
+    sctx.fill();
+  }
+}
+
 function syncCoursePartnerPin() {
-  if (!s6El || !s6PanelEl) return;
-  const panelCenter = s6PanelEl.offsetTop + s6PanelEl.offsetHeight / 2;
-  const releaseAt = Math.ceil(panelCenter + innerHeight / 2);
-  s6El.style.minHeight = Math.max(releaseAt, innerHeight * .72) + 'px';
+  if (!s6El) return;
+  /* trailing scroll for the dissolve and the ink's rise. #courseRun ends at
+     #s6's bottom, and that is when Courses unpins — so this must outlast the
+     black covering the screen, or Courses slides away mid-transition. */
+  const run = document.getElementById('s6run');
+  if (run) run.style.height = Math.round(innerHeight * 2.6) + 'px';
 }
-addEventListener('resize', syncCoursePartnerPin);
-addEventListener('orientationchange', () => setTimeout(syncCoursePartnerPin, 180));
-if (s6PanelEl) {
-  const imgs = s6PanelEl.querySelectorAll('img');
-  imgs.forEach((img) => img.complete ? null : img.addEventListener('load', syncCoursePartnerPin, { once:true }));
-  syncCoursePartnerPin();
-}
-let ftOn = false;
+addEventListener('resize', () => { syncCoursePartnerPin(); sizeDust(); sizeSpark(); sizeBurn(); });
+addEventListener('orientationchange', () => setTimeout(() => {
+  syncCoursePartnerPin(); sizeDust(); sizeSpark(); sizeBurn(); }, 180));
+syncCoursePartnerPin();
+if (s6PanelEl) s6PanelEl.querySelectorAll('img').forEach((img) => {
+  if (!img.complete) img.addEventListener('load', () => { syncCoursePartnerPin(); sizeDust(); sizeBurn(); }, { once: true }); });
+
+let ftOn = false, s5Graded = false;
 function s7Frame() {
-  const sy = scrollY, vh = innerHeight;
-  /* u counts viewports of scroll from the moment the Partners panel's bottom
-     edge sits on the viewport bottom */
-  const s6Top = s6El.getBoundingClientRect().top + sy;
-  const u = (sy - (s6Top + s6El.offsetHeight - vh)) / vh;
-  if (u <= -0.06) {
-    if (ftOn) { ftOn = false; s7stage.style.visibility = 'hidden'; }
+  if (!s6El || !s6PanelEl) return;
+  const vh = innerHeight;
+  /* The anchor is the moment the panel pins itself centred. It must be derived
+     from STATIC layout: #s6panel is sticky, and offsetTop on a stuck element
+     reports where it is currently painted, so measuring off the panel makes
+     pinAt track scrollY and the progress never leaves zero. #s6run is the
+     ordinary block right after it, so its offsetTop is stable. */
+  const s6Top = s6El.getBoundingClientRect().top + scrollY;
+  const panelStatic = s6RunEl
+    ? s6RunEl.offsetTop - s6PanelEl.offsetHeight
+    : (parseFloat(getComputedStyle(s6El).paddingTop) || 0);
+  const pinAt = s6Top + panelStatic - vh * .5;
+  const uRaw = (scrollY - pinAt) / vh;
+
+  paintPartners(clamp01((uRaw - .05) / .90));
+
+  const u = uRaw - INK_DELAY;
+  if (u <= -.05) {
+    if (ftOn) { ftOn = false; s7stage.style.visibility = 'hidden'; ftSparkEl.style.opacity = '0'; }
+    if (s5Graded) { s5El.style.filter = ''; if (s5InEl) s5InEl.style.opacity = ''; s5Graded = false; }
     return;
   }
   if (!ftOn) { ftOn = true; s7stage.style.visibility = 'visible'; }
 
-  /* 1 — the ink front climbs; the traces run a step ahead of it so white
-     edges and dust surface over Courses before the black gets there */
-  const ink = clamp01(u / 1.65);
-  const drift = 0.5 + 0.5 * Math.sin(u * 1.1);      /* slow lateral wander */
-  ftMaskPos(ftBodyEl, ink, drift);
-  ftMaskPos(ftEdgeEl, clamp01(ink + 0.085), drift);
-  /* the tide of lost light that precedes everything */
-  ftVeilEl.style.opacity = (easeIO(clamp01(u / 1.25)) * 0.9).toFixed(3);
+  /* 1 — the black flows up out of the bottom of the Courses composition, and
+     the traces run on a front a third of a viewport ahead of it, so white
+     contours surface over Courses before the black arrives under them */
+  const lvl = clamp01(u / INK_SPAN) * 1.06;
+  const lvlB = clamp01((u + .30) / INK_SPAN) * 1.10;
+  paintInk(inkPathA, inkRectA, lvl, u, 20);
+  paintInk(inkPathB, inkRectB, lvlB, u + .30, 26);
+  sizeInkMask('inkMaskA'); sizeInkMask('inkMaskB');
 
-  /* 2 — the tilt and the zoom unwind across the takeover */
-  const t = easeIO(clamp01(u / 1.75));
+  /* 2 — Courses turns to the footer's own black-and-white BEFORE the ink gets
+     there, so where the two meet they are already speaking one language and
+     the middle of the sequence is genuinely both worlds at once */
+  const cg = easeIO(clamp01(u / 1.05));
+  /* a full-viewport filter re-rasterises the whole section, so don't re-set it
+     with a string it already has — it saturates for most of the sequence */
+  const cgs = 'grayscale(' + cg.toFixed(3) + ') contrast(' + (1 + .55 * cg).toFixed(3)
+    + ') brightness(' + (1 - .42 * cg).toFixed(3) + ')';
+  if (s5El.style.filter !== cgs) {
+    s5El.style.filter = cgs;
+    if (s5InEl) s5InEl.style.opacity = (1 - .62 * cg).toFixed(3);
+  }
+  s5Graded = true;
+  ftVeilEl.style.opacity = (easeIO(clamp01(u / 1.0)) * .55).toFixed(3);
+
+  /* 3 — the scene settles square as it lands */
+  const t = easeIO(clamp01(u / 1.9));
   const deg = FT_TILT * (1 - t);
-  /* measure the UNtransformed layout box — getBoundingClientRect() returns the
-     already-rotated bounding box, which would feed back into its own scale */
   const sw = ftScene.offsetWidth || 1, sh = ftScene.offsetHeight || 1;
   const sc = Math.max(ftCover(deg, sw, sh) * 1.015, lerp(FT_ZOOM, 1, t));
-  ftScene.style.transform = `rotate(${deg.toFixed(3)}deg) scale(${sc.toFixed(4)})`;
+  ftScene.style.transform = 'rotate(' + deg.toFixed(3) + 'deg) scale(' + sc.toFixed(4) + ')';
 
-  /* 3 — inside the ink, the plates resolve from a dim grayscale ghost to full
-     colour, and the traces hand over once the shapes can carry the image */
-  const g = easeIO(clamp01((u - 1.35) / 1.15));
-  ftRealEl.style.opacity = easeIO(clamp01((u - 1.15) / 0.9)).toFixed(3);
-  ftRealEl.style.filter =
-    `grayscale(${(1 - g).toFixed(3)}) brightness(${(0.34 + 0.66 * g).toFixed(3)}) contrast(${(1.35 - 0.35 * g).toFixed(3)})`;
-  ftEdgeEl.style.opacity = (1 - easeIO(clamp01((u - 1.6) / 1.0))).toFixed(3);
-  ftVigEl.style.opacity = easeIO(clamp01((u - 1.5) / 0.8)).toFixed(3);
+  /* 4 — inside the black, the plates resolve from a grey ghost to full colour
+     and the traces hand over once the shapes can carry the image themselves */
+  const g = easeIO(clamp01((u - 1.55) / 1.25));
+  ftRealEl.style.opacity = easeIO(clamp01((u - 1.15) / .95)).toFixed(3);
+  ftRealEl.style.filter = 'grayscale(' + (1 - g).toFixed(3) + ') brightness('
+    + (.34 + .66 * g).toFixed(3) + ') contrast(' + (1.35 - .35 * g).toFixed(3) + ')';
+  ftEdgeEl.style.opacity = (1 - easeIO(clamp01((u - 1.75) / 1.05))).toFixed(3);
+  ftVigEl.style.opacity = easeIO(clamp01((u - 1.9) / .85)).toFixed(3);
 
-  /* 4 — the copy is last to arrive, once the picture is real */
-  const ui = easeIO(clamp01((u - 2.25) / 0.5));
+  paintSpark(u, lvl);
+
+  /* 5 — the copy is last, once the picture is real */
+  const ui = easeIO(clamp01((u - 2.9) / .5));
   ftUiEl.style.opacity = ui.toFixed(3);
-  s7stage.style.pointerEvents = ui > 0.9 ? 'auto' : 'none';
+  s7stage.style.pointerEvents = ui > .9 ? 'auto' : 'none';
 }
 
 gsap.ticker.add((t) => {
