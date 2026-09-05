@@ -372,7 +372,7 @@ body.debug #dbg{display:block}
 #s4grain{z-index:11;opacity:.34}
 
 /* ===================== SECTION 5 — COURSES ===================== */
-#courseRun{position:relative;z-index:5;margin-top:-33.333svh;background:#0A0908}
+#courseRun{position:relative;z-index:5;margin-top:0;background:#0A0908}
 #s5{position:sticky;top:0;z-index:5;height:100svh;padding:12vh 0 10vh;
   background:#0A0908;overflow:hidden;display:flex;align-items:center}
 #s5wall{position:absolute;inset:0;pointer-events:none;
@@ -508,7 +508,7 @@ body.debug #dbg{display:block}
 
 /* ===================== SECTION 6 — OUR PARTNERS ===================== */
  
-#s6{position:relative;z-index:6;padding:12svh 0 0;background:transparent}
+#s6{position:relative;z-index:6;padding:calc(50svh + 12svh) 0 0;background:transparent}
 #s6panel{position:sticky;top:50%;width:min(1180px,94vw);margin:0 auto;
   transform:translateY(-50%)}
  
@@ -645,7 +645,7 @@ body.debug #dbg{display:block}
     scrollbar-width:none;padding:0 20px;-webkit-mask-image:none;mask-image:none}
   #filmClip::-webkit-scrollbar{display:none}
   /* section 6 — same panel, just a narrower crop of the shelf photo */
-  #courseRun{margin-top:-33.333svh}
+  #courseRun{margin-top:0}
   #s5{height:100svh;padding:7svh 0 7svh;align-items:flex-start}
   #s5wall{background-size:260% auto;background-position:center 32%}
   .cxSub{margin-bottom:3.4vh}
@@ -653,7 +653,7 @@ body.debug #dbg{display:block}
      content — this padding is asymmetric, so plain centering lands ~4px off */
   /* portrait: the sheet is wide and short, so it pins a little above centre to
      leave the erosion room to throw shards downward into Courses */
-  #s6{padding:8svh 0 0}
+  #s6{padding:calc(46svh + 8svh) 0 0}
   #s6panel{width:94vw;top:46%}
   #s6shelf{width:88%}
  
@@ -1289,23 +1289,18 @@ if (document.querySelector('.fr')) {
 
 /* =================== SECTION 5 — courses reveal =================== */
 if (document.getElementById('cxGrid')) {
-  /* #s4's sticky wave already finishes revealing a fully-formed, empty dome
-     right as its pin releases — if the Courses title/frames only start fading
-     in once #s5 has visibly scrolled most of the way into view (the old
-     'top 80%'/'top 85%'), there's a stretch of plain, undecorated dome in
-     between that reads as the same background appearing twice. Firing while
-     #s5 is still below the fold (percentages > 100%) lets the title and
-     frames arrive as soon as the wave resolves, so the handoff reads as one
-     continuous reveal rather than dome -> dead air -> dome again. */
+  /* Reveal Courses only when Courses itself reaches the viewport. Earlier
+     below-the-fold triggers made the title/cards animate while Cohort was
+     still visible, which made Courses feel like it was changing during Cohort. */
   gsap.set('.cx', { y: 96 });
   gsap.to('.cx', {
     opacity: 1, y: 0, duration: reduced ? 0 : .85, ease: 'power3.out',
     stagger: reduced ? 0 : .16,
-    scrollTrigger: { trigger: '#cxGrid', start: 'top 145%', once: true },
+    scrollTrigger: { trigger: '#s5', start: 'top top', once: true },
   });
   gsap.from(['#cxKick', '#cxH', '#cxSub'], {
     opacity: 0, y: 18, duration: reduced ? 0 : .6, ease: 'power2.out', stagger: .08,
-    scrollTrigger: { trigger: '#s5in', start: 'top 165%', once: true },
+    scrollTrigger: { trigger: '#s5', start: 'top top', once: true },
   });
   /* the films idle until you look at them */
   document.querySelectorAll('.cx').forEach((c) => {
