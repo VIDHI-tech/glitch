@@ -3,1372 +3,2416 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>GLITCH — Learn beyond the system</title>
+<title>GLITCH — Catch What Comes Next</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Archivo:wght@300;400;500&display=swap">
+ 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..700&family=Cinzel:wght@400..900&family=EB+Garamond:ital,wght@0,400..800;1,400..600&display=swap">
 <style>
-/* =========================================================== tokens */
-:root {
-  --ground: #0B0B0D;
-  --stone:  #E8E4DB;
-  --shadow: #B8B2A6;
-  --dim:    #8B857A;
-  --gold:   #C9A44C;
-  --gold-hot: #F5D77A;
-  --glitch: #00E5D0;
-  --verm:   #E34A28;
-  --ochre:  #B07A3A;
-  --oxred:  #9C4A2A;
-  --bone:   #D8CFBB;
-  --f-display: "Cinzel", Georgia, serif;
-  --f-body: "Archivo", -apple-system, BlinkMacSystemFont, sans-serif;
-  --f-mono: ui-monospace, "SF Mono", Menlo, monospace;
-  --mx: 0px; --my: 0px;
+:root{
+  --ivory:#E9DFC9; --plaster:#C9B995; --cypress:#10261F;
+  --eblue:#2864FF; --coral:#FF2E93; --dgold:#D7A83E; --apple:#B83A2D; --ink:#171A18;
+  /* section 2 palette */
+  --s2ink:#09090B; --marble:#E8E1D4; --stoneg:#9C968C;
+  --agold:#B9923F; --lgold:#F0C767; --uv:#6D22A8; --hotm:#FF2E88;
+  --mx:0px; --my:0px;
+ 
+  --hallW: max(100vw,192.2svh);
+  --hallDX: 0%;
+  --f-disp:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --f-caps:"Cinzel","Trajan Pro",Georgia,serif;
+  --f-body:"EB Garamond",Georgia,"Times New Roman",serif;
+  --f-serif:"EB Garamond",Georgia,serif;
 }
-* { box-sizing: border-box; }
-html { background: var(--ground); }
-body {
-  margin: 0;
-  background: var(--ground);
-  color: var(--stone);
-  font-family: var(--f-body);
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
+/* Garamond sets a good deal smaller than Archivo at the same px, and Bodoni's
+   hairlines need optical sizing to survive at display sizes. */
+body{font-size:17px;font-optical-sizing:auto}
+#bigH,#mH,#cH,.cxH,#h1beat h1,#h2beat h2,#ftBrand b{font-optical-sizing:auto}
+*{box-sizing:border-box}
+html{background:var(--s2ink)}
+body{margin:0;font-family:var(--f-body);color:var(--ivory);overflow-x:hidden;background:var(--s2ink)}
 
-.plx { will-change: transform; }
-.plx[data-depth="1"] { transform: translate3d(calc(var(--mx) * 1.5), calc(var(--my) * 1), 0); }
-.plx[data-depth="2"] { transform: translate3d(calc(var(--mx) * 3), calc(var(--my) * 1.8), 0); }
-.plx[data-depth="3"] { transform: translate3d(calc(var(--mx) * 5), calc(var(--my) * 3), 0); }
+/* ============================= SECTION 1 — hero ============================= */
+#hero{height:620vh;position:relative;z-index:1}
+#stage{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--cypress)}
+.layer{position:absolute;inset:0;pointer-events:none;will-change:transform}
+#sky{background:url(assets/renaissance/background.jpg) center 32%/cover no-repeat;inset:-3%;
+  filter:saturate(.88) brightness(1.05) contrast(.98);
+  translate:calc(var(--mx)*8) calc(var(--my)*5)}
+#treesL{inset:-4% 55% -4% -4%;
+  background:url(assets/renaissance/background.jpg) 0% 30% no-repeat;
+  /* 260% of this element's 53vw box = 137.8vw; 152svh is what it takes to
+     cover the box's height at the plate's 1.383 aspect */
+  background-size:max(137.8vw,152svh) auto;
+  filter:saturate(.9) brightness(.92);
+  -webkit-mask-image:linear-gradient(to right,#000 62%,transparent 96%);
+          mask-image:linear-gradient(to right,#000 62%,transparent 96%);
+  translate:calc(var(--mx)*14) calc(var(--my)*9)}
+#treesR{inset:-4% -4% -4% 62%;
+  background:url(assets/renaissance/background.jpg) 100% 12% no-repeat;
+  background-size:max(138vw,152svh) auto;
+  filter:saturate(.9) brightness(.9);
+  -webkit-mask-image:linear-gradient(to left,#000 58%,transparent 95%);
+          mask-image:linear-gradient(to left,#000 58%,transparent 95%);
+  translate:calc(var(--mx)*-14) calc(var(--my)*9)}
+#foliage{inset:72% -6% -8% -6%;
+  background:url(assets/renaissance/background.jpg) center 100% no-repeat;
+  background-size:max(156.8vw,52svh) auto;
+  filter:saturate(.85) brightness(.62) contrast(1.05);
+  -webkit-mask-image:linear-gradient(to top,#000 68%,transparent 100%);
+          mask-image:linear-gradient(to top,#000 68%,transparent 100%);
+  translate:calc(var(--mx)*-20) calc(var(--my)*-13);
+  z-index:6}
+.fig{position:absolute;pointer-events:none;will-change:transform;filter:saturate(.95) drop-shadow(0 18px 34px rgba(10,14,10,.55))}
+#statueW{left:50%;top:50%;z-index:3;transform:translate(-50%,-50%); translate:calc(var(--mx)*20) calc(var(--my)*13)}
+#statue{height:64vh;opacity:.96;display:block;
+  -webkit-mask-image:linear-gradient(to bottom,#000 82%,transparent 98%);
+          mask-image:linear-gradient(to bottom,#000 82%,transparent 98%);
+  filter:sepia(.14) saturate(.92) brightness(1.02) contrast(1.02) drop-shadow(0 22px 40px rgba(10,14,10,.6))}
+#femW{left:16%;top:52%;z-index:7}
+#femP{translate:calc(var(--mx)*30) calc(var(--my)*19)}
+#fem{height:48vh;display:block;
+  filter:drop-shadow(0 18px 32px rgba(10,14,10,.5))}
+#maleW{left:82%;top:50%;z-index:7}
+#maleP{translate:calc(var(--mx)*32) calc(var(--my)*20)}
+#male{height:50vh;display:block;
+  filter:drop-shadow(0 18px 32px rgba(10,14,10,.5))}
 
-.rv {
-  opacity: 0;
-  transform: translateY(var(--rv-y, 26px)) scale(var(--rv-s, 1)) rotate(var(--rv-r, 0deg));
-  filter: blur(var(--rv-b, 0px));
-  transition: opacity .6s ease, transform .6s ease, filter .6s ease;
-}
-.rv.on { opacity: 1; transform: none; filter: none; }
+/* ---- the apple: ONE fixed story object continuing across both sections ---- */
+#appleW{position:fixed;left:53%;top:26%;z-index:60;pointer-events:none;will-change:transform}
+#appleInner{position:relative;width:64px;aspect-ratio:800/900;
+  translate:calc(var(--mx)*35) calc(var(--my)*21)}
+.matWrap{position:absolute;inset:0;will-change:clip-path}
+.matWrap img{width:100%;height:100%;display:block;will-change:transform}
+#matGold img{filter:drop-shadow(0 10px 18px rgba(10,10,8,.5)) drop-shadow(0 0 24px rgba(240,199,103,.35))}
+#matMarble{clip-path:inset(100% 0 0 0)}
+#matMarble img{filter:drop-shadow(0 10px 18px rgba(10,10,8,.5))}
+#spark{position:absolute;left:50%;top:50%;width:190px;height:190px;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(255,246,214,.95) 0%,rgba(215,168,62,.5) 32%,rgba(215,168,62,.12) 58%,transparent 72%);
+  mix-blend-mode:screen;opacity:0;pointer-events:none;z-index:-1}
+.tr{position:fixed;border-radius:50%;background:radial-gradient(circle,#F2DC9C,#D7A83E 70%);
+  mix-blend-mode:screen;pointer-events:none;z-index:59;opacity:0}
 
-/* ======================================================= chapter nav */
-#chapnav {
-  position: fixed; right: 18px; top: 50%;
-  transform: translateY(-50%);
-  z-index: 40;
-  display: flex; flex-direction: column; gap: 4px;
-  padding: 10px 8px;
-  background: rgba(11,11,13,.55);
-  border: 1px solid rgba(201,164,76,.18);
-  border-radius: 3px;
-  backdrop-filter: blur(6px);
-}
-#chapnav button {
-  display: flex; align-items: center; gap: 8px;
-  background: none; border: 0; cursor: pointer;
-  padding: 6px 4px;
-  color: var(--dim);
-  font: 10px/1 var(--f-body);
-  letter-spacing: .18em;
-}
-#chapnav button .num { font-family: var(--f-display); font-size: 11px; }
-#chapnav button .lbl {
-  max-width: 0; overflow: hidden; white-space: nowrap;
-  transition: max-width .35s ease, opacity .35s ease;
-  opacity: 0; text-transform: uppercase;
-}
-#chapnav:hover button .lbl,
-#chapnav button:focus-visible .lbl { max-width: 130px; opacity: 1; }
-#chapnav button[aria-current="true"] { color: var(--gold); }
-#chapnav button:hover { color: var(--stone); }
-#chapnav button:focus-visible { outline: 1px solid var(--gold); outline-offset: 2px; }
-#chapnav .bar {
-  height: 2px; margin-top: 8px; background: rgba(184,178,166,.2);
-  border-radius: 1px; overflow: hidden;
-}
-#chapnav .bar i { display: block; height: 100%; width: 0; background: var(--gold); }
+#dust{position:absolute;inset:0;z-index:8;pointer-events:none;
+  translate:calc(var(--mx)*12) calc(var(--my)*8)}
+.mote{position:absolute;width:3px;height:3px;border-radius:50%;background:#F2DC9C;opacity:.5}
+.grainy{position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.48 0 0 0 0 0.42 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
+#vig{position:absolute;inset:0;z-index:10;pointer-events:none;
+  background:radial-gradient(ellipse 82% 74% at 50% 48%,transparent 54%,rgba(13,18,14,.62) 100%)}
+#ui{position:absolute;inset:0;z-index:12;pointer-events:none; translate:calc(var(--mx)*-7) calc(var(--my)*-4)}
+#brand{position:absolute;left:44px;top:34px;display:flex;align-items:baseline;gap:14px}
+#brand b{font:800 22px/1 var(--f-caps);letter-spacing:.34em;color:var(--ivory)}
+#brand b i{font-style:normal;color:var(--dgold)}
+#brand span{font:500 10px/1.6 var(--f-caps);letter-spacing:.24em;color:var(--plaster)}
+.beat{position:absolute;left:clamp(24px,5vw,80px);text-align:left;opacity:0}
+#h1beat{top:max(15%,82px);width:min(430px,34vw)}
+#h1beat h1{font:800 clamp(24px,3.4vw,46px)/1.06 var(--f-disp);letter-spacing:.02em;margin:0;
+  color:var(--ivory);text-shadow:0 3px 34px rgba(10,14,10,.75)}
+#h2beat{top:max(15%,82px);width:min(430px,34vw)}
+#h2beat h2{font:800 clamp(28px,4vw,54px)/1.04 var(--f-disp);margin:0;color:var(--ivory);
+  text-shadow:0 3px 34px rgba(10,14,10,.8)}
+#h2beat h2 em{font-style:normal;color:var(--dgold)}
+#tide{position:absolute;inset:0;z-index:9;pointer-events:none;visibility:hidden;
+  -webkit-mask:url(#tideMask); mask:url(#tideMask)}
+ 
+#tideHall,#tideHallFg{position:absolute;left:50%;top:50%;
+  transform:translate(calc(-50% + var(--hallDX)),calc(-50% + var(--tideRise,0px)));
+  translate:calc(var(--mx)*6) calc(var(--my)*4);
+  width:var(--hallW);aspect-ratio:1414/736}
+#tideCrest{position:absolute;inset:0;width:100%;height:100%;z-index:10;pointer-events:none;
+  filter:blur(5px) drop-shadow(0 0 22px rgba(255,248,228,.5));visibility:hidden}
+#dbg{position:absolute;inset:0;z-index:40;pointer-events:none;display:none}
+body.debug #dbg{display:block}
+#cue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  font:500 9px/1 var(--f-caps);letter-spacing:.26em;color:var(--plaster);
+  display:flex;flex-direction:column;align-items:center;gap:8px}
+#cue i{width:1px;height:30px;background:linear-gradient(var(--plaster),transparent)}
 
-/* ================================================== shared chapter bits */
-.track { position: relative; }
-.stage {
-  position: sticky; top: 0;
-  height: 100svh;
-  overflow: hidden;
-  background: var(--ground);
-}
-.copy {
-  position: absolute;
-  left: clamp(28px, 7vw, 104px);
-  top: 50%;
-  transform: translateY(calc(-50% + var(--rise, 10px)));
-  width: min(460px, 62vw);
-  opacity: 0;
-  transition: opacity .55s ease, transform .55s ease;
-  pointer-events: none;
-  z-index: 6;
-}
-.copy.on { opacity: 1; --rise: 0px; }
-.copy h1, .copy h2 {
-  font-family: var(--f-display);
-  font-weight: 400;
-  font-size: clamp(28px, 3.6vw, 50px);
-  line-height: 1.12;
-  letter-spacing: .012em;
-  margin: 0;
-  text-wrap: balance;
-  text-shadow: 0 2px 40px rgba(0,0,0,.9);
-}
-.copy.minor h2 { font-size: clamp(22px, 2.8vw, 40px); }
-.copy p {
-  margin: 15px 0 0;
-  max-width: 40ch;
-  font-size: clamp(14px, 1.15vw, 16.5px);
-  font-weight: 300;
-  line-height: 1.62;
-  color: #C4BFB5;
-  text-shadow: 0 1px 3px rgba(0,0,0,.95);
-}
-.copy .gold { color: var(--gold); }
-.cta {
-  display: inline-block;
-  margin-top: 30px;
-  padding: 13px 30px;
-  border: 1px solid rgba(201,164,76,.5);
-  border-radius: 2px;
-  color: var(--gold);
-  font-size: 13px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  pointer-events: auto;
-  transition: background .25s, border-color .25s, transform .25s;
-}
-.cta:hover, .cta:focus-visible {
-  background: rgba(201,164,76,.10);
-  border-color: var(--gold);
-  transform: translateY(-2px);
-}
-.cta:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+/* ===================== SECTION 2 — WHAT IS GLITCH? ===================== */
+#s2{height:560vh;position:relative;z-index:2;margin-top:-100vh}
+#s2stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0A0C} 
+#envW{position:absolute;left:50%;top:50%;
+  transform:translate(calc(-50% + var(--hallDX)),-50%);
+  width:var(--hallW);aspect-ratio:1414/736;pointer-events:none;will-change:transform} 
+#hallBg,#hallFg{position:absolute;inset:0;width:100%;height:100%;display:block}
+#hallBg{translate:calc(var(--mx)*8) calc(var(--my)*5)}
+#hallFg{translate:calc(var(--mx)*18) calc(var(--my)*11)}
+#envFx{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.beam{position:absolute;top:-4%;left:44%;width:11%;height:88%;
+  background:linear-gradient(to bottom,rgba(255,250,235,.34),rgba(255,246,214,.10) 55%,transparent 90%);
+  transform-origin:top center;mix-blend-mode:screen;pointer-events:none;filter:blur(6px)}
+#beam2{left:50%;width:7%;transform:rotate(7deg);opacity:.7}
+#beam1{transform:rotate(-6deg)}
+#tShadow{position:absolute;left:45.5%;top:85.5%;width:9.4%;aspect-ratio:3.2/1;transform:translate(-50%,-50%) scale(.25);
+  background:radial-gradient(ellipse,rgba(20,14,10,.62),transparent 66%);opacity:0}
+#flash{position:absolute;left:45.5%;top:84%;width:16%;aspect-ratio:1;transform:translate(-50%,-50%) scale(.3);
+  background:radial-gradient(circle,rgba(255,241,200,.95),rgba(240,199,103,.45) 40%,transparent 70%);
+  mix-blend-mode:screen;opacity:0}
+.chip{position:absolute;left:45.5%;top:84.5%;width:.5%;aspect-ratio:1;border-radius:30%;background:#EDE7DA;opacity:0}
+#flecks{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
+  translate:calc(var(--mx)*13) calc(var(--my)*8)}
+#appleStageW{position:absolute;left:50%;top:60%;z-index:8;transform:translate(-50%,-88%);
+  translate:calc(var(--mx)*26) calc(var(--my)*16);
+  width:min(56vh,540px);aspect-ratio:1448/1086;opacity:0;pointer-events:none;
+  filter:drop-shadow(0 20px 36px rgba(10,8,6,.55))}
+#apieces{position:absolute;inset:0}
+.apiece{position:absolute;will-change:transform}
+.apiece.far{opacity:.9}
+#inkSvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+/* the scholar's arm: one rigid rig pivoting at the elbow, nib aimed by JS */
+#armRig{position:absolute;left:0;top:0;height:auto;z-index:10;opacity:0;pointer-events:none;
+  transform-origin:96% 42%;
+  filter:drop-shadow(-6px 10px 18px rgba(20,10,26,.5))}
+#s2grain{z-index:11}
+#s2vig{position:absolute;inset:0;z-index:10;pointer-events:none;
+  background:radial-gradient(ellipse 100% 92% at 50% 42%,transparent 64%,rgba(8,7,9,.5) 100%)}
+#s2scrim{position:absolute;left:0;top:0;bottom:0;width:44%;z-index:11;pointer-events:none;
+  background:linear-gradient(to right,rgba(10,9,11,.66) 0%,rgba(10,9,11,.34) 55%,transparent 100%)}
+#s2ui{position:absolute;inset:0;z-index:12;pointer-events:none;
+  padding:9vh 0 0 clamp(26px,6vw,96px);max-width:min(680px,46vw);
+  translate:calc(var(--mx)*-7) calc(var(--my)*-4)}
+#bigH{font:800 clamp(46px,6.8vw,104px)/0.98 var(--f-disp);letter-spacing:.01em;margin:0 0 3.4vh;
+  color:var(--marble);text-shadow:0 4px 40px rgba(0,0,0,.75);
+  clip-path:inset(0 0 100% 0);will-change:clip-path}
+#bigH em{font-style:normal;color:var(--lgold)}
+#supp{font:400 clamp(18px,1.85vw,26px)/1.42 var(--f-serif);font-style:italic;color:#E4DCCB;
+  margin:0 0 2.6vh;max-width:34ch;opacity:0;text-shadow:0 2px 18px rgba(0,0,0,.8)}
+#defn{font:400 clamp(16px,1.5vw,20px)/1.55 var(--f-body);color:var(--marble);
+  margin:0 0 2.2vh;max-width:38ch;opacity:0;text-shadow:0 2px 14px rgba(0,0,0,.8)}
+#defn b{color:var(--lgold);font-weight:600}
+#lines{display:flex;flex-direction:column;gap:.8vh;opacity:0}
+#lines span{font:600 clamp(15px,1.4vw,19px)/1.4 var(--f-body);letter-spacing:.05em;color:var(--marble)}
+#lines span em{font-style:normal;font-weight:400;color:var(--agold)}
 
-/* ============================================ chapter 1: the cave stone */
-/* Back layer: chapter 2's first frame, fully rendered underneath from the
-   start. Front layer (#caveworld) is everything of chapter 1 and gets eaten
-   by the burn mask from the centre outward. */
-#ch2back { position: absolute; inset: 0; z-index: 0; isolation: isolate; }
-#caveworld {
-  position: absolute; inset: 0; z-index: 1;
+/* ===================== SECTION 3 — OUR MISSION ===================== */
+#s3{height:760vh;position:relative;z-index:3;background:#060607}
+#s3stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#060607}
+#s3bgW{position:absolute;inset:-3%;
+  translate:calc(var(--mx)*7) calc(var(--my)*4)}
+#s3bg{width:100%;height:100%;object-fit:cover;object-position:center 62%;
+  filter:brightness(.94) saturate(.92)}
+#s3bgGrad{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(to bottom,#0B0A0C 0%,rgba(11,10,12,0) 26%),
+  radial-gradient(ellipse 95% 72% at 50% 108%,rgba(5,5,6,.6),transparent 62%)}
+ 
+#lapMask{position:fixed;inset:0;z-index:55;pointer-events:none}
+ 
+#lapPlate{position:absolute;left:0;top:0;width:0;aspect-ratio:1086/625;
+  opacity:0;pointer-events:none;will-change:transform,opacity,left,top,width}
+#lapPar{position:absolute;left:50%;top:65.5%;width:min(34vw,56vh);
+  transform:translate(-50%,-50%); translate:calc(var(--mx)*13) calc(var(--my)*8);
+  will-change:transform;pointer-events:none}
+#lapShadow{position:absolute;left:50%;top:101%;width:120%;aspect-ratio:5/1;opacity:0;
+  transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(ellipse,rgba(0,0,0,.62),transparent 64%)}
+#lapWrap{position:relative;width:100%;opacity:0;will-change:transform,opacity,filter}
+#lapScene{perspective:2600px;perspective-origin:50% 12%}
+#lap3d{position:relative;width:100%;aspect-ratio:1.397;
+  transform:rotateY(30deg) rotateX(66deg);transform-style:preserve-3d}
+#deckPlane{position:absolute;inset:0;isolation:isolate;
+  box-shadow:inset 0 -3px 6px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,252,246,.5)}
+#deckBack{position:absolute;inset:0;opacity:0;pointer-events:none;
+  -webkit-mask:url(assets/renaissance/laptop-deck.png) center/100% 100% no-repeat;
+          mask:url(assets/renaissance/laptop-deck.png) center/100% 100% no-repeat;
+  background:url(assets/renaissance/laptop-lid.png) center 40%/150% auto;
+  filter:brightness(.86) saturate(.8) contrast(1.02)}
+#deckImg{position:absolute;inset:0;width:100%;height:100%;display:block}
+#deckGlow{position:absolute;left:6%;right:6%;top:14%;height:52%;
+  background:radial-gradient(ellipse at 50% 46%,rgba(240,199,103,.34),transparent 66%);
+  mix-blend-mode:screen;opacity:0}
+#lid{position:absolute;inset:0;transform-origin:50% 2.2%;
+  transform-style:preserve-3d;will-change:transform}
+.lidFace{position:absolute;inset:0;isolation:isolate;
+  box-shadow:inset 0 -3px 6px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,252,246,.5)}
+#lidOut img{width:100%;height:100%;display:block}
+#lidSheen{position:absolute;inset:2% 3%;border-radius:4%;mix-blend-mode:screen;opacity:.0;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,246,220,.5) 46%,rgba(240,199,103,.25) 52%,transparent 68%);
+  background-size:280% 280%}
+#lidIn{opacity:0}
+#lidInC{position:absolute;inset:0;transform:scaleY(-1);border-radius:3.5%/4.8%;overflow:hidden}
+ 
+#bezel{position:absolute;inset:0;border-radius:3.5%/4.8%;
+  background:url(assets/renaissance/laptop-lid.png) center/150% auto;
+  filter:brightness(.96)}
+#glass{position:absolute;inset:6.5% 6.2% 8.5% 6.2%;border-radius:2.5%/3.6%;overflow:hidden;
   background:
-    radial-gradient(ellipse 70% 60% at 60% 42%, #17161A 0%, #0B0B0D 62%),
-    linear-gradient(to top, #131110 0%, transparent 18%),
-    var(--ground);
-  will-change: clip-path;
-}
-#stonewrap { position: absolute; inset: 0; }
-/* the marble plate exactly as it was: same cover framing, same soft mask */
-#bg {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  -webkit-mask-image: radial-gradient(ellipse 90% 85% at 50% 45%, #000 55%, transparent 100%);
-          mask-image: radial-gradient(ellipse 90% 85% at 50% 45%, #000 55%, transparent 100%);
-}
-/* cave art sits over the lit face of the stone */
-#artwrap {
-  position: absolute;
-  left: 26%; top: 12%;
-  width: 52%; height: 78%;
-  z-index: 2;
-  pointer-events: none;
-}
-#artlayer { width: 100%; height: 100%; }
-/* pigment sinks into the marble instead of sitting on it */
-#pigment { mix-blend-mode: multiply; opacity: 1; }
-#goldtrace { mix-blend-mode: screen; }
-#veil {
-  position: absolute; inset: 0; z-index: 3;
+    radial-gradient(ellipse 120% 90% at 50% 8%,rgba(58,54,64,.55),transparent 55%),
+    linear-gradient(168deg,#17161B,#0B0A0E 55%,#0E0C11);
+  box-shadow:inset 0 0 46px rgba(0,0,0,.85), inset 0 0 0 2px rgba(185,146,63,.28)}
+#glassSheen{position:absolute;inset:0;mix-blend-mode:screen;opacity:.35;
+  background:linear-gradient(115deg,transparent 42%,rgba(214,222,240,.14) 50%,transparent 60%)}
+ 
+#reflWrap{position:absolute;left:50%;top:6%;width:24%;transform:translateX(-50%);opacity:0;
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,.35) 46%,transparent 80%);
+          mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,.35) 46%,transparent 80%)}
+#reflApple{width:100%;display:block;transform:scaleY(-1);
+  filter:blur(2.6px) brightness(.5) saturate(.55) contrast(.9)}
+#digiApple{position:absolute;left:50%;top:46%;width:36%;transform:translate(-50%,-50%);
+  opacity:0;will-change:filter,opacity;
+  filter:drop-shadow(0 0 26px rgba(240,199,103,.65)) drop-shadow(0 0 70px rgba(240,199,103,.3)) brightness(1.12)}
+#glitchApple{position:absolute;left:50%;top:46%;width:36%;transform:translate(-50%,-50%);
+  opacity:0;mix-blend-mode:screen;
+  filter:sepia(1) saturate(6) hue-rotate(120deg) brightness(1.1)}
+.ring{position:absolute;left:50%;top:46%;width:30%;aspect-ratio:1;border-radius:50%;
+  transform:translate(-50%,-50%) scale(.2);opacity:0;
+  border:2px solid rgba(240,199,103,.85);mix-blend-mode:screen}
+#screenWord{position:absolute;left:50%;top:74%;transform:translateX(-50%);
+  font:600 clamp(9px,.9vw,14px)/1 var(--f-caps);letter-spacing:.6em;text-indent:.6em;
+  color:var(--lgold);opacity:0;text-shadow:0 0 14px rgba(240,199,103,.6)}
+/* --- mission copy --- */
+#s3ui{position:absolute;inset:0;z-index:12;pointer-events:none;
+  padding:9vh clamp(20px,3vw,56px) 0;
+  translate:calc(var(--mx)*-5) calc(var(--my)*-3)}
+#mKick{position:absolute;top:9vh;left:0;right:0;text-align:center;
+  font:600 clamp(11px,.95vw,13px)/1 var(--f-caps);letter-spacing:.44em;
+  color:var(--lgold);margin:0;opacity:0}
+#mH{position:absolute;top:36vh;left:clamp(20px,3vw,56px);max-width:27vw;
+  font:800 clamp(24px,3.4vw,52px)/1.08 var(--f-disp);margin:0;color:var(--marble);
+  text-shadow:0 4px 40px rgba(0,0,0,.8);clip-path:inset(0 0 100% 0);will-change:clip-path}
+#mH em{font-style:normal;color:var(--lgold)}
+#mLines{position:absolute;top:36vh;right:clamp(20px,3vw,56px);max-width:26vw;
+  display:flex;flex-direction:column;gap:1vh;opacity:0;text-align:right}
+#mLines span{font:600 clamp(14px,1.2vw,17px)/1.45 var(--f-body);letter-spacing:.14em;color:var(--marble)}
+#mLines b{color:var(--lgold);font-weight:700}
+#s3vig{position:absolute;inset:0;z-index:10;pointer-events:none;
+  background:radial-gradient(ellipse 100% 92% at 50% 44%,transparent 60%,rgba(4,4,5,.62) 100%)}
+#s3grain{z-index:11}
+
+/* ===================== SECTION 4 — THE COHORT ===================== */
+#s4{height:380vh;position:relative;z-index:4;background:#0B0A0C}
+#s4stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#0B0A0C}
+ 
+#s4bgW{position:absolute;--s4w:max(104vw,158vh);width:var(--s4w);
+  height:calc(var(--s4w) / 1.5024);
+  left:calc(21vw - 0.2134 * var(--s4w));
+  top:calc(62vh - 0.600 * (var(--s4w) / 1.5024));
+  translate:calc(var(--mx)*6) calc(var(--my)*4)}
+#s4bg{width:100%;height:100%;display:block;object-fit:cover;
+  filter:brightness(.82) saturate(.9) contrast(1.04)}
+#s4bgGrad{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(to bottom,rgba(8,7,9,.80) 0%,rgba(8,7,9,.62) 28%,
+    rgba(8,7,9,.38) 42%,rgba(8,7,9,.14) 54%,rgba(8,7,9,0) 66%),
+  linear-gradient(to right,rgba(8,7,9,.34) 0%,rgba(8,7,9,.10) 34%,rgba(8,7,9,0) 56%),
+  radial-gradient(ellipse 70% 60% at 50% 108%,rgba(6,5,7,.72),transparent 70%)}
+/* the warmth the screen throws onto the statue's lap as it settles */
+#lapGlow{position:absolute;left:0;top:0;width:24vw;aspect-ratio:2/1;
+  transform:translate(-50%,-46%);opacity:0;pointer-events:none;mix-blend-mode:screen;
+  background:radial-gradient(ellipse,rgba(255,238,196,.5),rgba(240,199,103,.18) 44%,transparent 72%)}
+#lapCast{position:absolute;left:0;top:0;width:15vw;aspect-ratio:4/1;
+  transform:translate(-50%,-6%);opacity:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(28,22,14,.6),transparent 70%)}
+/* ---------- the television ---------- */
+#tvW{position:absolute;left:72%;top:45%;width:40vw;z-index:6;
+  transform:translate(-50%,-50%); translate:calc(var(--mx)*-9) calc(var(--my)*-6);
+  will-change:transform;opacity:0;filter:drop-shadow(0 30px 46px rgba(0,0,0,.6))}
+#tvImg{width:100%;display:block}
+#tvScreenFx{position:absolute;left:12.4%;top:12.5%;width:56.2%;height:74%;
+  border-radius:5%/7%;overflow:hidden;pointer-events:none}
+#tvScanImg{position:absolute;inset:0;opacity:.34;
+  background:repeating-linear-gradient(to bottom,rgba(0,0,0,.30) 0 1px,transparent 1px 3px)}
+#tvBloom{position:absolute;inset:-6%;mix-blend-mode:screen;opacity:.5;
+  background:radial-gradient(ellipse 70% 60% at 50% 45%,rgba(150,200,255,.35),transparent 72%)}
+#tvOn{position:absolute;left:0;right:0;top:50%;height:3px;background:rgba(232,244,255,.95);
+  box-shadow:0 0 30px 8px rgba(190,220,255,.8);opacity:0}
+/* ---------- the frame carousel ---------- */
+#filmW{position:absolute;left:72%;top:82%;width:52vw;z-index:6;
+  transform:translate(-50%,-50%); translate:calc(var(--mx)*-13) calc(var(--my)*-8);
+  will-change:transform}
+#filmKick{margin:0 0 1.3vh;font:600 clamp(9px,.78vw,12px)/1 var(--f-caps);
+  letter-spacing:.4em;color:var(--lgold);opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.9)}
+#filmClip{overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 3.5%,#000 95%,transparent);
+          mask-image:linear-gradient(to right,transparent,#000 3.5%,#000 95%,transparent)}
+#filmRow{display:flex;gap:2.1vw;will-change:transform}
+.fr{margin:0;flex:0 0 auto;width:13.2vw;opacity:0;will-change:transform,opacity}
+/* an old Windows window: raised chrome, sunken client area */
+.frIn{position:relative;background:#C3C3C3;padding:2px;
+  box-shadow:inset -1px -1px 0 #000,inset 1px 1px 0 #FFF,
+             inset -2px -2px 0 #868A8E,inset 2px 2px 0 #DFDFDF,
+             3px 4px 0 rgba(0,0,0,.45),0 14px 26px rgba(0,0,0,.55)}
+.frBar{display:flex;align-items:center;justify-content:space-between;gap:4px;
+  height:1.55vw;min-height:15px;padding:0 2px 0 3px;
+  background:linear-gradient(90deg,#00007B 0%,#1083D2 100%)}
+.frBar b{font:700 clamp(7px,.62vw,10px)/1 Tahoma,"Segoe UI",sans-serif;color:#fff;
+  letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.frBtns{display:flex;gap:2px;flex:0 0 auto}
+.frBtns i{width:1.05vw;min-width:11px;height:.92vw;min-height:10px;background:#C3C3C3;
+  display:grid;place-items:center;font:700 clamp(6px,.52vw,9px)/1 Tahoma,sans-serif;color:#000;
+  box-shadow:inset -1px -1px 0 #000,inset 1px 1px 0 #FFF,
+             inset -2px -2px 0 #868A8E,inset 2px 2px 0 #DFDFDF}
+.frPicW{padding:3px 3px 4px}
+.frPic{position:relative;aspect-ratio:1.42;overflow:hidden;background:#000;
+  box-shadow:inset 1px 1px 0 #868A8E,inset -1px -1px 0 #FFF,
+             inset 2px 2px 0 #000,inset -2px -2px 0 #DFDFDF}
+.frPic i{position:absolute;inset:2px;opacity:.5;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.05) 0 1px,transparent 1px 3px),
+             radial-gradient(ellipse 120% 110% at 50% 34%,#1B2026,#05070A 74%)}
+.play{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);
+  border-radius:50%;border:1.5px solid rgba(240,214,147,.9);background:rgba(10,10,12,.45)}
+.play::after{content:'';position:absolute;left:56%;top:50%;transform:translate(-50%,-50%);
+  border-left:.62em solid rgba(245,226,178,.95);border-top:.4em solid transparent;
+  border-bottom:.4em solid transparent}
+.frStatus{display:flex;align-items:center;height:1.15vw;min-height:12px;margin:0 3px 3px;
+  padding:0 4px;font:400 clamp(6px,.55vw,9px)/1 Tahoma,sans-serif;color:#1A1A1A;
+  box-shadow:inset 1px 1px 0 #868A8E,inset -1px -1px 0 #FFF}
+/* ---------- section copy ---------- */
+#s4ui{position:absolute;left:0;top:0;z-index:12;pointer-events:none;
+  padding:6.5vh 0 0 clamp(26px,5vw,80px);max-width:29vw;
+  translate:calc(var(--mx)*-5) calc(var(--my)*-3)}
+#cKick{margin:0 0 2vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-caps);
+  letter-spacing:.44em;color:var(--lgold);opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.9)}
+#cH{margin:0 0 2.4vh;font:800 clamp(24px,3.2vw,48px)/1.04 var(--f-disp);color:var(--marble);
+  text-shadow:0 4px 30px rgba(0,0,0,.95);clip-path:inset(0 0 100% 0);will-change:clip-path}
+#cH em{font-style:normal;color:var(--lgold)}
+#cSub{margin:0;font:400 clamp(15px,1.25vw,19px)/1.55 var(--f-body);color:#E4DCCB;
+  max-width:30ch;opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.95)}
+#s4vig{position:absolute;inset:0;z-index:10;pointer-events:none;
+  background:radial-gradient(ellipse 104% 96% at 50% 46%,transparent 54%,rgba(6,5,7,.66) 100%)}
+#s4grain{z-index:11;opacity:.34}
+
+/* ===================== SECTION 5 — COURSES ===================== */
+#courseRun{position:relative;z-index:5;margin-top:-33.333svh;background:#0A0908}
+#s5{position:sticky;top:0;z-index:5;height:100svh;padding:12vh 0 10vh;
+  background:#0A0908;overflow:hidden;display:flex;align-items:center}
+#s5wall{position:absolute;inset:0;pointer-events:none;
+  background:url(assets/renaissance/dome-bg.jpg) center 44%/220% auto no-repeat;
+  filter:brightness(.62) saturate(.8) contrast(1.04)} 
+#s5wall::after{content:'';position:absolute;inset:0;opacity:.85;mix-blend-mode:overlay;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23r)' opacity='0.75'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size:520px 520px,180px 180px}
+ 
+#s5wall::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:
-    linear-gradient(to right,
-      rgba(11,11,13,.92) 0%, rgba(11,11,13,.72) 24%,
-      rgba(11,11,13,.22) 44%, rgba(11,11,13,0) 60%),
-    linear-gradient(to bottom,
-      rgba(11,11,13,.5) 0%, rgba(11,11,13,0) 24%,
-      rgba(11,11,13,0) 74%, rgba(11,11,13,.72) 100%);
-  pointer-events: none;
-}
-/* code fragments: released from the marks, not written on the stone */
-.frag {
-  position: absolute;
-  font: 400 clamp(11px, 1.05vw, 15px)/1.4 var(--f-mono);
-  color: var(--gold);
-  text-shadow: 0 0 14px rgba(201,164,76,.45), 0 1px 2px rgba(0,0,0,.9);
-  letter-spacing: .02em;
-  white-space: nowrap;
-  opacity: 0;
-  will-change: transform, opacity;
-  pointer-events: none;
-  z-index: 4;
-}
-.frag.bin  { letter-spacing: .16em; color: #BE9A45; font-size: clamp(10px, .92vw, 13px); }
-.frag.sym  { font-size: clamp(18px, 1.9vw, 30px); color: var(--gold-hot); letter-spacing: .04em; }
-.frag.code { color: var(--gold); }
-/* the single irregular heat point where the burn will begin */
-#heat {
-  position: absolute;
-  width: 120px; height: 120px;
-  transform: translate(-50%, -50%) scale(.4);
-  border-radius: 50%;
-  background: radial-gradient(circle at 48% 52%,
-    rgba(245,215,122,.9) 0%, rgba(224,118,47,.55) 26%,
-    rgba(64,26,10,.85) 55%, rgba(20,10,6,.6) 68%, transparent 78%);
-  filter: blur(3px);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 5;
-  mix-blend-mode: screen;
-}
-/* incandescent rim + char, drawn as strokes of the same burn blob */
-#burnrim { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 7; pointer-events: none; }
-#rim-char { fill: none; stroke: #17100A; stroke-width: 24; opacity: 0; filter: blur(7px); }
-#rim-hot  { fill: none; stroke: #E0762F; stroke-width: 6;  opacity: 0; filter: blur(2.5px); }
-#rim-core { fill: none; stroke: var(--gold-hot); stroke-width: 1.8; opacity: 0; }
-#embers { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 8; pointer-events: none; }
-#cue {
-  position: absolute; bottom: 26px; left: 50%;
-  transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 9px;
-  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
-  color: var(--dim);
-  transition: opacity .5s;
-  z-index: 9;
-}
-#cue i { display: block; width: 1px; height: 34px; background: linear-gradient(var(--dim), transparent); }
+    radial-gradient(ellipse 82% 66% at 50% 42%,rgba(8,7,6,0) 55%,rgba(8,7,6,.30) 100%),
+    linear-gradient(180deg,rgba(8,7,6,.20) 0%,rgba(8,7,6,0) 22%,rgba(8,7,6,.22) 100%)}
+.s5in{position:relative;z-index:2;max-width:min(1280px,92vw);margin:0 auto}
+.cxKick{margin:0 0 1.8vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-caps);
+  letter-spacing:.44em;color:var(--lgold)}
+.cxH{margin:0 0 1.6vh;font:800 clamp(28px,3.6vw,54px)/1.04 var(--f-disp);color:var(--marble)}
+.cxH em{font-style:normal;color:var(--lgold)}
+.cxSub{margin:0 0 7vh;font:400 clamp(15px,1.25vw,19px)/1.55 var(--f-body);color:#C9C1B0;max-width:46ch}
+.cxGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,1.8vw,30px)}
+ 
+.cx{margin:0;opacity:0;will-change:transform,opacity}
+ 
+.cxFrame{position:relative;
+  border-style:solid;
+  border-width:clamp(19px,2.05vw,35px) clamp(19px,2.02vw,35px)
+               clamp(19px,2.02vw,35px) clamp(19px,2.08vw,36px);
+  border-image-source:url(assets/renaissance/frame-antique.png);
+  border-image-slice:496 490 490 504;
+  border-image-repeat:stretch;
+  filter:drop-shadow(0 22px 34px rgba(0,0,0,.72)) drop-shadow(0 4px 8px rgba(0,0,0,.6))}
+.cx:nth-child(2) .cxFrame{rotate:-.5deg}
+.cx:nth-child(3) .cxFrame{rotate:.4deg}
+.cx:nth-child(4) .cxFrame{rotate:.55deg}
+.cxArt{position:relative;aspect-ratio:9/16;overflow:hidden;
+  background:radial-gradient(ellipse 130% 120% at 50% 32%,#20242A,#07090C 74%);
+  box-shadow:inset 0 0 40px rgba(0,0,0,.95)}
+.cxArt video,.cxArt img{width:100%;height:100%;object-fit:cover;display:block}
+.cxArt i.scan{position:absolute;inset:0;opacity:.24;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.06) 0 1px,transparent 1px 3px)}
+.cxPlay{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);
+  border-radius:50%;border:1.5px solid rgba(244,224,168,.9);background:rgba(8,8,10,.42);
+  transition:transform .35s ease,background .35s ease;z-index:2}
+.cxPlay::after{content:'';position:absolute;left:57%;top:50%;transform:translate(-50%,-50%);
+  border-left:.72em solid rgba(248,234,196,.96);border-top:.46em solid transparent;
+  border-bottom:.46em solid transparent}
+.cx:hover .cxPlay{transform:translate(-50%,-50%) scale(1.12);background:rgba(201,164,76,.3)}
+.cxLabel{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22% 9% 7%;
+  background:linear-gradient(to top,rgba(6,6,8,.92),rgba(6,6,8,.55) 44%,transparent)}
+.cxLabel b{display:block;font:800 clamp(12px,1.05vw,17px)/1.12 var(--f-disp);color:#F2EADA;
+  text-shadow:0 2px 10px rgba(0,0,0,.95)}
+.cxLabel span{display:block;margin-top:.55em;white-space:nowrap;
+  font:600 clamp(7px,.52vw,9px)/1 var(--f-caps);
+  letter-spacing:.2em;color:var(--lgold);opacity:.92}
+.cxTag{position:absolute;top:0;left:0;z-index:5;transform:translate(6%,-42%);
+  padding:.42em .8em;border-radius:2px;background:linear-gradient(180deg,#D8B863,#8E6E27);
+  font:700 clamp(7px,.56vw,9px)/1 var(--f-caps);letter-spacing:.2em;color:#221A08;
+  box-shadow:0 4px 12px rgba(0,0,0,.6)}
 
-/* ================================= chapter 2 interior (first frame only) */
-.interior { position: absolute; inset: 0; background: #14100A; }
-.interior svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.interior .caption {
-  position: absolute; left: 50%; bottom: 7%;
-  transform: translateX(-50%);
-  font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
-  color: #8A7350;
-  z-index: 2;
-}
-#ch2intro { position: relative; min-height: 100svh; overflow: hidden; }
-#ch2intro .interior { position: absolute; inset: 0; }
+/* ---------- section copy ---------- */
+#s4ui{position:absolute;left:0;top:0;z-index:12;pointer-events:none;
+  padding:6.5vh 0 0 clamp(26px,5vw,80px);max-width:29vw;
+  translate:calc(var(--mx)*-5) calc(var(--my)*-3)}
+#cKick{margin:0 0 2vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-caps);
+  letter-spacing:.44em;color:var(--lgold);opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.9)}
+#cH{margin:0 0 2.4vh;font:800 clamp(24px,3.2vw,48px)/1.04 var(--f-disp);color:var(--marble);
+  text-shadow:0 4px 30px rgba(0,0,0,.95);clip-path:inset(0 0 100% 0);will-change:clip-path}
+#cH em{font-style:normal;color:var(--lgold)}
+#cSub{margin:0;font:400 clamp(15px,1.25vw,19px)/1.55 var(--f-body);color:#E4DCCB;
+  max-width:30ch;opacity:0;text-shadow:0 2px 12px rgba(0,0,0,.95)}
+#s4vig{position:absolute;inset:0;z-index:10;pointer-events:none;
+  background:radial-gradient(ellipse 104% 96% at 50% 46%,transparent 54%,rgba(6,5,7,.66) 100%)}
+#s4grain{z-index:11;opacity:.34}
 
-/* ================================================ chapter 2: classroom */
-#ch2 .stage { background: #17161A; }
-#rotunda {
-  position: absolute; inset: 0;
+/* ===================== SECTION 5 — COURSES ===================== */
+#s5{position:sticky;top:0;z-index:5;height:100svh;padding:12vh 0 10vh;
+  background:#0A0908;overflow:hidden;display:flex;align-items:center}
+#s5wall{position:absolute;inset:0;pointer-events:none;
+  background:url(assets/renaissance/dome-bg.jpg) center 44%/220% auto no-repeat;
+  filter:brightness(.62) saturate(.8) contrast(1.04)}
+ 
+#s5wall::after{content:'';position:absolute;inset:0;opacity:.85;mix-blend-mode:overlay;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23r)' opacity='0.75'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size:520px 520px,180px 180px}
+ 
+#s5wall::before{content:'';position:absolute;inset:0;pointer-events:none;
   background:
-    radial-gradient(ellipse 120% 90% at 50% -18%, #3A3733 0%, #262421 34%, #17161A 62%),
-    radial-gradient(ellipse 60% 45% at 50% 4%, rgba(232,228,219,.14), transparent 60%);
-}
-#rotunda svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-#deskfield { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; }
-.clockface { position: absolute; z-index: 3; }
-.certs { position: absolute; top: 12%; right: 8%; z-index: 3; display: flex; gap: 14px; }
-.cert {
-  width: 74px; height: 96px;
-  border: 1px solid rgba(184,178,166,.5);
-  background: linear-gradient(180deg, rgba(232,228,219,.10), rgba(232,228,219,.04));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 8px; letter-spacing: .2em; color: var(--dim); text-transform: uppercase;
-  --rv-y: -18px;
-}
-#vermilion {
-  position: absolute; z-index: 4;
-  width: 46px; height: 46px;
-  left: 30%; top: 58%;
-  will-change: transform;
-}
-#vermilion svg { width: 100%; height: 100%; filter: drop-shadow(0 6px 10px rgba(0,0,0,.5)); }
-#ch2 .copy { z-index: 6; }
-#ch2-vignette {
-  position: absolute; inset: 0; z-index: 5; pointer-events: none;
-  background: radial-gradient(ellipse 90% 80% at 50% 50%, transparent 52%, rgba(11,11,13,.9) 100%);
-  opacity: 0;
-}
-
-/* ==================================================== portal 2 (frozen) */
-.portal-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.portal-through {
-  position: absolute; inset: 0;
-  clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%);
-  will-change: clip-path;
-}
-.portal-caption {
-  position: absolute; left: 50%; bottom: 10%;
-  transform: translateX(-50%);
-  font-size: 10px; letter-spacing: .3em; text-transform: uppercase;
-  color: var(--dim);
-}
-
-/* ================================================== chapter 3 (frozen) */
-#ch3 .stage { background: radial-gradient(ellipse 90% 70% at 60% 40%, #141318 0%, #0B0B0D 70%); }
-#orbits { position: absolute; left: 50%; top: 46%; width: min(64vw, 760px); aspect-ratio: 1.6;
-  transform: translate(-50%, -50%); z-index: 1; opacity: .6; }
-#orbits svg { width: 100%; height: 100%; overflow: visible; }
-.card {
-  position: absolute;
-  width: 148px;
-  padding: 12px 14px 12px;
-  background: rgba(17,16,20,.88);
-  border: 1px solid rgba(201,164,76,.32);
-  border-radius: 3px;
-  color: var(--stone);
-  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
-  line-height: 1.5;
-  box-shadow: 0 12px 30px rgba(0,0,0,.5);
-  transition: opacity .6s ease, transform .6s ease, filter .6s ease,
-              border-color .25s, box-shadow .25s;
-  cursor: default;
-}
-.card small { display: block; color: var(--dim); font-size: 8.5px; letter-spacing: .1em; margin-top: 5px; text-transform: none; }
-.card .chip { display: block; width: 22px; height: 3px; background: var(--gold); margin-bottom: 9px; }
-.card:hover, .card:focus-visible {
-  border-color: var(--gold);
-  box-shadow: 0 16px 40px rgba(0,0,0,.6), 0 0 0 1px rgba(201,164,76,.25);
-  outline: none;
-}
-.card.verm .chip { background: var(--verm); }
-#gear { position: absolute; left: 7%; bottom: 9%; width: 74px; z-index: 3; opacity: .75; will-change: transform; }
-#token { position: absolute; width: 30px; height: 30px; z-index: 4; will-change: transform; }
-#token i {
-  display: block; width: 100%; height: 100%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 34% 30%, #FF7A54, var(--verm) 58%, #A93318);
-  box-shadow: 0 4px 10px rgba(0,0,0,.55), 0 0 14px rgba(227,74,40,.35);
-}
-#ch3 .copy { left: 50%; transform: translate(-50%, calc(-50% + var(--rise, 10px))); text-align: center; width: min(560px, 80vw); }
-#ch3 .copy p { margin-inline: auto; }
-
-/* ================================================== chapter 4 (frozen) */
-#ch4 .stage { background: #0B0B0D; }
-#constellation { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
-#constellation line { stroke: var(--gold); stroke-width: 1; opacity: .8; }
-#constellation .halo { fill: none; stroke: rgba(201,164,76,.35); }
-#constellation circle.node { fill: #1C1A20; stroke: var(--shadow); stroke-width: 1; }
-#constellation text { fill: var(--shadow); font: 9px var(--f-body); letter-spacing: .12em; text-anchor: middle; }
-#constellation .pass { fill: var(--gold-hot); filter: drop-shadow(0 0 6px rgba(245,215,122,.8)); }
-#ch4 .copy { z-index: 6; }
-
-/* ================================================== chapter 5 (frozen) */
-#ch5 {
-  min-height: 120vh;
-  display: grid; place-items: center;
-  position: relative;
+    radial-gradient(ellipse 82% 66% at 50% 42%,rgba(8,7,6,0) 55%,rgba(8,7,6,.30) 100%),
+    linear-gradient(180deg,rgba(8,7,6,.20) 0%,rgba(8,7,6,0) 22%,rgba(8,7,6,.22) 100%)}
+.s5in{position:relative;z-index:2;max-width:min(1280px,92vw);margin:0 auto}
+.cxKick{margin:0 0 1.8vh;font:600 clamp(10px,.9vw,13px)/1 var(--f-caps);
+  letter-spacing:.44em;color:var(--lgold)}
+.cxH{margin:0 0 1.6vh;font:800 clamp(28px,3.6vw,54px)/1.04 var(--f-disp);color:var(--marble)}
+.cxH em{font-style:normal;color:var(--lgold)}
+.cxSub{margin:0 0 7vh;font:400 clamp(15px,1.25vw,19px)/1.55 var(--f-body);color:#C9C1B0;max-width:46ch}
+.cxGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,1.8vw,30px)}
+/* an old gallery frame: weathered gilt, deep rebate, canvas sunk inside */
+.cx{margin:0;opacity:0;will-change:transform,opacity}
+.cxFrame{position:relative;padding:clamp(15px,1.6vw,27px);border-radius:2px;
   background:
-    radial-gradient(ellipse 70% 46% at 50% 62%, rgba(201,164,76,.07), transparent 70%),
-    var(--ground);
-}
-#ch5 .inner { text-align: center; padding: 24vh 24px; max-width: 620px; }
-#ch5 h2 {
-  font-family: var(--f-display); font-weight: 400;
-  font-size: clamp(30px, 4vw, 54px); line-height: 1.16; margin: 0;
-  text-wrap: balance;
-}
-#key { width: 44px; margin: 0 auto 34px; display: block; opacity: .85; transition: transform .5s ease; }
-#ch5 .inner:hover #key { transform: rotate(-18deg); }
+    /* grime settled into the carving over a couple of centuries */
+    linear-gradient(rgba(22,15,6,.42),rgba(22,15,6,.42)),
+    radial-gradient(ellipse 62% 44% at 16% 10%,rgba(70,52,22,.6),transparent 62%),
+    radial-gradient(ellipse 54% 52% at 84% 86%,rgba(28,20,8,.7),transparent 64%),
+    linear-gradient(152deg,#5A4520 0%,#241B0A 13%,#8E7133 27%,#3D2E12 41%,
+      #A88949 54%,#2E2209 68%,#7E6429 82%,#1E1608 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,238,196,.32),
+    inset 0 0 0 3px rgba(38,27,10,.62),
+    inset 0 0 0 4px rgba(212,176,96,.38),
+    inset 0 0 0 9px rgba(26,18,7,.55),
+    inset 0 0 0 10px rgba(198,164,88,.22),
+    inset 0 0 26px rgba(18,12,5,.72),
+    0 28px 54px rgba(0,0,0,.78), 0 6px 14px rgba(0,0,0,.62)}
+/* the rebate: the step down into the canvas, in deep shadow */
+.cxFrame::before{content:'';position:absolute;inset:clamp(11px,1.2vw,21px);border-radius:1px;
+  z-index:3;pointer-events:none;
+  border:1px solid rgba(20,14,6,.7);
+  box-shadow:inset 0 0 16px rgba(0,0,0,.85),0 0 0 1px rgba(226,196,128,.24)}
+/* craquelure and worn gilding across the moulding */
+.cxFrame::after{content:'';position:absolute;inset:0;border-radius:2px;pointer-events:none;z-index:4;
+  background:
+    linear-gradient(118deg,transparent 33%,rgba(255,244,206,.13) 46%,transparent 58%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='5'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23c)' opacity='0.55'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;opacity:1}
+.cx:nth-child(2) .cxFrame{rotate:-.5deg}
+.cx:nth-child(3) .cxFrame{rotate:.4deg}
+.cx:nth-child(4) .cxFrame{rotate:.55deg}
 
-/* ============================================================= debug */
-#debug {
-  display: none;
-  position: fixed; top: 10px; left: 10px;
-  padding: 8px 12px;
-  background: rgba(11,11,13,.85);
-  border: 1px solid rgba(201,164,76,.35);
-  font: 11px/1.7 var(--f-mono);
-  color: var(--stone);
-  z-index: 51; pointer-events: none; white-space: pre;
-}
-body.debug #debug { display: block; }
+/* ===================== SECTION 6 — OUR PARTNERS ===================== */
+ 
+#s6{position:relative;z-index:6;padding:12svh 0 0;background:transparent}
+#s6panel{position:sticky;top:50%;width:min(1180px,94vw);margin:0 auto;
+  transform:translateY(-50%)}
+ 
+#s6paper{display:block;width:100%;height:auto}
+#s6shelf{position:absolute;left:50%;top:53%;width:76%;height:auto;
+  transform:translate(-50%,-50%);will-change:transform,opacity,filter}
+ 
+#s6burn{position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;opacity:0;
+  filter:drop-shadow(0 0 18px rgba(255,138,42,.30))}
+ 
+#s6dust{position:absolute;inset:-12% -14%;width:128%;height:124%;
+  pointer-events:none;opacity:0}
 
-/* ==================================================== responsive */
-@media (max-width: 760px) {
-  .plx[data-depth] { transform: none; }
-  #artwrap { left: 14%; top: 16%; width: 74%; height: 66%; }
-  #veil {
-    background:
-      linear-gradient(to bottom,
-        rgba(11,11,13,.5) 0%, rgba(11,11,13,.04) 22%,
-        rgba(11,11,13,.3) 56%, rgba(11,11,13,.92) 84%);
-  }
-  .copy, #ch3 .copy {
-    left: 24px; right: 24px; width: auto;
-    top: auto; bottom: 12vh;
-    transform: translateY(var(--rise, 10px));
-    text-align: left;
-  }
-  .copy p { max-width: none; }
-  .frag { font-size: 10px; }
-  #chapnav {
-    right: auto; left: 50%; top: auto; bottom: 12px;
-    transform: translateX(-50%);
-    flex-direction: row; gap: 2px; padding: 6px 10px;
-  }
-  #chapnav button .lbl { display: none; }
-  #chapnav .bar { display: none; }
-  .certs { top: 8%; right: 4%; }
-  .cert { width: 54px; height: 70px; }
-  .card { width: 124px; font-size: 9px; }
-  #orbits { width: 92vw; }
-  #gear { display: none; }
-}
 
-/* ================================================= reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .rv, .copy, .card { transition: none; }
-  .plx[data-depth] { transform: none; }
+/* ===================== SECTION 7 — FOOTER ===================== */
+ 
+#s7{position:relative;z-index:7;height:320svh;background:transparent}
+#s7stage{position:fixed;inset:0;overflow:hidden;pointer-events:none;
+  visibility:hidden;background:transparent} 
+ 
+#ftBody{-webkit-mask:url(#inkMaskA); mask:url(#inkMaskA)}
+#ftEdge{-webkit-mask:url(#inkMaskB); mask:url(#inkMaskB)} 
+#ftSpark{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0}
+#ftVeil{position:absolute;inset:0;z-index:1;opacity:0;
+  background:linear-gradient(to top,rgba(3,3,5,.92) 0%,rgba(3,3,5,.55) 34%,rgba(3,3,5,0) 78%)} 
+#ftBody{position:absolute;inset:0;z-index:2}
+#ftInk{position:absolute;inset:0;background:#050506} 
+#ftScene{position:absolute;inset:0;transform-origin:50% 50%;
+  will-change:transform;backface-visibility:hidden}
+.ftL{position:absolute;inset:0;width:100%;height:100%;display:block;
+  object-fit:cover;object-position:50% 50%} 
+#ftReal{position:absolute;inset:0;opacity:0;will-change:opacity,filter}
+#ftBg{z-index:1} #ftTable{z-index:2} #ftMan{z-index:3} 
+#ftEdge{position:absolute;inset:0;z-index:3;will-change:opacity,filter}
+#ftEdge .ftL{object-fit:cover} 
+#ftEdgeGlow{position:absolute;inset:0;
+  filter:drop-shadow(0 0 3px rgba(214,232,255,.55)) drop-shadow(0 0 10px rgba(150,190,255,.28))} 
+#ftVig{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse 96% 90% at 50% 46%,transparent 54%,rgba(0,0,0,.66) 100%)}
+/* --- footer copy --- */
+#ftUi{position:absolute;left:0;right:0;bottom:0;z-index:6;opacity:0;
+  padding:clamp(20px,3vw,44px) clamp(20px,4vw,72px) clamp(18px,2.6vw,38px);
+  background:linear-gradient(to top,rgba(6,6,8,.96) 0%,rgba(6,6,8,.88) 38%,rgba(6,6,8,.62) 68%,transparent 100%);
+  will-change:opacity}
+#ftRow{display:flex;align-items:flex-end;justify-content:space-between;
+  gap:clamp(16px,3vw,48px);flex-wrap:wrap}
+#ftBrand b{display:block;font:800 clamp(20px,2.4vw,34px)/1 var(--f-caps);
+  letter-spacing:.22em;color:var(--marble)}
+#ftBrand span{display:block;margin-top:.7em;
+  font:600 clamp(8px,.72vw,10px)/1.5 var(--f-caps);letter-spacing:.24em;color:var(--lgold)}
+#ftNav{display:flex;gap:clamp(18px,3.4vw,64px)}
+#ftNav ul{list-style:none;margin:0;padding:0}
+#ftNav li{margin:0 0 .55em}
+#ftNav b{display:block;margin:0 0 1em;
+  font:700 clamp(8px,.68vw,10px)/1 var(--f-caps);letter-spacing:.26em;color:var(--lgold)}
+#ftNav a{font:400 clamp(13px,1.05vw,16px)/1 var(--f-body);color:#D7CFC0;
+  text-decoration:none;transition:color .25s ease}
+#ftNav a:hover{color:var(--marble)}
+#ftFine{width:100%;margin-top:clamp(14px,2vw,26px);padding-top:clamp(10px,1.2vw,16px);
+  border-top:1px solid rgba(226,201,150,.16);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font:400 clamp(11px,.82vw,13px)/1.5 var(--f-body);letter-spacing:.08em;color:#8E877C}
+
+/* ============================= mobile ============================= */
+@media (max-width:760px){
+  #stage :is(#sky,#treesL,#treesR,#foliage,#statue,#fem,#male,#dust){transform:none!important}
+  #appleInner,#flecks{transform:none!important} 
+  :root{--hallW: max(115vw,118svh); --hallDX: -7.25%}
+  #envW,#tideHall,#tideHallFg{top:auto;bottom:0;aspect-ratio:auto;height:88svh}
+  #envW{transform:translate(calc(-50% + var(--hallDX)),0)!important}
+  #tideHall,#tideHallFg{transform:translate(calc(-50% + var(--hallDX)),var(--tideRise,0px))} 
+  #hallBg,#hallFg,#tideHall,#tideHallFg{object-fit:cover;object-position:50% 18%}
+  #envW,#tideHall,#tideHallFg{
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 60px);
+            mask-image:linear-gradient(to bottom,transparent 0,#000 60px)}
+  #s2ui{translate:0 0}
+}
+@media (max-width:760px){
+  #statueW{top:38%} #statue{height:46vh}
+  #femW{left:15%;top:72%} #fem{width:40vw;height:auto}
+  #maleW{left:85%;top:74%} #male{width:34vw;height:auto}
+  #appleW{left:55%;top:35%} #appleInner{width:46px}
+  #brand{left:20px;top:18px;flex-direction:column;gap:6px}
+  #brand b{font-size:17px;letter-spacing:.3em}
+  #brand span{font-size:7.5px;letter-spacing:.18em}
+  #h1beat,#h2beat{top:max(12%,76px);width:92vw}
+  #h1beat h1{font-size:clamp(21px,6.6vw,30px)}
+  #h2beat h2{font-size:clamp(24px,7.6vw,34px)}
+  #s2ui{max-width:92vw;padding:4vh 20px 0}
+  #bigH{font-size:clamp(20px,6.4vw,26px);margin-bottom:1.2vh}
+  #supp{font-size:12px}
+  #s2scrim{width:100%;background:linear-gradient(to bottom,rgba(10,9,11,.55),transparent 45%)}
+  #appleStageW{width:64vw}
+  .apiece.far{display:none}
+  /* section 3 */
+  #s3{height:520vh}
+  #s3bgW{transform:none!important}
+  #s3bg{object-position:55% 62%}
+  #lapPar{transform:translate(-50%,-50%)!important}
+  #s3ui{max-width:100vw;padding:6vh 20px 0;translate:0 0}
+  #mKick{position:static;text-align:left;margin:0 0 1.4vh;font-size:9px}
+  #mH{position:static;font-size:clamp(17px,5.2vw,21px);max-width:100%;margin:0 0 1.6vh}
+  #mLines{position:static;max-width:100%;text-align:left;gap:.6vh}
+  #mLines span{font-size:9.5px}
+  /* section 5 */
+  #s5{padding:11vh 0 12vh}
+  .s5in{max-width:100vw;padding:0 20px}
+  .cxH{font-size:clamp(24px,7vw,30px)}
+  .cxSub{font-size:13px;margin-bottom:4.5vh}
+  .cxGrid{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scroll-snap-type:x mandatory;scrollbar-width:none;gap:20px;
+    margin:0 -20px;padding:0 20px 6px}
+  .cxGrid::-webkit-scrollbar{display:none}
+  .cx{flex:0 0 62vw;scroll-snap-align:center}
+  /* section 4 */
+  #s4{height:300vh}
+  /* portrait needs a bigger art frame to cover, and the lap sits lower */
+  #s4bgW{--s4w:max(108vw,168vh);
+    left:calc(34vw - 0.2134 * var(--s4w));
+    top:calc(56vh - 0.600 * (var(--s4w) / 1.5024));
+    transform:none!important}
+  #s4bgGrad{background:
+    linear-gradient(to bottom,rgba(8,7,9,.95) 0%,rgba(8,7,9,.35) 22%,rgba(8,7,9,0) 40%),
+    radial-gradient(ellipse 90% 50% at 50% 108%,rgba(6,5,7,.8),transparent 72%)}
+  #s4ui{max-width:100vw;padding:4.5vh 20px 0;translate:0 0}
+  #cKick{font-size:13px;margin-bottom:1.2vh}
+  #cH{font-size:clamp(30px,9.5vw,38px);margin-bottom:1.4vh}
+  #cSub{font-size:15px;max-width:80vw}
+  #tvW{left:50%;top:74.5%;width:70vw;transform:translate(-50%,-50%)!important}
+  #filmW{left:50%;top:92%;width:100vw;transform:translate(-50%,-50%)!important}
+  #filmKick{padding-left:20px;margin-bottom:.8vh}
+  #filmClip{overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;
+    scrollbar-width:none;padding:0 20px;-webkit-mask-image:none;mask-image:none}
+  #filmClip::-webkit-scrollbar{display:none}
+  /* section 6 — same panel, just a narrower crop of the shelf photo */
+  #courseRun{margin-top:-33.333svh}
+  #s5{height:100svh;padding:7svh 0 7svh;align-items:flex-start}
+  #s5wall{background-size:260% auto;background-position:center 32%}
+  .cxSub{margin-bottom:3.4vh}
+  /* the curtain's copy must sit exactly where the real section puts its
+     content — this padding is asymmetric, so plain centering lands ~4px off */
+  /* portrait: the sheet is wide and short, so it pins a little above centre to
+     leave the erosion room to throw shards downward into Courses */
+  #s6{padding:8svh 0 0}
+  #s6panel{width:94vw;top:46%}
+  #s6shelf{width:88%}
+ 
+  #ftScene{inset:0 0 auto 0;height:52svh}
+  .ftL{object-position:50% 42%}
+  #ftUi{top:calc(52svh - 26px);background:linear-gradient(to top,#060608 0%,#060608 88%,rgba(6,6,8,0) 100%);
+    padding:40px 20px 22px;display:flex;align-items:center}
+  #ftRow{width:100%}
+  #ftRow{flex-direction:column;align-items:flex-start;gap:20px}
+  #ftNav{gap:22px;flex-wrap:wrap}
+  #ftNav a{font-size:12px}
+  #ftFine{flex-direction:column;gap:6px;margin-top:16px}
+  #filmRow{gap:14px;transform:none!important}
+  .fr{width:32vw;scroll-snap-align:center}
+}
+ 
+@media (max-width:760px) and (max-height:480px){
+  #h1beat,#h2beat{top:max(10%,68px);width:44vw}
+  #h1beat h1{font-size:clamp(16px,3.4vw,22px)}
+  #h2beat h2{font-size:clamp(18px,4vw,25px)}
+  #statue{height:52vh} #fem{width:22vw;height:auto} #male{width:17vw;height:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  .mote{display:none}
+  #stage *,#s2stage *{transition:none!important}
 }
 </style>
 </head>
 <body>
 
-<!-- ======================================================= chapter nav -->
-<nav id="chapnav" aria-label="Chapters">
-  <button data-go="ch1" aria-current="true"><span class="num">I</span><span class="lbl">The First Tool</span></button>
-  <button data-go="ch2intro"><span class="num">II</span><span class="lbl">The Old Classroom</span></button>
-  <button data-go="ch3"><span class="num">III</span><span class="lbl">The Glitch</span></button>
-  <button data-go="ch4"><span class="num">IV</span><span class="lbl">The Community</span></button>
-  <button data-go="ch5"><span class="num">V</span><span class="lbl">The Invitation</span></button>
-  <span class="bar" aria-hidden="true"><i></i></span>
-</nav>
-
-<!-- ============================================ CHAPTER 1 · THE FIRST TOOL -->
-<section id="ch1" class="track" style="height: 560vh" aria-label="Chapter 1 — The First Tool">
-  <div class="stage">
-
-    <!-- BACK LAYER: chapter 2's first frame, rendered from the start -->
-    <div id="ch2back" class="interior" data-placeholder="chapter 2 first frame"></div>
-
-    <!-- FRONT LAYER: the complete cave-stone world; the burn removes it -->
-    <div id="caveworld">
-      <!-- The original marble plate, unchanged: same footage, same framing,
-           same scrub. Cave art is painted ON it, not instead of it. -->
-      <div id="stonewrap" class="plx" data-depth="1">
-        <video id="bg" muted playsinline preload="auto"
-               poster="assets/video/hero-poster.jpg" data-placeholder="marble footage"></video>
-      </div>
-
-      <!-- Cave art, blended into the stone face. Pigment multiplies into the
-           marble so it sits in the surface rather than floating over it; a
-           noise mask erodes the strokes so nothing reads as clean vector. -->
-      <div id="artwrap">
-        <svg id="artlayer" viewBox="0 0 600 800" aria-hidden="true" data-placeholder="cave pigment art">
-          <defs>
-            <filter id="handrough" x="-25%" y="-25%" width="150%" height="150%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="5" result="n"/>
-              <feDisplacementMap in="SourceGraphic" in2="n" scale="6.5"/>
-            </filter>
-            <filter id="goldglow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="2.6" result="b"/>
-              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <!-- erosion: patchy alpha so pigment survives only where the
-                 stone held it, the way real cave pigment has flaked -->
-            <filter id="erodef" x="0" y="0" width="100%" height="100%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.02 0.03" numOctaves="4" seed="19" result="t"/>
-              <feColorMatrix in="t" type="matrix"
-                values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0.8 0.45 0 0 -0.04" result="a"/>
-              <feComposite in="SourceGraphic" in2="a" operator="in"/>
-            </filter>
-          </defs>
-
-          <g id="pigment" filter="url(#handrough)" stroke-linecap="round" stroke-linejoin="round">
-            <g filter="url(#erodef)">
-              <!-- bison: filled pigment wash, heavy shoulder hump, small
-                   hindquarters — proportions taken from Palaeolithic cave
-                   painting rather than outline drawing -->
-              <g fill="#7E3418" opacity=".8" stroke="none">
-                <path d="M116 372 c-3 -28 3 -48 17 -60 c15 -14 36 -22 58 -27 c14 -3 24 -12 31 -25
-                  c8 -14 21 -20 36 -17 c17 3 29 14 38 27 c7 10 15 15 25 17 c9 2 12 8 8 13
-                  c-5 6 -15 5 -25 1 c-11 -4 -22 -4 -34 -1 c-17 4 -33 11 -49 19 c-19 9 -37 16 -53 21
-                  c-15 5 -25 15 -29 28 z"/>
-                <path d="M137 368 l11 3 l-6 46 l-11 -3 z"/>
-                <path d="M167 356 l10 3 l-7 44 l-10 -3 z"/>
-                <path d="M243 330 l10 3 l-8 42 l-10 -3 z"/>
-                <path d="M272 320 l10 3 l-9 40 l-10 -3 z"/>
-              </g>
-              <!-- horns, thin and separate the way pigment horns usually are -->
-              <g fill="none" stroke="#7E3418" stroke-width="4.5" opacity=".7">
-                <path d="M300 254 q10 -20 4 -34 M312 262 q18 -14 22 -30"/>
-              </g>
-
-              <!-- horse, ochre, half lost to the surface -->
-              <g fill="#9A631F" opacity=".66" stroke="none">
-                <path d="M366 486 c-2 -20 4 -33 16 -40 c14 -8 32 -12 48 -13 c11 -1 19 -7 25 -16
-                  c7 -10 17 -13 27 -10 c11 3 18 11 22 21 c3 7 8 11 15 12 c7 1 9 6 5 10
-                  c-4 4 -11 3 -18 0 c-8 -3 -16 -3 -25 -1 c-13 3 -25 9 -37 14 c-14 6 -28 11 -40 14
-                  c-11 3 -19 10 -22 19 z"/>
-                <path d="M381 484 l8 2 l-5 34 l-8 -2 z"/>
-                <path d="M406 476 l8 2 l-6 33 l-8 -2 z"/>
-                <path d="M456 458 l8 2 l-6 32 l-8 -2 z"/>
-              </g>
-
-              <!-- hunters: filled, elongated, mid-stride (Levantine manner),
-                   never stick figures -->
-              <g fill="#211D19" opacity=".78" stroke="none">
-                <path d="M258 484 c4 0 8 4 8 9 c0 4 -2 7 -5 9 l0 13 c0 4 4 7 9 9 l15 6
-                  c3 1 4 4 2 6 c-2 2 -5 2 -8 1 l-17 -8 l-2 19 l10 26 c1 4 -1 7 -4 7 c-3 0 -5 -2 -6 -5
-                  l-9 -23 l-8 21 c-1 3 -4 5 -7 4 c-3 -1 -4 -4 -3 -7 l9 -25 l0 -24 c-4 -2 -7 -6 -7 -11
-                  c0 -6 5 -11 11 -11 z"/>
-                <path d="M203 508 c4 0 7 3 7 8 c0 4 -2 6 -4 8 l0 12 c0 4 3 6 8 8 l12 5
-                  c2 1 3 3 2 5 c-2 2 -4 2 -7 1 l-14 -7 l-2 17 l9 23 c1 3 -1 6 -3 6 c-3 0 -5 -2 -5 -4
-                  l-8 -21 l-7 19 c-1 3 -3 4 -6 3 c-2 -1 -3 -3 -2 -6 l8 -22 l0 -21 c-4 -2 -6 -5 -6 -10
-                  c0 -5 4 -9 9 -9 z"/>
-              </g>
-              <!-- spears -->
-              <g fill="none" stroke="#2B2621" stroke-width="3" opacity=".5">
-                <path d="M286 512 L322 462 M226 528 L256 488"/>
-              </g>
-
-              <!-- hand stencil -->
-              <g fill="#7E3418" opacity=".55" stroke="none">
-                <path d="M414 214 q5 -23 12 -4 l2 20 q4 -25 12 -5 l1 21 q5 -21 12 -3 l-1 21 q7 -16 12 -1 l-4 23
-                  q12 -10 10 4 q-3 16 -16 26 q-14 11 -30 5 q-14 -5 -18 -23 l-2 -44 q0 -19 9 -19 z"/>
-              </g>
-              <!-- tally marks: the first stored data -->
-              <g stroke="#241F1B" stroke-width="4" opacity=".62" fill="none">
-                <path d="M120 452 l0 26 M133 450 l0 26 M146 452 l0 26 M159 450 l0 26 M115 478 l50 -22"/>
-              </g>
-              <!-- gathering dots -->
-              <g fill="#A6712F" opacity=".4" stroke="none">
-                <circle cx="352" cy="196" r="4"/><circle cx="372" cy="184" r="3.4"/>
-                <circle cx="392" cy="176" r="4"/><circle cx="332" cy="206" r="3.4"/>
-                <circle cx="412" cy="170" r="3.4"/>
-              </g>
-            </g>
-          </g>
-
-          <!-- the same strokes waking as gold: knowledge becoming computation -->
-          <g id="goldtrace" filter="url(#goldglow)" stroke-linecap="round" stroke-linejoin="round" fill="none">
-            <path class="gt" d="M116 372 c-3 -28 3 -48 17 -60 c15 -14 36 -22 58 -27 c14 -3 24 -12 31 -25
-              c8 -14 21 -20 36 -17 c17 3 29 14 38 27 c7 10 15 15 25 17" stroke="#F5D77A" stroke-width="2.4" opacity="0"/>
-            <path class="gt" d="M366 486 c-2 -20 4 -33 16 -40 c14 -8 32 -12 48 -13 c11 -1 19 -7 25 -16
-              c7 -10 17 -13 27 -10 c11 3 18 11 22 21" stroke="#F5D77A" stroke-width="2" opacity="0"/>
-            <path class="gt" d="M286 512 L322 462" stroke="#F5D77A" stroke-width="2" opacity="0"/>
-            <path class="gt" d="M115 478 l50 -22" stroke="#F5D77A" stroke-width="2" opacity="0"/>
-            <path class="gt" d="M258 484 c4 0 8 4 8 9 c0 4 -2 7 -5 9 l0 13 c0 4 4 7 9 9 l15 6" stroke="#F5D77A" stroke-width="1.8" opacity="0"/>
-          </g>
-        </svg>
-      </div>
-
-      <!-- released from the marks: binary and code symbols, not prose -->
-      <div class="frag bin" style="left:30%; top:34%" data-d="-70,-38" data-t="0.35">01001100 01000101</div>
-      <div class="frag sym" style="left:62%; top:24%" data-d="40,-56" data-t="0.375">&lt;/&gt;</div>
-      <div class="frag bin" style="left:67%; top:52%" data-d="78,4"  data-t="0.40">10110101 00110110</div>
-      <div class="frag sym" style="left:28%; top:58%" data-d="-76,26" data-t="0.425">{ }</div>
-      <div class="frag bin" style="left:52%; top:70%" data-d="14,62" data-t="0.45">0110 1001 1100</div>
-      <div class="frag code" style="left:44%; top:17%" data-d="-10,-62" data-t="0.475">if (system.stalls) disrupt();</div>
-      <div class="frag sym" style="left:73%; top:38%" data-d="86,-16" data-t="0.50">=&gt;</div>
-      <div class="frag code" style="left:22%; top:46%" data-d="-88,2" data-t="0.52">const future = learn(unknown);</div>
-
-      <div id="heat"></div>
-      <div id="veil"></div>
-
-      <div class="copy" data-in="0.00" data-out="0.15">
-        <h1>Everything you were taught<br>was built for a world that has already changed.</h1>
-      </div>
-      <div class="copy minor" data-in="0.20" data-out="0.34">
-        <h2>Knowledge once changed by generation.</h2>
-      </div>
-      <div class="copy minor" data-in="0.38" data-out="0.54">
-        <h2>Now it changes <span class="gold">every day</span>.</h2>
-      </div>
+<!-- ======================= SECTION 1 ======================= -->
+<section id="hero" aria-label="GLITCH — the apple of knowledge falls from the old system">
+  <div id="stage">
+    <div class="layer" id="sky"></div>
+    <div class="layer" id="treesL"></div>
+    <div class="layer" id="treesR"></div>
+    <div class="fig" id="statueW">
+      <img id="statue" src="assets/renaissance/statue-rebellious-slave.png"
+           alt="Michelangelo's Rebellious Slave, marble statue">
     </div>
-
-    <!-- burn edge + embers live above the masked front layer -->
-    <svg id="burnrim" aria-hidden="true">
-      <path id="rim-char" d=""/>
-      <path id="rim-hot" d=""/>
-      <path id="rim-core" d=""/>
+    <div class="fig" id="femW"><div id="femP">
+      <img id="fem" src="assets/characters/girl-student-transparent.png"
+           alt="A young student with violet headphones and neon sneakers, flying toward the apple">
+    </div></div>
+    <div class="fig" id="maleW"><div id="maleP">
+      <img id="male" src="assets/characters/boy-student-transparent.png"
+           alt="A young student with neon smart glasses, leaping toward the apple">
+    </div></div>
+    <div class="layer" id="foliage"></div>
+    <div id="dust"></div>
+    <div id="vig"></div>
+    <div class="grainy"></div>
+    <svg id="maskDefs" width="1" height="1" aria-hidden="true" style="position:absolute;left:-9999px;top:0;overflow:visible;pointer-events:none">
+      <defs>
+        <filter id="tideSoft" x="-25%" y="-25%" width="150%" height="150%">
+          <feGaussianBlur stdDeviation="17"/>
+        </filter>
+        <mask id="tideMask" maskUnits="userSpaceOnUse" x="-200" y="-600" width="6000" height="6000">
+          <path id="tideMaskPath" fill="#fff" filter="url(#tideSoft)"/>
+        </mask>
+      </defs>
     </svg>
-    <canvas id="embers" data-placeholder="ember particles"></canvas>
-
-    <div id="cue"><i></i>Scroll</div>
-  </div>
-</section>
-
-<!-- =============================== CHAPTER 2 · first frame (transition test) -->
-<section id="ch2intro" aria-label="Chapter 2 — The Old Classroom (first frame)">
-  <div class="interior" data-placeholder="chapter 2 first frame"></div>
-</section>
-
-<!-- ============================================ CHAPTER 2 (frozen, out of scope) -->
-<section id="ch2" class="track" style="height: 420vh" aria-label="Chapter 2 — The Old Classroom">
-  <div class="stage">
-    <div id="rotunda" class="plx" data-depth="1" data-placeholder="dome interior environment">
-      <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <g fill="none" stroke="rgba(184,178,166,.30)" stroke-width="2">
-          <path d="M 40 900 A 760 700 0 0 1 1560 900"/>
-          <path d="M 200 900 A 600 560 0 0 1 1400 900"/>
-        </g>
-        <g stroke="rgba(184,178,166,.18)" stroke-width="1">
-          <line x1="800" y1="200" x2="800" y2="560"/>
-          <line x1="500" y1="260" x2="440" y2="560"/>
-          <line x1="1100" y1="260" x2="1160" y2="560"/>
-        </g>
-        <circle cx="800" cy="214" r="40" fill="none" stroke="rgba(232,228,219,.35)" stroke-width="2"/>
-      </svg>
+    <div id="tide">
+      <img id="tideHall" src="assets/renaissance/hall-bg.png" alt="">
+      <img id="tideHallFg" src="assets/renaissance/hall-fg.png" alt="">
     </div>
-    <svg id="deskfield" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" data-placeholder="examination desks"></svg>
-    <svg class="clockface plx" data-depth="2" style="left:9%; top:14%; width:70px;" viewBox="0 0 80 80" aria-hidden="true" data-placeholder="clock">
-      <circle cx="40" cy="40" r="36" fill="rgba(232,228,219,.06)" stroke="#B8B2A6" stroke-width="1.5"/>
-      <line class="hand-h" x1="40" y1="40" x2="40" y2="22" stroke="#E8E4DB" stroke-width="2.5"/>
-      <line class="hand-m" x1="40" y1="40" x2="40" y2="14" stroke="#B8B2A6" stroke-width="1.5"/>
+    <svg id="tideCrest" aria-hidden="true"><path id="crestPath" fill="none" stroke="#FBF2DC" stroke-width="7" opacity=".38"/></svg>
+    <svg id="dbg" width="100%" height="100%" aria-hidden="true">
+      <line id="dbgCorr" stroke="#00E5D0" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <circle id="dbgGirl" r="7" fill="none" stroke="#FF2E88" stroke-width="2"/>
+      <circle id="dbgBoy" r="7" fill="none" stroke="#2864FF" stroke-width="2"/>
+      <circle id="dbgShared" r="10" fill="none" stroke="#F0C767" stroke-width="2"/>
     </svg>
-    <svg class="clockface plx" data-depth="3" style="right:13%; top:34%; width:52px;" viewBox="0 0 80 80" aria-hidden="true" data-placeholder="clock">
-      <circle cx="40" cy="40" r="36" fill="rgba(232,228,219,.06)" stroke="#B8B2A6" stroke-width="1.5"/>
-      <line class="hand-h" x1="40" y1="40" x2="40" y2="22" stroke="#E8E4DB" stroke-width="2.5"/>
-      <line class="hand-m" x1="40" y1="40" x2="40" y2="14" stroke="#B8B2A6" stroke-width="1.5"/>
-    </svg>
-    <div class="certs plx" data-depth="2">
-      <div class="cert rv" data-rv="0.16 0.95" data-placeholder="certificate">Cert. A-113</div>
-      <div class="cert rv" data-rv="0.20 0.95" data-placeholder="certificate">Cert. A-113</div>
-      <div class="cert rv" data-rv="0.24 0.95" data-placeholder="certificate">Cert. A-113</div>
-    </div>
-    <div id="vermilion" data-placeholder="irregular object">
-      <svg viewBox="0 0 46 46" aria-hidden="true">
-        <path d="M23 3 L36 10 L43 24 L34 34 L38 43 L22 39 L9 43 L11 30 L3 20 L12 12 Z" fill="#E34A28"/>
-      </svg>
-    </div>
-    <div id="ch2-vignette"></div>
-    <div class="copy minor" data-in="0.10" data-out="0.42">
-      <h2>Education was optimized<br>for consistency.</h2>
-    </div>
-    <div class="copy minor" data-in="0.50" data-out="0.86">
-      <h2>Consistency is not<br>the same as <span class="gold">learning</span>.</h2>
+
+    <div id="ui">
+      <div id="brand"><b>GL<i>I</i>TCH</b><span>POST-AI EDUCATION<br>COMMUNITY / OPPORTUNITY</span></div>
+      <div class="beat" id="h1beat"><h1>KNOWLEDGE IS FALLING<br>OUT OF THE OLD SYSTEM.</h1></div>
+      <div class="beat" id="h2beat"><h2>CATCH WHAT <em>COMES NEXT.</em></h2></div>
+      <div id="cue"><i></i>SCROLL</div>
     </div>
   </div>
 </section>
 
-<!-- ================================================ PORTAL 2 (frozen) -->
-<section id="portal2" class="track portal-track" style="height: 160vh" aria-label="Transition">
-  <div class="stage portal-stage">
-    <div class="portal-through" data-placeholder="next-chapter preview"
-         style="background: radial-gradient(ellipse 90% 70% at 60% 40%, #141318 0%, #0B0B0D 70%);"></div>
-    <canvas data-placeholder="gold particle field"></canvas>
-    <span class="portal-caption">Chapter III — The Glitch</span>
+<!-- ================= the continuous apple (fixed, single writer) ================= -->
+<div id="appleW" aria-hidden="true">
+  <div id="appleInner">
+    <div id="spark"></div>
+    <div class="matWrap" id="matGold"><img id="apple" src="assets/renaissance/apple-gold-n.png" alt=""></div>
+    <div class="matWrap" id="matMarble"><img id="appleMini" src="assets/renaissance/apple-marble-n.png" alt=""></div>
   </div>
-</section>
+</div>
 
-<!-- ==================================================== CHAPTER 3 (frozen) -->
-<section id="ch3" class="track" style="height: 420vh" aria-label="Chapter 3 — The Glitch">
-  <div class="stage">
-    <div id="orbits" class="plx" data-depth="1" data-placeholder="orbital knowledge diagram">
-      <svg viewBox="0 0 320 200" aria-hidden="true">
-        <ellipse cx="160" cy="100" rx="150" ry="56" fill="none" stroke="rgba(201,164,76,.35)" stroke-width="1"/>
-        <ellipse cx="160" cy="100" rx="106" ry="86" fill="none" stroke="rgba(184,178,166,.25)" stroke-width="1"
-                 transform="rotate(-24 160 100)"/>
-        <ellipse cx="160" cy="100" rx="60" ry="30" fill="none" stroke="rgba(0,229,208,.30)" stroke-width="1"
-                 transform="rotate(18 160 100)"/>
-        <circle cx="160" cy="100" r="5" fill="#C9A44C"/>
-      </svg>
-    </div>
-    <div class="plx" data-depth="2" style="position:absolute; inset:0;">
-      <div class="card rv" tabindex="0" data-rv="0.08 0.9" style="left:14%; top:18%; --rv-y:34px;" data-placeholder="learning module card">
-        <span class="chip"></span>Modular Learning<small>self-paced tracks</small></div>
-      <div class="card rv" tabindex="0" data-rv="0.14 0.9" style="right:12%; top:22%; --rv-y:34px; --rv-r:2deg;" data-placeholder="market map card">
-        <span class="chip"></span>Market Maps<small>where new economies open</small></div>
-      <div class="card rv" tabindex="0" data-rv="0.30 0.92" style="left:9%; top:56%; --rv-y:40px; --rv-b:6px;" data-placeholder="biotech card">
-        <span class="chip"></span>Biotech Forms<small>living systems literacy</small></div>
-      <div class="card rv" tabindex="0" data-rv="0.36 0.92" style="right:18%; top:60%; --rv-y:40px; --rv-s:.92;" data-placeholder="code card">
-        <span class="chip"></span>Code Fragments<small>build before you're ready</small></div>
-      <div class="card rv" tabindex="0" data-rv="0.52 0.94" style="left:33%; top:12%; --rv-y:-30px;" data-placeholder="creator tools card">
-        <span class="chip"></span>Creator Tools<small>publish as you learn</small></div>
-      <div class="card rv verm" tabindex="0" data-rv="0.58 0.94" style="right:34%; top:74%; --rv-y:44px; --rv-r:-3deg;" data-placeholder="community node card">
-        <span class="chip"></span>Community Nodes<small>people as curriculum</small></div>
-    </div>
-    <div class="plx" data-depth="3" style="position:absolute; inset:0;">
-      <svg id="gear" viewBox="0 0 80 80" aria-hidden="true" data-placeholder="mechanical wheel">
-        <g fill="none" stroke="#B8B2A6" stroke-width="2">
-          <circle cx="40" cy="40" r="22"/><circle cx="40" cy="40" r="7"/>
-          <g stroke-width="5">
-            <line x1="40" y1="6" x2="40" y2="16"/><line x1="40" y1="64" x2="40" y2="74"/>
-            <line x1="6" y1="40" x2="16" y2="40"/><line x1="64" y1="40" x2="74" y2="40"/>
-            <line x1="16" y1="16" x2="23" y2="23"/><line x1="57" y1="57" x2="64" y2="64"/>
-            <line x1="64" y1="16" x2="57" y2="23"/><line x1="23" y1="57" x2="16" y2="64"/>
-          </g>
+<!-- ======================= SECTION 2 ======================= -->
+<section id="s2" aria-label="What is GLITCH?">
+  <div id="s2stage">
+    <div id="envW">
+      <img id="hallBg" src="assets/renaissance/hall-bg.png"
+           alt="A monumental marble hall with a decorated dome">
+      <img id="hallFg" src="assets/renaissance/hall-fg.png"
+           alt="A masked Renaissance scholar seated behind a marble study table">
+      <i class="beam" id="beam1"></i><i class="beam" id="beam2"></i>
+      <div id="tShadow"></div>
+      <div id="flash"></div>
+      <i class="chip" id="chip1"></i><i class="chip" id="chip2"></i><i class="chip" id="chip3"></i>
+      <svg id="envFx" viewBox="0 0 1414 736" preserveAspectRatio="none" aria-hidden="true">
+        <g id="lids" transform="translate(0 259) scale(1 0.001) translate(0 -259)">
+          <ellipse cx="957" cy="272" rx="18" ry="10.5" fill="#B0785A"/>
+          <ellipse cx="1021" cy="269" rx="20" ry="11.5" fill="#B0785A"/>
+          <path d="M939 273 q18 7 36 0 M1001 270 q20 7 40 0" stroke="#7E5638" stroke-width="1.7" fill="none" opacity=".72"/>
         </g>
       </svg>
-      <div id="token" data-placeholder="vermilion learning token"><i></i></div>
+      <canvas id="flecks"></canvas>
     </div>
-    <div class="copy" data-in="0.16" data-out="0.5">
-      <h2>Learning is no longer a room.</h2>
+
+    <div id="appleStageW">
+      <div id="apieces" aria-hidden="true"></div>
+      <img id="appleDone" src="assets/renaissance/apple-marble-n.png" alt=""
+           style="position:absolute;left:6.49%;top:9.48%;width:59.05%;opacity:0">
+      <svg id="inkSvg" viewBox="0 0 1448 1086" preserveAspectRatio="none" aria-hidden="true">
+        <defs><linearGradient id="goldInk" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#F6DFA4"/><stop offset=".5" stop-color="#E0B84F"/>
+          <stop offset="1" stop-color="#B8912F"/></linearGradient></defs>
+        <path id="inkPath" d="M781.9 376.7L791.4 387.4L799.8 398.0L807.1 408.7L813.7 419.4L819.5 430.1L824.7 440.8L829.4 451.5L833.4 462.2L836.7 472.9L839.8 483.6L842.5 494.3L844.9 504.9L846.7 515.6L848.4 526.3L849.7 537.0L850.6 547.7L851.4 558.4L851.9 569.1L851.9 579.8L851.6 590.5L850.9 601.2L849.9 611.8L848.8 622.5L847.4 633.2L845.7 643.9L843.7 654.6L841.2 665.3L838.6 676.0L835.6 686.7L832.5 697.4L828.7 708.1L824.8 718.7L820.8 729.4L816.5 740.1L811.6 750.8L806.3 761.5L800.7 772.2L794.5 782.9L788.1 793.6L780.9 804.3L773.8 815.0L766.1 825.6L757.7 836.3L748.5 847.0L738.5 857.7L727.5 868.4L717.5 879.1L715.6 882.3" fill="none" stroke="url(#goldInk)" stroke-width="5.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
-    <div class="copy" data-in="0.56" data-out="0.9">
-      <h2>It is a <span class="gold">network</span>.</h2>
+
+    <img id="armRig" src="assets/characters/arm-quill.png?v=3"
+         alt="The scholar's hand holding an antique quill">
+    <div id="s2vig"></div>
+    <div class="grainy" id="s2grain"></div>
+    <div id="s2scrim"></div>
+
+    <div id="s2ui">
+      <h2 id="bigH">WHAT IS<br><em>GLITCH?</em></h2>
+      <p id="supp">Education was designed for a world that no longer exists.</p>
+      <p id="defn">GLITCH is a <b>post-AI learning community</b> for people building what comes next.</p>
+      <div id="lines">
+        <span>LEARN <em>what is changing.</em></span>
+        <span>BUILD <em>with people already inside it.</em></span>
+        <span>FIND <em>support, bounties and opportunity.</em></span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ================================================ CHAPTER 4 (frozen) -->
-<section id="ch4" class="track" style="height: 380vh" aria-label="Chapter 4 — The Community">
-  <div class="stage">
-    <svg id="constellation" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" data-placeholder="community network">
-      <g id="con-lines"></g>
-      <g id="con-nodes"></g>
-      <circle id="con-pass" class="pass" r="7" cx="-40" cy="-40"/>
-    </svg>
-    <div class="copy" data-in="0.10" data-out="0.46">
-      <h2>Learn with people building<br>what comes next.</h2>
+<!-- ============ the continuous laptop (fixed, single writer) ============ -->
+<div id="lapMask" aria-hidden="true">
+    <div id="lapPar">
+      <div id="lapShadow"></div>
+      <div id="lapWrap">
+        <div id="lapScene">
+          <div id="lap3d">
+            <div id="deckPlane">
+              <img id="deckImg" src="assets/renaissance/laptop-deck.png"
+                   alt="A laptop base sculpted from white Carrara marble; the keys G, L, I, T, C, H are solid gold">
+              <div id="deckGlow"></div>
+              <div id="deckBack"></div>
+            </div>
+            <div id="lid">
+              <div class="lidFace" id="lidOut">
+                <img src="assets/renaissance/laptop-lid.png"
+                     alt="The laptop's closed marble lid with a gold kintsugi vein">
+                <div id="lidSheen"></div>
+              </div>
+              <div class="lidFace" id="lidIn">
+                <div id="lidInC">
+                  <div id="bezel"></div>
+                  <div id="glass">
+                    <div id="glassSheen"></div>
+                    <div id="reflWrap"><img id="reflApple" src="assets/renaissance/apple-marble-n.png" alt=""></div>
+                    <i class="ring" id="ring1"></i><i class="ring" id="ring2"></i>
+                    <img id="glitchApple" src="assets/renaissance/apple-marble-n.png" alt="">
+                    <img id="digiApple" src="assets/renaissance/apple-marble-n.png"
+                         alt="The marble-and-gold apple, now luminous inside the screen">
+                    <div id="screenWord">GLITCH</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="copy" data-in="0.54" data-out="0.9">
-      <h2>Knowledge becomes powerful<br>when it moves <span class="gold">between people</span>.</h2>
+    <img id="lapPlate" src="assets/renaissance/laptop-lap-plate.png" alt=""
+         aria-hidden="true">
+
+</div>
+<!-- ======================= SECTION 3 ======================= -->
+<section id="s3" aria-label="Our mission — knowledge enters the GLITCH platform">
+  <div id="s3stage">
+    <div id="s3bgW">
+      <img id="s3bg" src="assets/renaissance/s3-vault.png"
+           alt="A dark marble gallery vault; one shaft of light falls on a low marble plinth">
+      <div id="s3bgGrad"></div>
+    </div>
+    <div id="s3vig"></div>
+    <div class="grainy" id="s3grain"></div>
+
+    <div id="s3ui">
+      <p id="mKick">OUR MISSION</p>
+      <h2 id="mH">REBUILD EDUCATION<br>FOR <em>WHAT COMES NEXT.</em></h2>
+      <div id="mLines">
+        <span><b>A COMMUNITY,</b> NOT AN INSTITUTION.</span>
+        <span><b>LIVE COHORTS,</b> NOT A COURSE LIBRARY.</span>
+        <span><b>BOUNTIES,</b> NOT CERTIFICATES.</span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ================================================ CHAPTER 5 (frozen) -->
-<section id="ch5" aria-label="Chapter 5 — The Invitation">
-  <div class="inner">
-    <svg id="key" viewBox="0 0 44 44" aria-hidden="true" data-placeholder="gold key">
-      <g fill="none" stroke="#C9A44C" stroke-width="2">
-        <circle cx="15" cy="15" r="9"/>
-        <path d="M21 21 L37 37 M31 31 L36 26 M27 35 L32 30"/>
-      </g>
-    </svg>
-    <h2 class="rv" data-rv="0 2">Not an institution.<br>A way through one.</h2>
-    <a class="cta rv" data-rv="0 2" href="#" style="--rv-y: 18px;">Enter GLITCH →</a>
+<!-- ======================= SECTION 4 ======================= -->
+<section id="s4" aria-label="The cohort — course select and recent films">
+  <div id="s4stage">
+    <div id="s4bgW">
+      <img id="s4bg" src="assets/renaissance/campus-statue.png"
+           alt="A seated marble philosopher on a campus lawn with students gathered around him">
+      <i id="lapCast"></i>
+      <i id="lapGlow"></i>
+    </div>
+    <div id="s4bgGrad"></div>
+
+    <div id="tvW">
+      <img id="tvImg" src="assets/renaissance/tv-course-select.png"
+           alt="An old television showing the GLITCH course select: foundations, tech and code, AI and design, creativity zone, future outlook, rebellion arc">
+      <div id="tvScreenFx">
+        <div id="tvBloom"></div>
+        <div id="tvScanImg"></div>
+        <div id="tvOn"></div>
+      </div>
+    </div>
+
+    <!-- FROM THE CHANNEL — parked for now
+    <div id="filmW">
+      <p id="filmKick">FROM THE CHANNEL</p>
+      <div id="filmClip">
+        <div id="filmRow">
+          <figure class="fr">
+            <div class="frIn">
+              <div class="frBar"><b>AI TOOLS DEEP DIVE</b>
+                <span class="frBtns"><i>_</i><i>&#9633;</i><i>&#10005;</i></span>
+              </div>
+              <div class="frPicW"><div class="frPic"><i></i><span class="play"></span></div></div>
+              <div class="frStatus">12:04&nbsp;&nbsp;|&nbsp;&nbsp;GLITCH.AVI</div>
+            </div>
+          </figure>
+          <figure class="fr">
+            <div class="frIn">
+              <div class="frBar"><b>BUILDING IN PUBLIC</b>
+                <span class="frBtns"><i>_</i><i>&#9633;</i><i>&#10005;</i></span>
+              </div>
+              <div class="frPicW"><div class="frPic"><i></i><span class="play"></span></div></div>
+              <div class="frStatus">08:31&nbsp;&nbsp;|&nbsp;&nbsp;GLITCH.AVI</div>
+            </div>
+          </figure>
+          <figure class="fr">
+            <div class="frIn">
+              <div class="frBar"><b>FUTURE SIGNALS</b>
+                <span class="frBtns"><i>_</i><i>&#9633;</i><i>&#10005;</i></span>
+              </div>
+              <div class="frPicW"><div class="frPic"><i></i><span class="play"></span></div></div>
+              <div class="frStatus">15:47&nbsp;&nbsp;|&nbsp;&nbsp;GLITCH.AVI</div>
+            </div>
+          </figure>
+          <figure class="fr">
+            <div class="frIn">
+              <div class="frBar"><b>BOUNTY BRIEFS</b>
+                <span class="frBtns"><i>_</i><i>&#9633;</i><i>&#10005;</i></span>
+              </div>
+              <div class="frPicW"><div class="frPic"><i></i><span class="play"></span></div></div>
+              <div class="frStatus">06:12&nbsp;&nbsp;|&nbsp;&nbsp;GLITCH.AVI</div>
+            </div>
+          </figure>
+          <figure class="fr">
+            <div class="frIn">
+              <div class="frBar"><b>COHORT DIARIES</b>
+                <span class="frBtns"><i>_</i><i>&#9633;</i><i>&#10005;</i></span>
+              </div>
+              <div class="frPicW"><div class="frPic"><i></i><span class="play"></span></div></div>
+              <div class="frStatus">09:58&nbsp;&nbsp;|&nbsp;&nbsp;GLITCH.AVI</div>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </div>
+    -->
+
+    <div id="s4vig"></div>
+    <div class="grainy" id="s4grain"></div>
+
+    <div id="s4ui">
+      <p id="cKick">THE COHORT</p>
+      <h2 id="cH">ONE PROGRAM<br>AT A <em>TIME.</em></h2>
+      <p id="cSub">Live sessions and build labs, mixed. You ship inside the cohort, and what you ship is what opens the door.</p>
+    </div>
   </div>
 </section>
 
-<div id="debug" aria-hidden="true"></div>
+<div id="courseRun">
+  <!-- ======================= SECTION 5 — COURSES ======================= -->
+  <section id="s5" aria-label="Courses">
+    <div id="s5wall"></div>
+    <div id="s5in" class="s5in">
+      <p id="cxKick" class="cxKick">COURSES</p>
+      <h2 id="cxH" class="cxH">CHOOSE <em>YOUR PATH.</em></h2>
+      <p id="cxSub" class="cxSub">Every course runs inside the cohort — live sessions, build labs, and a brief you actually ship.</p>
+      <div id="cxGrid" class="cxGrid">
+        <figure class="cx feat">
+          <div class="cxFrame">
+          <span class="cxTag">MONA LISA</span>
+            <div class="cxArt" data-course="FOUNDATIONS">
+              <video src="assets/courses/course-1.mp4" muted loop playsinline></video>
+              <i class="scan"></i>
+              <span class="cxPlay"></span>
+              <figcaption class="cxLabel"><b>FOUNDATIONS</b><span>POST-AI &nbsp;·&nbsp; 12:04</span></figcaption>
+            </div>
+          </div>
+        </figure>
+        <figure class="cx ">
+          <div class="cxFrame">
+            <div class="cxArt" data-course="TECH &amp; CODE">
+              <video src="assets/courses/course-2.mp4" muted loop playsinline></video>
+              <i class="scan"></i>
+              <span class="cxPlay"></span>
+              <figcaption class="cxLabel"><b>TECH &amp; CODE</b><span>THE NEW STACK &nbsp;·&nbsp; 18:22</span></figcaption>
+            </div>
+          </div>
+        </figure>
+        <figure class="cx ">
+          <div class="cxFrame">
+            <div class="cxArt" data-course="AI &amp; DESIGN">
+              <video src="assets/courses/mona-lisa.mp4" muted loop playsinline></video>
+              <i class="scan"></i>
+              <span class="cxPlay"></span>
+              <figcaption class="cxLabel"><b>AI &amp; DESIGN</b><span>TASTE &amp; TOOLS &nbsp;·&nbsp; 15:47</span></figcaption>
+            </div>
+          </div>
+        </figure>
+        <figure class="cx ">
+          <div class="cxFrame">
+            <div class="cxArt" data-course="CREATIVITY ZONE">
+              <!-- <video src="assets/courses/course-4.mp4" poster="assets/courses/course-4.jpg" muted loop playsinline></video> -->
+              <i class="scan"></i>
+              <span class="cxPlay"></span>
+              <figcaption class="cxLabel"><b>CREATIVITY ZONE</b><span>MAKE THINGS &nbsp;·&nbsp; 09:58</span></figcaption>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
 
+  <!-- ======================= SECTION 6 — OUR PARTNERS ======================= -->
+  <section id="s6" aria-label="Our partners">
+    <div id="s6panel">
+      <img id="s6paper" src="assets/renaissance/paper.png" alt="">
+      <img id="s6shelf" src="assets/renaissance/bookshell.png" alt="A wooden card-catalog drawer, filed with blank index cards, reading Our Partners">
+      <canvas id="s6burn" aria-hidden="true"></canvas>
+      <canvas id="s6dust" aria-hidden="true"></canvas>
+    </div>
+    <!-- the scroll the panel stays pinned across. It has to be a real box
+         INSIDE #s6: a sticky element is constrained to its containing block's
+         content box, so padding on #s6 would lengthen the page without giving
+         the panel anywhere to stick. -->
+    <div id="s6run" aria-hidden="true"></div>
+  </section>
+</div>
+
+<!-- ======================= SECTION 7 — FOOTER ======================= -->
+<!-- the ink fronts: two blurred paths, B running ahead of A so the white
+     traces surface over Courses before the black body reaches them -->
+<svg id="inkDefs" width="1" height="1" aria-hidden="true"
+     style="position:fixed;left:-9999px;top:0;overflow:visible;pointer-events:none">
+  <defs>
+    <filter id="inkSoft" x="-20%" y="-60%" width="140%" height="220%">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+    <filter id="inkSoft2" x="-20%" y="-60%" width="140%" height="220%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
+    <!-- Each mask is a blurred band around the front plus a plain rect for the
+         solid area beneath it. Filling the whole lower screen with the blurred
+         path instead puts every one of those pixels through the Gaussian on
+         every frame, which was by far the most expensive thing here. -->
+    <mask id="inkMaskA" maskUnits="userSpaceOnUse" x="-400" y="-900" width="6000" height="6000">
+      <path id="inkPathA" fill="#fff" filter="url(#inkSoft)"/>
+      <rect id="inkRectA" fill="#fff"/>
+    </mask>
+    <mask id="inkMaskB" maskUnits="userSpaceOnUse" x="-400" y="-900" width="6000" height="6000">
+      <path id="inkPathB" fill="#fff" filter="url(#inkSoft2)"/>
+      <rect id="inkRectB" fill="#fff"/>
+    </mask>
+  </defs>
+</svg>
+<footer id="s7" aria-label="Footer">
+  <div id="s7stage">
+    <div id="ftVeil" aria-hidden="true"></div>
+    <div id="ftBody" class="ftMask">
+      <div id="ftInk" aria-hidden="true"></div>
+      <div id="ftScene">
+        <div id="ftReal" aria-hidden="true">
+        <img class="ftL" id="ftBg"    src="assets/renaissance/footer-bg.png" alt="">
+        <img class="ftL" id="ftTable" src="assets/renaissance/monitor-table.png" alt="">
+        <img class="ftL" id="ftMan"   src="assets/renaissance/man-filled.png"
+             alt="A figure in Renaissance dress, seen from behind, reaching toward a tablet on a desk beneath an open sky">
+      </div>
+      </div>
+    </div>
+    <div id="ftEdge" class="ftMask" aria-hidden="true">
+      <div id="ftEdgeGlow">
+        <img class="ftL" src="assets/renaissance/footer-bg-edge.png" alt="">
+        <img class="ftL" src="assets/renaissance/monitor-table-edge.png" alt="">
+        <img class="ftL" src="assets/renaissance/man-edge.png" alt="">
+      </div>
+    </div>
+    <div id="ftVig" aria-hidden="true"></div>
+    <canvas id="ftSpark" aria-hidden="true"></canvas>
+
+    <div id="ftUi">
+      <div id="ftRow">
+        <div id="ftBrand">
+          <b>GLITCH</b>
+          <span>CATCH WHAT COMES NEXT</span>
+        </div>
+        <nav id="ftNav" aria-label="Footer">
+          <ul>
+            <b>PROGRAM</b>
+            <li><a href="#s4">The Cohort</a></li>
+            <li><a href="#s5">Courses</a></li>
+            <li><a href="#s6">Partners</a></li>
+          </ul>
+          <ul>
+            <b>GLITCH</b>
+            <li><a href="#s3">Our Mission</a></li>
+            <li><a href="#s2">What is GLITCH</a></li>
+            <li><a href="#hero">Start Here</a></li>
+          </ul>
+          <ul>
+            <b>CONNECT</b>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">hello@glitch.edu</a></li>
+          </ul>
+        </nav>
+        <p id="ftFine">
+          <span>© 2026 GLITCH — a for-profit community, not an institution.</span>
+          <span>Terms · Privacy</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
 <script>
 (() => {
 'use strict';
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobile = matchMedia('(max-width: 760px)').matches;
+const QP = new URLSearchParams(location.search);
+const TEST = QP.has('test');
+if (QP.has('y')) { history.scrollRestoration='manual'; addEventListener('DOMContentLoaded',()=>scrollTo(0,+QP.get('y'))); }
+window.__POSE = QP.has('pose') ? (+QP.get('pose'))/100 : null;
+window.__POSE1 = QP.has('pose1') ? (+QP.get('pose1'))/100 : null; /* verification: no smoothing */
+gsap.registerPlugin(ScrollTrigger);
+const $ = (s) => document.querySelector(s);
+const clamp01 = (v) => v < 0 ? 0 : v > 1 ? 1 : v;
+const lerp = (a,b,t) => a + (b-a)*t;
 
-const $  = (s, r) => (r || document).querySelector(s);
-const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
-const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
-const lerp = (a, b, t) => a + (b - a) * t;
-const smooth = (t) => t * t * (3 - 2 * t);
-const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const mobile  = window.matchMedia('(max-width: 760px)').matches;
-const DEBUG = new URLSearchParams(location.search).has('debug');
-if (DEBUG) document.body.classList.add('debug');
+if (!reduced && !TEST && typeof Lenis !== 'undefined') {
+  const lenis = new Lenis({ lerp: 0.11 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((t) => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
 
-const hash = (i, k) => {
-  const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453;
-  return x - Math.floor(x);
+/* ------------------------------ dust motes (S1) ------------------------------ */
+const dust = $('#dust'); const motes = [];
+if (!reduced) for (let i = 0; i < 14; i++) {
+  const m = document.createElement('i'); m.className = 'mote';
+  m.style.left = (8 + (i*63)%84) + '%'; m.style.top = (12 + (i*37)%70) + '%';
+  dust.appendChild(m); motes.push(m);
+}
+
+/* =================== SECTION 1 timeline (no apple tweens here) =================== */
+const vw = () => innerWidth/100, vh = () => innerHeight/100;
+const tl1 = gsap.timeline({
+  defaults: { ease: 'none' },
+  scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom bottom', scrub: (reduced||TEST) ? true : 0.6 },
+});
+/* centre the two figures through GSAP rather than CSS: parsing a CSS
+   translate(-50%,-50%) it sometimes stores xPercent:-50 and sometimes a
+   pixel x, and in the latter case the x tweens below overwrite the
+   centering instead of composing with it */
+gsap.set('#femW,#maleW',{xPercent:-50,yPercent:-50});
+const femX  = mobile ? 8 : 10, maleX = mobile ? -16 : -15.5;
+tl1
+.to({}, { duration: .10 })
+.to('#femW',  { x: () => femX*.28*vw(), duration: .15 }, .10)
+.to('#maleW', { x: () => maleX*.28*vw(), duration: .15 }, .10)
+.to('#h1beat',{ opacity: 1, duration: .05 }, .12)
+.to('#femW',  { x: () => femX*.55*vw(), y: () => 2*vh(), duration: .20 }, .25)
+.to('#maleW', { x: () => maleX*.55*vw(), y: () => 2*vh(), duration: .20 }, .25)
+.to('#h1beat',{ opacity: 0, duration: .05 }, .38)
+.to('#femW',  { x: () => femX*.85*vw(), y: () => 5*vh(), duration: .25 }, .45)
+.to('#maleW', { x: () => maleX*.85*vw(), y: () => 5*vh(), duration: .25 }, .45)
+.to('#statue',{ filter: 'sepia(.2) saturate(.72) brightness(.9) contrast(1.02)', duration: .25 }, .45)
+.to('#h2beat',{ opacity: 1, duration: .06 }, .30)
+.to('#femW',  { x: () => femX*vw(), y: () => 8*vh(), duration: .20 }, .70)
+.to('#maleW', { x: () => maleX*vw(), y: () => 8*vh(), duration: .20 }, .70)
+.to('#statue',{ opacity: .88, duration: .2 }, .70)
+.to('#cue',   { opacity: 0, duration: .04 }, .10);
+
+/* =================== SECTION 2 timeline =================== */
+const tl2 = gsap.timeline({
+  defaults: { ease: 'none' },
+  scrollTrigger: { trigger: '#s2', start: 'top top', end: 'bottom bottom', scrub: (reduced||TEST) ? true : 0.6 },
+});
+tl2
+/* .15-.32 the headline reveals out of the architecture */
+.to('#bigH', { clipPath: 'inset(0% 0 0% 0)', duration: .16, ease: 'power1.out' }, .15)
+.to('#supp', { opacity: 1, duration: .06 }, .30)
+/* .32-.48 approach: shadow handled per-frame in JS */
+/* .48-.55 IMPACT */
+.to('#flash', { opacity: .95, scale: 1, duration: .012, ease: 'power2.out' }, .30)
+.to('#flash', { opacity: 0, scale: 1.7, duration: .04 }, .315)
+.to('#s2stage', { y: 6, duration: .008 }, .30)
+.to('#s2stage', { y: 0, duration: .016 }, .309)
+.to('#chip1', { opacity: .95, x: -26, y: -34, rotation: 80, duration: .05 }, .30)
+.to('#chip2', { opacity: .95, x: 30, y: -26, rotation: -60, duration: .05 }, .302)
+.to('#chip3', { opacity: .9, x: 12, y: -44, rotation: 140, duration: .05 }, .304)
+.to(['#chip1','#chip2','#chip3'], { opacity: 0, duration: .02 }, .355)
+/* .55-.60 the gold fracture spreads; the swap itself is owned by appleFrame */
+/* .88-1 the supporting hierarchy settles */
+/* every shard is home by ~.891; hold the assembled apple, then dissolve the
+   seams into the whole one */
+.to('#apieces',  { autoAlpha: 0, duration: .04 }, .935)
+.to('#appleDone', { autoAlpha: 1, duration: .04 }, .935)
+.to('#defn',  { opacity: 1, duration: .05 }, .90)
+.to('#lines', { opacity: 1, duration: .05 }, .95)
+.to({}, { duration: .02 });
+
+/* ---- the pieces: authored positions from the owner's broken-apple render.
+   Impact physics: fragments RISE from the collision, big pieces stay near
+   the table, small ones travel farther, then all slow into suspension. */
+/* the fragments' cx/cy used to be lifted straight off the owner's shatter
+   render — i.e. their EXPLODED positions — so "home" (x:0,y:0) was returning
+   them to the scattered pose, not the reconstructed apple: the gap next to
+   the bite never closed no matter how far you scrolled. Re-derived by
+   template-matching each fragment's marble/gold texture against
+   apple-marble-n.png (the same apple, whole) placed in this same frame, so
+   home now actually sits inside the missing wedge. */
+const PIECES = [
+  { n:'apple-body',    cx:.366, cy:.490, w:.479 },
+  { n:'apple-frag-1',  cx:.386, cy:.496, w:.180 },
+  { n:'apple-frag-2',  cx:.470, cy:.424, w:.140 },
+  { n:'apple-frag-3',  cx:.437, cy:.426, w:.144 },
+  { n:'apple-frag-4',  cx:.476, cy:.439, w:.111 },
+  { n:'apple-frag-5',  cx:.485, cy:.416, w:.099 },
+  { n:'apple-frag-6',  cx:.425, cy:.450, w:.099 },
+  { n:'apple-frag-7',  cx:.478, cy:.423, w:.075 },
+  { n:'apple-frag-8',  cx:.432, cy:.443, w:.083 },
+  { n:'apple-frag-9',  cx:.439, cy:.520, w:.066 },
+  { n:'apple-frag-10', cx:.430, cy:.450, w:.054 },
+  { n:'apple-frag-11', cx:.514, cy:.452, w:.050 },
+  { n:'apple-frag-12', cx:.424, cy:.343, w:.034 },
+];
+{
+  const wrap = document.getElementById('apieces');
+  PIECES.forEach((f, i) => {
+    const img = document.createElement('img');
+    img.src = 'assets/renaissance/' + f.n + '.png';
+    img.className = 'apiece';
+    img.style.left = (f.cx*100) + '%';
+    img.style.top  = (f.cy*100) + '%';
+    img.style.width = (f.w*100) + '%';
+    wrap.appendChild(img);
+    gsap.set(img, { xPercent: -50, yPercent: -50 });
+    if (f.n === 'apple-body') return;                 /* the body never leaves */
+    /* every shard's exploded state is derived from its OWN home position, so
+       the return is exact by construction: home -> out -> home */
+    const dx = f.cx - 0.47, dy = f.cy - 0.45;
+    const len = Math.hypot(dx, dy) || 1;
+    const push = (mobile ? 7 : 11) + i * 1.6;
+    const OUT = {
+      x: () => dx/len * push * vw(),
+      y: () => (dy/len * push * 0.5 - 3.2) * vh(),
+      rotation: (i % 2 ? 1 : -1) * (12 + i*4),
+      scale: 1.06,
+    };
+    tl2.fromTo(img, { x:0, y:0, rotation:0, scale:1 },
+      { ...OUT, duration: .10, ease: 'power2.out', immediateRender: false }, .25 + i*.008);
+    /* the drawing brings them home, one after another, tracking the nib */
+    tl2.to(img, { x:0, y:0, rotation:0, scale:1,
+      duration: .085, ease: 'power2.inOut' }, .672 + i*.0112);
+  });
+}
+
+/* =================== SECTION 3 timeline (copy reveals only) =================== */
+const tl3 = gsap.timeline({
+  defaults: { ease: 'none' },
+  scrollTrigger: { trigger: '#s3', start: 'top top', end: 'bottom bottom', scrub: (reduced||TEST) ? true : 0.6 },
+});
+tl3
+.to('#mKick', { opacity: 1, duration: .04 }, .64)
+.to('#mH',   { clipPath: 'inset(0 0 0% 0)', duration: .12, ease: 'power1.out' }, .68)
+.to('#screenWord', { opacity: .95, duration: .05 }, .70)
+.to('#mLines', { opacity: 1, duration: .06 }, .84)
+.to({}, { duration: .02 });
+
+/* =================== SECTION 4 timeline (copy + hardware reveals) =================== */
+const tl4 = gsap.timeline({
+  defaults: { ease: 'none' },
+  scrollTrigger: { trigger: '#s4', start: 'top top', end: 'bottom bottom', scrub: (reduced||TEST) ? true : 0.6 },
+});
+tl4
+.to('#cKick', { opacity: 1, duration: .03 }, .04)
+.to('#cH',    { clipPath: 'inset(0 0 0% 0)', duration: .09, ease: 'power1.out' }, .07)
+.to('#cSub',  { opacity: 1, duration: .04 }, .15)
+/* the set powers up only after the laptop has landed */
+.to('#tvW',   { opacity: 1, duration: .04 }, .30)
+.fromTo('#tvOn', { opacity: 0, scaleY: .2 }, { opacity: .95, scaleY: 1, duration: .014 }, .31)
+.to('#tvOn',  { opacity: 0, scaleY: 30, duration: .035 }, .324)
+.to({}, { duration: .02 });
+if (document.querySelector('.fr')) {
+  gsap.set('.fr', { y: 26 });
+  tl4
+  .to('#filmKick', { opacity: 1, duration: .03 }, .62)
+  .to('.fr', { opacity: 1, y: 0, duration: .05, stagger: .022 }, .65);
+}
+
+/* =================== SECTION 5 — courses reveal =================== */
+if (document.getElementById('cxGrid')) {
+  /* #s4's sticky wave already finishes revealing a fully-formed, empty dome
+     right as its pin releases — if the Courses title/frames only start fading
+     in once #s5 has visibly scrolled most of the way into view (the old
+     'top 80%'/'top 85%'), there's a stretch of plain, undecorated dome in
+     between that reads as the same background appearing twice. Firing while
+     #s5 is still below the fold (percentages > 100%) lets the title and
+     frames arrive as soon as the wave resolves, so the handoff reads as one
+     continuous reveal rather than dome -> dead air -> dome again. */
+  gsap.set('.cx', { y: 96 });
+  gsap.to('.cx', {
+    opacity: 1, y: 0, duration: reduced ? 0 : .85, ease: 'power3.out',
+    stagger: reduced ? 0 : .16,
+    scrollTrigger: { trigger: '#cxGrid', start: 'top 145%', once: true },
+  });
+  gsap.from(['#cxKick', '#cxH', '#cxSub'], {
+    opacity: 0, y: 18, duration: reduced ? 0 : .6, ease: 'power2.out', stagger: .08,
+    scrollTrigger: { trigger: '#s5in', start: 'top 165%', once: true },
+  });
+  /* the films idle until you look at them */
+  document.querySelectorAll('.cx').forEach((c) => {
+    const v = c.querySelector('video');
+    if (!v) return;
+    c.addEventListener('pointerenter', () => v.play().catch(() => {}));
+    c.addEventListener('pointerleave', () => { v.pause(); v.currentTime = 0; });
+  });
+}
+
+/* =================== THE APPLE — one deterministic writer =================== */
+const appleW = $('#appleW'), appleInner = $('#appleInner');
+const spark = $('#spark');
+const heroEl = $('#hero'), s2El = $('#s2'), s3El = $('#s3'), s4El = $('#s4');
+const seg = (p,a,b) => clamp01((p-a)/(b-a));
+const easeIn2 = (t) => t*t, easeOut2 = (t) => 1-(1-t)*(1-t), easeIO = (t) => t*t*(3-2*t);
+
+const envW = document.getElementById('envW');
+const stageW = document.getElementById('appleStageW');
+const s2stage = document.getElementById('s2stage');
+const inkPath = document.getElementById('inkPath');
+const stageEl = document.getElementById('appleStageW');
+const tide = document.getElementById('tide');
+const crestSvg = document.getElementById('tideCrest');
+const crestPath = document.getElementById('crestPath');
+const maskPath = document.getElementById('tideMaskPath');
+const matGold = document.getElementById('matGold');
+const matMarble = document.getElementById('matMarble');
+const goldImg = document.getElementById('apple');
+const marbleImg = document.getElementById('appleMini');
+/* the tabletop contact point, measured on the hall art */
+const IMPACT = { x: .455, y: .838 };
+function impactPt() {
+  const r = envW.getBoundingClientRect();
+  return { x: r.left + IMPACT.x*r.width, y: r.top + IMPACT.y*r.height, w: r.width };
+}
+const A_BASE = () => (mobile ? 78 : 116);
+const aSizeS1 = (p1) => A_BASE() * (1 + 0.42 * easeIO(seg(p1, .50, 1.0)));
+let INK_LEN = 0;
+function initInk() {
+  if (!inkPath || INK_LEN) return;
+  INK_LEN = inkPath.getTotalLength();
+  inkPath.style.strokeDasharray = INK_LEN;
+  inkPath.style.strokeDashoffset = INK_LEN;
+}
+/* ---- the arm rig: elbow anchored at his torso, nib aimed at the drawing head.
+   Measured on the asset: nib (3.5%, 94.5%), elbow (96%, 42%). One rotational
+   degree of freedom, so the hand and quill can never separate. ---- */
+const ARM = { nib:[.035,.945], elbow:[.96,.42], anchor:[.845,.800], rest:[.655,.880] };
+const armRig = document.getElementById('armRig');
+const hallFgEl = document.getElementById('hallFg');
+function paintPen(s2p) {
+  initInk();
+  if (!INK_LEN || !armRig) return;
+  const reach = clamp01((s2p - .50) / .18);   /* notices it, reaches, grips   */
+  const draw  = clamp01((s2p - .70) / .20);   /* draws the completing contour */
+  const spent = clamp01((s2p - .925) / .045); /* the line has served its purpose */
+  inkPath.style.opacity = (1 - spent).toFixed(3);
+  if (reach <= 0) { armRig.style.opacity = 0; inkPath.style.strokeDashoffset = INK_LEN; return; }
+  const st  = stageEl.getBoundingClientRect();
+  const env = (hallFgEl || envW).getBoundingClientRect();
+  inkPath.style.strokeDashoffset = INK_LEN * (1 - draw);
+
+  /* where the nib must be: resting on the table, then on the drawn contour */
+  const pt = inkPath.getPointAtLength(INK_LEN * Math.max(draw, 0.0001));
+  /* the ink path lives in the stage's own 1448x1086 viewBox — normalise by that,
+     or the nib is placed on a different scale than the line it is drawing */
+  const headX = st.left + (pt.x / 1448) * st.width;
+  const headY = st.top  + (pt.y / 1086) * st.height;
+  const restX = env.left + ARM.rest[0] * env.width;
+  const restY = env.top  + ARM.rest[1] * env.height;
+  const t  = easeIO(reach);
+  const tx = lerp(restX, headX, t);
+  const ty = lerp(restY, headY, t);
+
+  /* scale the arm so elbow->nib exactly spans elbow->target: no stretching,
+     the rig simply rotates to aim */
+  const ax = env.left + ARM.anchor[0] * env.width;
+  const ay = env.top  + ARM.anchor[1] * env.height;
+  const reachPx = Math.hypot(tx - ax, ty - ay);
+  const natW = armRig.naturalWidth || 1862, natH = armRig.naturalHeight || 1569;
+  const vx = (ARM.nib[0] - ARM.elbow[0]) * natW, vy = (ARM.nib[1] - ARM.elbow[1]) * natH;
+  const vlen = Math.hypot(vx, vy) || 1;
+  const scale = Math.min(reachPx / vlen, (innerWidth * 0.30) / natW);
+  const w = natW * scale, h = natH * scale;
+  armRig.style.width = w + 'px';
+  const baseA = Math.atan2(vy, vx);
+  const aimA  = Math.atan2(ty - ay, tx - ax);
+  const rot = aimA - baseA;
+  /* place by the NIB so the pen tip always lands on the target, even when the
+     rig size is capped; the shoulder end stays buried in his robe */
+  const cs = Math.cos(rot), sn = Math.sin(rot);
+  const ex = ARM.elbow[0]*w, ey = ARM.elbow[1]*h;         /* pivot in rig px */
+  const nx0 = ARM.nib[0]*w - ex, ny0 = ARM.nib[1]*h - ey; /* nib rel pivot   */
+  const nrx = nx0*cs - ny0*sn, nry = nx0*sn + ny0*cs;     /* rotated         */
+  armRig.style.left = (tx - nrx - ex) + 'px';
+  armRig.style.top  = (ty - nry - ey) + 'px';
+  armRig.style.transform = `rotate(${(rot * 180 / Math.PI).toFixed(2)}deg)`;
+  armRig.style.opacity = (Math.min(1, reach * 1.6) * (1 - spent)).toFixed(3);
+}
+
+/* ---- the marble tide: one deterministic wave, shared by the section reveal
+   AND the apple's material seam. Pure function of hero progress. ---- */
+const TIDE_START = .86;
+function tideLevel(p1) {
+  if (p1 <= TIDE_START) return 0;
+  const b = (p1 - TIDE_START) / (1 - TIDE_START);
+  return b * 1.18 * (1 + .05 * Math.sin(b * 3.5 * Math.PI));
+}
+function waveY(x01, lvl, p1) {
+  const H = innerHeight;
+  const calm = Math.max(.20, 1.6 * Math.min(lvl, Math.max(0, 1.15 - lvl)));
+  const T = x01 * 6.2832;
+  const a = ( .0560 * Math.sin(T * 0.90 + p1 *  7.0)
+            + .0330 * Math.sin(T * 1.73 - p1 * 11.3 + 1.7)
+            + .0180 * Math.sin(T * 3.11 + p1 * 16.4 + 0.6)
+            + .0092 * Math.sin(T * 5.47 - p1 * 22.1 + 2.9)
+            + .0046 * Math.sin(T * 9.13 + p1 * 29.7 + 1.2)
+            + .0024 * Math.sin(T * 15.7 - p1 * 38.0) ) * calm;
+  return H * (1 - lvl) + a * H;
+}
+/* the old world has to leave as the new one washes in — without this the
+   landscape's statue and trees stay solid on top of the hall and the two
+   scenes read as a collage instead of one replacing the other */
+const OLD_WORLD = ['#sky','#treesL','#treesR','#foliage','#statueW','#femW','#maleW','#dust','#vig']
+  .map(q => document.querySelector(q)).filter(Boolean);
+function fadeOldWorld(lvl) {
+  const o = (1 - clamp01((lvl - .30) / .62)).toFixed(3);
+  for (const el of OLD_WORLD) if (el.style.opacity !== o) el.style.opacity = o;
+}
+
+function paintTide(p1) {
+  const lvl = tideLevel(p1);
+  fadeOldWorld(lvl);
+  if (lvl <= 0) { tide.style.visibility='hidden'; crestSvg.style.visibility='hidden'; return lvl; }
+  tide.style.visibility = 'visible';
+  const W = innerWidth, H = innerHeight;
+  /* the reveal edge is a blurred SVG mask, so the new world seeps in like
+     water over sand instead of being cut by a hard line */
+  let md = '';
+  for (let i = 0; i <= 96; i++) {
+    const x = i / 96;
+    const y = Math.max(-80, waveY(x, lvl, p1));
+    md += (i ? 'L' : 'M') + (x*W).toFixed(1) + ' ' + y.toFixed(1);
+  }
+  md += `L${W} ${H+120}L0 ${H+120}Z`;
+  maskPath.setAttribute('d', md);
+  const mk = document.getElementById('tideMask');
+  if (mk) { mk.setAttribute('x', -200); mk.setAttribute('y', -600);
+            mk.setAttribute('width', W + 400); mk.setAttribute('height', H + 1200); }
+  /* the revealed world rises as it arrives */
+  /* the new world rises INTO place: early in the wash only its floor and table
+     are above the waterline, so the scholar is never cut awkwardly mid-torso */
+  const rise = Math.pow(1 - Math.min(1, lvl), 1.6) * 15;
+  document.documentElement.style.setProperty('--tideRise', rise.toFixed(2) + 'vh');
+  if (lvl < 1.05) {
+    crestSvg.style.visibility = 'visible';
+    let d = '';
+    for (let i = 0; i <= 96; i++) {
+      const x = i / 96, y = waveY(x, lvl, p1);
+      d += (i ? 'L' : 'M') + (x*W).toFixed(1) + ' ' + y.toFixed(1);
+    }
+    crestPath.setAttribute('d', d);
+    crestPath.setAttribute('opacity', (0.5 * Math.min(1, (1.15-lvl)*3)).toFixed(2));
+  } else crestSvg.style.visibility = 'hidden';
+  return lvl;
+}
+/* the apple's material seam: both layers clipped by the SAME wave contour */
+function paintAppleMaterial(lvl, p1, fullyMarble) {
+  if (fullyMarble || lvl >= 1.15) {
+    matGold.style.clipPath = 'inset(0 0 100% 0)'; matMarble.style.clipPath = 'none'; return;
+  }
+  if (lvl <= 0) {
+    matGold.style.clipPath = 'none'; matMarble.style.clipPath = 'inset(100% 0 0 0)'; return;
+  }
+  const r = appleW.getBoundingClientRect();
+  if (r.height < 2) return;
+  const gold = [], marble = [];
+  for (let i = 0; i <= 18; i++) {
+    const fx = i / 18;
+    const vx = (r.left + fx * r.width) / innerWidth;
+    const ly = ((waveY(vx, lvl, p1) - r.top) / r.height * 100);
+    const cl = Math.max(-30, Math.min(130, ly)).toFixed(1) + '%';
+    gold.push((fx*100).toFixed(1) + '% ' + cl);
+    marble.push((fx*100).toFixed(1) + '% ' + cl);
+  }
+  matGold.style.clipPath   = 'polygon(0% -30%,100% -30%,' + gold.reverse().join(',') + ')';
+  matMarble.style.clipPath = 'polygon(' + marble.join(',') + ',100% 130%,0% 130%)';
+}
+function paintDbg() {
+  if (!document.body.classList.contains('debug')) return;
+  const W = innerWidth, H = innerHeight;
+  const set = (id, cx, cy) => { const e = document.getElementById(id);
+    if (e) { e.setAttribute('cx', cx*W); e.setAttribute('cy', cy*H); } };
+  const l = document.getElementById('dbgCorr');
+  if (l) { l.setAttribute('x1', .505*W); l.setAttribute('x2', .505*W);
+           l.setAttribute('y1', 0); l.setAttribute('y2', H); }
+  set('dbgGirl', .49, .365); set('dbgBoy', .515, .375); set('dbgShared', .505, .37);
+}
+if (new URLSearchParams(location.search).has('debug')) document.body.classList.add('debug');
+
+/* =================== SECTION 3 — the marble laptop & the crossing =================== */
+const appleDone = document.getElementById('appleDone');
+const lidEl = document.getElementById('lid');
+const lidOutEl = document.getElementById('lidOut');
+const lap3d = document.getElementById('lap3d');
+const reflWrap = document.getElementById('reflWrap');
+const lapWrapEl = document.getElementById('lapWrap');
+const lidSheenEl = document.getElementById('lidSheen');
+const deckGlowEl = document.getElementById('deckGlow');
+const lapShadowEl = document.getElementById('lapShadow');
+const deckPlaneEl = document.getElementById('deckPlane');
+const lapPlateEl = document.getElementById('lapPlate');
+/* laptop-lap-plate.png is a keyed crop of the user's reference render (real
+   marble slab thickness, not a flat CSS plane). LID_FRAC marks where the
+   screen/lid rectangle sits within that crop (measured by hand against a
+   pixel grid) — the same rectangle #lidOut used to occupy in #lapPar, so the
+   plate can be scaled/positioned from the same P4 pose the CSS lid used. */
+const LID_FRAC = { x0: 570/1086, y0: 55/625, x1: 1035/1086, y1: 585/625 };
+/* anchor at the hinge crease (the lid's near-bottom-left corner, where the
+   base disappears under the screen) rather than the lid's centre — that is
+   the point that actually rests on his lap, and it keeps the screen face
+   riding clear above the robe-fold occluder instead of dipping into it */
+const PLATE_ANCHOR = { xf: LID_FRAC.x0, yf: LID_FRAC.y1 };
+/* placed off the raw lap point (lapPt()), not off #lidOut's own rendered
+   box — #lidOut is foreshortened by the CSS lid's own yaw/pitch, and
+   dividing that already-foreshortened width by LID_FRAC (itself measured
+   from the plate photo's OWN foreshortening) double-applies the effect and
+   inflates the implied full-plate size. lapPt()'s width is a plain,
+   unrotated fraction of the art frame, so it scales cleanly. Tuned per
+   viewport by eye, the same way the old LAP_DY was. */
+const PLATE_SCALE = mobile ? 1.4 : 1;
+const PLATE_DY = mobile ? 0.08 : 0.02;
+const digiEl = document.getElementById('digiApple');
+const glitchEl = document.getElementById('glitchApple');
+const ring1 = document.getElementById('ring1'), ring2 = document.getElementById('ring2');
+/* beat boundaries on s3 progress */
+const S3_APPR = .50, S3_X0 = .615, S3_X1 = .648;
+
+/* where the laptop sits in each room, in viewport pixels */
+const lapPoseS3 = () => mobile
+  ? { x: .50*innerWidth, y: .72*innerHeight, w: Math.min(.82*innerWidth, .50*innerHeight) }
+  : { x: .50*innerWidth, y: .655*innerHeight, w: Math.min(.34*innerWidth, .56*innerHeight) };
+/* the laptop's berth is the statue's lap, read live off the campus art;
+   LAP_DY lifts it so the deck sits ON the thighs rather than through them */
+/* solved so the screen's lower edge sits just into his lap, base hidden */
+/* solved per viewport so the keyboard band lands on his fingers */
+const LAP_DY = () => mobile ? -0.307 : 0.055;
+const lapPoseS4 = () => {
+  const l = lapPt();
+  return { x: l.x, y: l.y + LAP_DY() * l.w, w: l.w * (mobile ? 1.12 : 1.04) };
 };
 
-/* ------------------------------------------- chapter 2 first frame scene */
-/* One scene, injected into both the back layer (inside ch1) and #ch2intro,
-   so the burn reveal and the section that follows are pixel-identical. */
-/* ------------------------------------------- chapter 2 first frame scene */
-/* A coffered dome built procedurally: 8 rings x 34 segments, each coffer
-   shaded against a single light so the vault reads as a real curved surface
-   rather than flat line-art. Michelangelo's Rebellious Slave stands at the
-   centre, lit by the oculus shaft. Same scene is injected into the layer
-   behind chapter 1 and into #ch2intro, so the burn reveal and the section
-   that follows are pixel-identical. */
-function buildInterior() {
-  const cx = 800, cy = 250, ky = 0.62;
-  const RINGS = [660, 566, 482, 406, 338, 278, 224, 176, 134];
-  const SEG = 34, LIGHT = -2.15;
-  const SH = [34, 28, 21], LIT = [236, 230, 216], GOLD = [201, 164, 76];
-  const mixc = (a, b, t) => 'rgb(' + Math.round(a[0] + (b[0] - a[0]) * t) + ',' +
-    Math.round(a[1] + (b[1] - a[1]) * t) + ',' + Math.round(a[2] + (b[2] - a[2]) * t) + ')';
-  const P = (R, a) => (cx + R * Math.cos(a)).toFixed(1) + ' ' + (cy + R * ky * Math.sin(a)).toFixed(1);
+function paintLaptop(hand, p3, fly) {
+  /* the laptop arrives with the room, then waits, closed */
+  const ent = easeOut2(seg(p3, .015, .15));
+  /* one heavy hinge: eased overall, with two subtle slow points (~45°, ~75°)
+     and a damped settle at the top — a marble slab, not a card flip */
+  const base = easeIO(seg(p3, .10, .52));
+  const mod = clamp01(base - .05 * Math.sin(base * 2 * Math.PI));
+  let A = 106 * mod;
+  A -= 6 * easeIO(seg(p3, .52, .62));
+  A += (96 - A) * easeIO(fly);   /* screen square to the base on his lap */
+  lidEl.style.transform = `rotateX(${A.toFixed(2)}deg)`;
+  const open = clamp01(A / 100);
+  const fe = easeIO(fly);
+  /* it arrives turned to the right, swings square to camera as it opens, then
+     turns its back to us on his lap — he is the one using it, not us */
+  const turn = easeIO(seg(fly, .02, .34));
+  /* the photographed plate (real slab geometry) takes over once the laptop
+     has essentially landed; the CSS-3D construct crossfades out under it, so
+     the fall/hinge animation is untouched and only the final rest frame
+     changes to the higher-quality asset */
+  const plateIn = easeIO(seg(fly, .985, 1));
+  const yaw = 30 * (1 - easeIO(seg(p3, .08, .58))) + 150 * turn;
+  lap3d.style.transform = `rotateY(${yaw.toFixed(2)}deg) rotateX(${(66 + 18*fe).toFixed(2)}deg)`;
+  /* which face the camera sees depends on the lid angle AND the way it is
+     turned: past edge-on we see the screen, but only while it still faces us */
+  const opened = (66 + A) >= 90;
+  const facingUs = Math.cos(yaw * Math.PI / 180) > 0;
+  const showScreen = opened && facingUs;
+  document.getElementById('lidOut').style.opacity = showScreen ? 0 : 1;
+  document.getElementById('lidIn').style.opacity = showScreen ? 1 : 0;
+  document.getElementById('deckBack').style.opacity = facingUs ? 0 : 1;
+  /* A shut laptop shows its lid and nothing else. While the hinge is still
+     nearly closed the deck is coplanar with the lid and its edges rake out
+     past the lid's silhouette — that is the pale strip along the far edge.
+     Hold it hidden until the hinge has genuinely opened.
+     On his lap the base would only stick out under the screen as a keyboard
+     band, so it goes again as the laptop settles: what is left is the screen
+     resting in the drapery, which is all his own laptop would show. */
+  const deckVis = easeIO(seg(A, 7, 20)) * (1 - easeIO(seg(fly, .70, .95)));
+  deckPlaneEl.style.opacity = deckVis.toFixed(3);
 
-  let coffers = '';
-  for (let r = 0; r < RINGS.length - 1; r++) {
-    const Ro = RINGS[r] - 5, Ri = RINGS[r + 1] + 5;
-    const glow = 1 - r / (RINGS.length - 1);
-    for (let sg = 0; sg < SEG; sg++) {
-      const a0 = sg / SEG * Math.PI * 2 + 0.011;
-      const a1 = (sg + 1) / SEG * Math.PI * 2 - 0.011;
-      const mid = (a0 + a1) / 2;
-      let b = 0.16 + 0.84 * Math.pow(Math.max(0, Math.cos(mid - LIGHT)), 1.45);
-      b = Math.min(1, (b * (0.46 + 0.54 * glow)) + glow * 0.20);
-      const face = mixc(SH, LIT, b);
-      const deep = mixc(SH, LIT, b * 0.20);
-      coffers +=
-        '<path d="M' + P(Ro, a0) + 'L' + P(Ro, a1) + 'L' + P(Ri, a1) + 'L' + P(Ri, a0) + 'Z" fill="' + face + '"/>' +
-        '<path d="M' + P(Ro - 16, a0 + 0.018) + 'L' + P(Ro - 16, a1 - 0.018) +
-        'L' + P(Ri + 14, a1 - 0.018) + 'L' + P(Ri + 14, a0 + 0.018) + 'Z" fill="' + deep + '"/>' +
-        '<path d="M' + P(Ro - 26, a0 + 0.03) + 'L' + P(Ro - 26, a1 - 0.03) +
-        'L' + P(Ri + 24, a1 - 0.03) + 'L' + P(Ri + 24, a0 + 0.03) + 'Z" fill="' +
-        mixc(SH, GOLD, 0.30 + b * 0.5) + '" opacity=".55"/>';
+  /* the flight: one lerp between the two rooms, arcing up before it comes down */
+  const P3 = lapPoseS3(), P4 = lapPoseS4();
+  const arc = Math.sin(Math.PI * clamp01(fly));
+  lapPar.style.left  = lerp(P3.x, P4.x, fe).toFixed(1) + 'px';
+  lapPar.style.top   = (lerp(P3.y, P4.y, fe) - arc * innerHeight * (mobile ? .07 : .15)).toFixed(1) + 'px';
+  lapPar.style.width = lerp(P3.w, P4.w, fe).toFixed(1) + 'px';
+  let sc = (0.94 + .06 * ent) * (1 + .12 * easeIO(seg(p3, .12, .54)) - .16 * easeIO(seg(p3, .74, .96)));
+  let ty = (1 - ent) * innerHeight * .06 - easeIO(seg(p3, .12, .54)) * innerHeight * .012;
+  if (mobile) {  /* give the copy the top of the frame once it arrives */
+    const push = easeIO(seg(p3, .66, .86));
+    ty += push * innerHeight * .07;
+    sc *= 1 - .10 * push;
+  }
+  /* it banks through the fall and settles square, with a little weight on landing */
+  const bank = -8 * arc * (mobile ? .4 : 1) - 4.5 * easeIO(fly);
+  sc *= 1 - .05 * easeIO(seg(fly, .93, 1)) + .05 * easeIO(seg(fly, .97, 1));
+  const mblur = reduced ? 0 : (3.2 * arc + 4.5 * Math.sin(Math.PI * turn));
+  lapWrapEl.style.opacity = (ent * (1 - plateIn)).toFixed(3);
+  lapWrapEl.style.transform =
+    `translateY(${ty.toFixed(1)}px) rotate(${bank.toFixed(2)}deg) scale(${sc.toFixed(4)})`;
+  /* settle it into the scene's exposure so the marble stops blowing out */
+  const grade = ` brightness(${(1 - .12 * fe).toFixed(3)}) contrast(${(1 + .10 * fe).toFixed(3)})`;
+  lapWrapEl.style.filter = (mblur > .05 ? `blur(${mblur.toFixed(2)}px)` : '') + grade;
+  /* light travels across the marble as it opens; the gold keys answer */
+  lidSheenEl.style.opacity = (open > .02 && open < .98 ? .5 * Math.sin(open * Math.PI) : 0).toFixed(3);
+  lidSheenEl.style.backgroundPosition = `${(85 - open * 170).toFixed(1)}% 50%`;
+  deckGlowEl.style.opacity = (.5 * easeIO(seg(open, .55, 1))).toFixed(3);
+  lapShadowEl.style.opacity = ((.5 + .35 * open) * (1 - .8 * arc) * (1 - easeIO(seg(fly, .3, .8)))).toFixed(3);
+  lapShadowEl.style.transform =
+    `translate(-50%,-50%) scaleX(${(1 + .1 * open + .5 * arc).toFixed(3)})`;
+
+  if (plateIn > 0) {
+    const lp = lapPt();
+    const pw = lp.w * PLATE_SCALE;
+    const ph = pw * (625 / 1086);
+    const px_ = lp.x;
+    const py_ = lp.y + PLATE_DY * lp.w;
+    lapPlateEl.style.width = pw.toFixed(1) + 'px';
+    lapPlateEl.style.left = (px_ - PLATE_ANCHOR.xf * pw).toFixed(1) + 'px';
+    lapPlateEl.style.top = (py_ - PLATE_ANCHOR.yf * ph).toFixed(1) + 'px';
+    lapPlateEl.style.transformOrigin =
+      `${(PLATE_ANCHOR.xf * 100).toFixed(1)}% ${(PLATE_ANCHOR.yf * 100).toFixed(1)}%`;
+    lapPlateEl.style.transform = `rotate(${bank.toFixed(2)}deg)`;
+    lapPlateEl.style.filter = grade;
+  }
+  lapPlateEl.style.opacity = plateIn.toFixed(3);
+}
+
+const lapPar = document.getElementById('lapPar');
+const lapMask = document.getElementById('lapMask');
+const s4bg = document.getElementById('s4bg');
+const lapGlow = document.getElementById('lapGlow');
+const lapCast = document.getElementById('lapCast');
+/* the statue's lap, measured on the campus art: the laptop is aimed here, so
+   the two stay locked together at any viewport size */
+const LAP = { x: .2134, y: .600, w: .115 };
+function lapPt() {
+  const r = s4bg.getBoundingClientRect();
+  return { x: r.left + LAP.x * r.width, y: r.top + LAP.y * r.height, w: LAP.w * r.width };
+}
+const filmRow = document.getElementById('filmRow');
+const filmClip = document.getElementById('filmClip');
+
+/* the cohort room: everything here is a pure function of scroll, so the
+   landing plays backwards exactly as it played forwards */
+
+function s4Frame(fly, p4) {
+  const near = clamp01(fly);
+  /* the screen's warmth arrives on his lap as the laptop settles into it */
+  const rest = easeIO(seg(near, .66, 1));
+  const bg = s4bg.getBoundingClientRect();
+  const lx = bg.left + LAP.x * bg.width, ly = bg.top + LAP.y * bg.height;
+  lapGlow.style.left = lapCast.style.left = (lx - bg.left) + 'px';
+  lapGlow.style.top = lapCast.style.top = (ly - bg.top) + 'px';
+  lapGlow.style.opacity = (rest * .40).toFixed(3);
+  lapCast.style.opacity = (rest * .8).toFixed(3);
+  /* the carousel drifts across as the section closes */
+  if (!mobile && filmRow && filmClip) {
+    /* travel whole frames only, so the row never rests mid-caption */
+    const figs = filmRow.children;
+    const pitch = figs.length > 1 ? figs[1].offsetLeft - figs[0].offsetLeft : 0;
+    const over = Math.max(0, filmRow.scrollWidth - filmClip.clientWidth);
+    const drift = pitch ? Math.floor(over / pitch) * pitch : over;
+    filmRow.style.transform = `translateX(${(-drift * easeIO(seg(p4, .66, .99))).toFixed(1)}px)`;
+  }
+}
+
+function s3Frame(hand, p3, fly, time) {
+  document.body.dataset.s3 = '1';
+  appleDone.style.visibility = 'hidden';
+  paintLaptop(hand, p3, fly);
+
+  /* ------- the same apple, continuing: table -> hover -> through the glass ------- */
+  const doneR = appleDone.getBoundingClientRect();   /* rides the outgoing S2 stage */
+  const from = { x: doneR.left + doneR.width / 2, y: doneR.top + doneR.height / 2, w: doneR.width };
+  const hov = { x: innerWidth * .50, y: innerHeight * .24, w: Math.min(innerWidth * .11, innerHeight * .16) };
+  let x, y, w;
+  if (p3 <= S3_APPR) {
+    const t = easeIO(hand);
+    x = lerp(from.x, hov.x, t);
+    y = lerp(from.y, hov.y, t) - Math.sin(t * Math.PI) * innerHeight * .06;
+    w = lerp(from.w, hov.w, t);
+    y += easeIO(seg(p3, .10, S3_APPR)) * innerHeight * .05;
+    if (!reduced && hand >= 1 && p3 < .40) y += Math.cos(time * .6) * 4;
+  } else {
+    const g = digiEl.getBoundingClientRect();        /* projected screen target */
+    const t = easeIO(seg(p3, S3_APPR, S3_X1));
+    x = lerp(hov.x, g.left + g.width / 2, t);
+    y = lerp(hov.y + innerHeight * .05, g.top + g.height / 2, t);
+    w = lerp(hov.w, Math.max(g.width, 10), t);
+  }
+  const fade = seg(p3, S3_X0, S3_X1);
+  appleW.style.opacity = (1 - fade).toFixed(3);
+  appleW.style.left = x + 'px';
+  appleW.style.top = y + 'px';
+  appleInner.style.width = w + 'px';
+  appleW.style.transform = 'translate(-50%,-50%)';
+  goldImg.style.transform = marbleImg.style.transform = 'rotate(0deg)';
+  spark.style.opacity = 0;
+  /* damp the apple's parallax toward the laptop's depth so the crossing
+     stays aligned while the pointer moves */
+  const k = lerp(28, 8, easeIO(seg(p3, S3_APPR, S3_X0)));
+  appleInner.style.translate = mobile ? ''
+    : `calc(var(--mx)*${k.toFixed(2)}) calc(var(--my)*${(k * .6).toFixed(2)})`;
+
+  /* ------- inside the glass ------- */
+  /* the reflection rises to meet the apple as it comes down, then dies at the plane */
+  const rf = seg(p3, S3_APPR - .02, S3_X0);
+  reflWrap.style.opacity = (.34 * easeIO(rf) * (1 - fade)).toFixed(3);
+  reflWrap.style.top = (5 + 20 * easeIO(rf)) .toFixed(2) + '%';
+  reflWrap.style.width = (20 + 10 * easeIO(rf)).toFixed(2) + '%';
+  digiEl.style.opacity = fade.toFixed(3);
+  const rp = seg(p3, S3_X0, .74);
+  [[ring1, 0], [ring2, .18]].forEach(([r, ph]) => {
+    const e = clamp01((rp - ph) / (1 - ph));
+    r.style.opacity = (e > 0 && e < 1 ? (1 - e) * .85 : 0).toFixed(3);
+    r.style.transform = `translate(-50%,-50%) scale(${(.25 + e * 2.3).toFixed(3)})`;
+  });
+  /* one restrained glitch band, purely scroll-driven so reverse is exact */
+  const gw = seg(p3, S3_X0 + .004, S3_X1 + .02);
+  if (gw > 0 && gw < 1 && !reduced) {
+    const j = Math.sin(p3 * 1370) * 7;
+    glitchEl.style.opacity = (.5 * Math.sin(gw * Math.PI)).toFixed(3);
+    glitchEl.style.transform = `translate(calc(-50% + ${j.toFixed(1)}px),-50%)`;
+    glitchEl.style.clipPath = `polygon(0 ${(22 + j).toFixed(1)}%,100% ${(22 + j).toFixed(1)}%,100% ${(36 + j).toFixed(1)}%,0 ${(36 + j).toFixed(1)}%)`;
+  } else glitchEl.style.opacity = 0;
+}
+
+/* ---------------- the apple: one deterministic writer ---------------- */
+function appleFrame(time) {
+  if (window.__POSE  !== null) return poseFrame(window.__POSE, time);
+  if (window.__POSE1 !== null) return pose1Frame(window.__POSE1, time);
+  const sy = window.scrollY;
+  const heroRange = heroEl.offsetHeight - innerHeight;
+  const p1 = clamp01(sy / heroRange);
+  const s2Top = s2El.offsetTop;
+  const s2p = clamp01((sy - s2Top) / (s2El.offsetHeight - innerHeight));
+  const flightStart = heroRange * 0.90;
+  const impactScroll = s2Top + 0.30 * (s2El.offsetHeight - innerHeight);
+  const fp = clamp01((sy - flightStart) / (impactScroll - flightStart));
+
+  /* section 3: the last viewport of S2 is the handoff — the reconstructed
+     apple leaves the table as the hall slides away */
+  const s3Top = s3El.offsetTop;
+  const hand = clamp01((sy - (s3Top - innerHeight)) / innerHeight);
+  const p3 = clamp01((sy - s3Top) / (s3El.offsetHeight - innerHeight));
+  /* the laptop leaves the vault over the last screen of section 3 and is on the
+     plinth a tenth of the way into section 4 */
+  const s4Top = s4El.offsetTop, s4Range = s4El.offsetHeight - innerHeight;
+  const p4 = clamp01((sy - s4Top) / s4Range);
+  const flyA = s4Top - innerHeight * .92, flyB = s4Top + s4Range * .10;
+  const fly = clamp01((sy - flyA) / (flyB - flyA));
+  if (hand > 0) {
+    /* keep the apple's departure point pinned to the table art while the
+       S2 stage slides away: position stageW in stage-local coordinates */
+    const iph = impactPt();
+    const st2 = s2stage.getBoundingClientRect();
+    stageW.style.left = (iph.x - st2.left) + 'px';
+    stageW.style.top  = (iph.y - st2.top) + 'px';
+    stageW.style.width = (Math.min(.142 * iph.w, innerHeight * .26) / 0.723) + 'px';
+    s3Frame(hand, p3, fly, time);
+    s4Frame(fly, p4);
+    paintTide(0);
+    paintAppleMaterial(1.2, 1, true);
+    paintDbg();
+    s2stage.style.visibility = 'visible';
+    paintPen(s2p);
+    return { fp, swapped: false };
+  }
+  document.body.dataset.s3 = '0';
+  appleDone.style.visibility = '';
+  appleInner.style.translate = '';
+  lapWrapEl.style.opacity = 0;
+  lapShadowEl.style.opacity = 0;
+  lapMask.style.opacity = 1;
+
+  let lxPx = null, lx, ty, rot, w, sparkO = 0, squash = 1;
+  if (fp <= 0) {
+    const drop = 12 * easeIO(seg(p1,.45,.62)) + 6 * easeIO(seg(p1,.62,.75))
+               + 16 * easeIn2(seg(p1,.75,.90));
+    lx = 53 - 2.5 * easeIO(seg(p1,.40,.60));
+    /* Portrait needs the headline where the apple used to float — four lines
+       at 92vw run right under it — so the apple starts lower there. The fall is
+       rescaled to still land on 60vh, which is where the flight phase picks up
+       (it lerps from .59*innerHeight), otherwise the handoff would jump. */
+    const TY0 = (mobile && innerHeight > innerWidth) ? 40 : 26;
+    ty = TY0 + drop * ((60 - TY0) / 34);
+    rot = 5*easeIO(seg(p1,.35,.55)) + 9*easeIO(seg(p1,.55,.75)) + 10*easeIn2(seg(p1,.75,.95));
+    w = aSizeS1(p1);
+    sparkO = .45*easeIO(seg(p1,.35,.55)) + .25*easeIO(seg(p1,.55,.75)) - .4*easeIO(seg(p1,.86,1));
+  } else {
+    const ip = impactPt();
+    const targetW = Math.min(.142*ip.w, innerHeight*.26);
+    const e = easeIn2(fp);
+    lxPx = lerp(.505*innerWidth, ip.x, easeIO(fp));
+    ty = lerp(.59*innerHeight, ip.y - targetW*.42, e) / innerHeight * 100;
+    rot = lerp(24, 97, easeIO(fp));
+    w = lerp(aSizeS1(1), targetW, easeIO(seg(fp,.15,1)));
+    squash = 1 - .06*easeIO(seg(fp,.96,1));
+  }
+  const swapped = s2p >= .305;
+  appleW.style.opacity = swapped ? 0 : 1;
+  stageW.style.opacity = swapped ? 1 : 0;   /* never both at once */
+  if (lxPx !== null) appleW.style.left = lxPx + 'px'; else appleW.style.left = lx + 'vw';
+  appleW.style.top = ty + 'vh';
+  appleInner.style.width = w + 'px';
+  const bob = (!reduced && fp<=0 && p1 < TIDE_START) ? Math.cos(time*.6)*3 : 0;
+  appleW.style.transform = `translate(-50%,-50%) translateY(${bob}px) scaleY(${squash})`;
+  goldImg.style.transform = marbleImg.style.transform = `rotate(${rot}deg)`;
+  spark.style.opacity = Math.max(0, sparkO);
+
+  const heroVisible = sy < s2Top - 2;
+  const lvl = heroVisible ? paintTide(p1)
+            : (tide.style.visibility='hidden', crestSvg.style.visibility='hidden', 1.2);
+  paintAppleMaterial(lvl, p1, s2p > 0.02 || fp > 0.35);
+  paintDbg();
+
+  s2stage.style.visibility = (sy >= s2Top - 2) ? 'visible' : 'hidden';
+  paintPen(s2p);
+
+  const ip2 = impactPt();
+  stageW.style.left = ip2.x + 'px';
+  stageW.style.top  = ip2.y + 'px';
+  stageW.style.width = (Math.min(.142*ip2.w, innerHeight*.26) / 0.723) + 'px';
+  return { fp, swapped };
+}
+
+/* ------- verification harnesses: render any state at scroll 0 ------- */
+function pose1Frame(pp, time) {
+  if (tl1.scrollTrigger && tl1.scrollTrigger.enabled !== false) tl1.scrollTrigger.disable(false);
+  tl1.progress(pp);
+  const drop = 12*easeIO(seg(pp,.45,.62)) + 6*easeIO(seg(pp,.62,.75)) + 16*easeIn2(seg(pp,.75,.90));
+  appleW.style.opacity = 1;
+  appleW.style.left = (53 - 2.5*easeIO(seg(pp,.40,.60))) + 'vw';
+  appleW.style.top = (26 + drop) + 'vh';
+  appleInner.style.width = aSizeS1(pp) + 'px';
+  appleW.style.transform = 'translate(-50%,-50%)';
+  const rot = 5*easeIO(seg(pp,.35,.55)) + 9*easeIO(seg(pp,.55,.75)) + 10*easeIn2(seg(pp,.75,.95));
+  goldImg.style.transform = marbleImg.style.transform = `rotate(${rot}deg)`;
+  spark.style.opacity = Math.max(0, .45*easeIO(seg(pp,.35,.55)) + .25*easeIO(seg(pp,.55,.75)) - .4*easeIO(seg(pp,.86,1)));
+  const lvl = paintTide(pp);
+  paintAppleMaterial(lvl, pp, false);
+  paintDbg();
+  return { fp: 0, swapped: false };
+}
+function poseFrame(pp, time) {
+  document.getElementById('hero').style.display = 'none';
+  s2El.style.height = '100vh';
+  s2El.style.marginTop = '0';
+  if (tl2.scrollTrigger && tl2.scrollTrigger.enabled !== false) tl2.scrollTrigger.disable(false);
+  tl2.progress(pp);
+  const ip = impactPt();
+  const targetW = Math.min(.142*ip.w, innerHeight*.26);
+  const fp = clamp01(pp/.30);
+  appleW.style.opacity = pp >= .305 ? 0 : 1;
+  appleW.style.left = lerp(innerWidth*.56, ip.x, easeIO(fp)) + 'px';
+  appleW.style.top  = (lerp(.1*innerHeight, ip.y - targetW*.42, easeIn2(fp))/innerHeight*100) + 'vh';
+  appleInner.style.width = lerp(aSizeS1(1), targetW, easeIO(fp)) + 'px';
+  appleW.style.transform = `translate(-50%,-50%) scaleY(${1-.06*easeIO(seg(fp,.96,1))})`;
+  goldImg.style.transform = marbleImg.style.transform = `rotate(${lerp(18,97,easeIO(fp))}deg)`;
+  paintAppleMaterial(1.2, 1, true);
+  const sh = document.getElementById('tShadow');
+  const near = clamp01((pp - .10)/.19);
+  if (sh) { sh.style.opacity = (near*.85).toFixed(2);
+    sh.style.transform = `translate(-50%,-50%) scale(${(.25+near*.75).toFixed(2)})`; }
+  stageW.style.left = ip.x + 'px'; stageW.style.top = ip.y + 'px';
+  stageW.style.width = (targetW / 0.479) + 'px';
+  paintPen(pp);
+  return { fp, swapped: pp >= .305 };
+}
+
+/* ---------------- cursor parallax ----------------
+   The cursor is normalised to -1..1 from the centre of the viewport and damped
+   with a time constant, so every layer reads the SAME number and scales it by
+   its own depth amplitude (set in CSS, in px). It is written to the `translate`
+   property, never `transform`, so it composes with — and never overwrites —
+   the scroll timelines and the per-frame transforms GSAP owns.
+   final position = scroll transform + cursor offset                        */
+const PX = { tx: 0, ty: 0, cx: 0, cy: 0, home: true, last: 0 };
+const TAU_FOLLOW = .135;  /* ~95% caught up in about 0.4s */
+const TAU_SETTLE = .42;   /* drifts back to neutral more slowly     */
+if (!mobile && !reduced) {
+  /* a gamma curve on the offset: tiny cursor moves near the centre produce a
+     visible shift instead of a fraction of a pixel, without raising the peak */
+  const shape = (u) => Math.sign(u) * Math.pow(Math.abs(u), .6);
+  addEventListener('pointermove', (e) => {
+    PX.home = false;
+    PX.tx = shape((e.clientX / innerWidth  - .5) * 2);
+    PX.ty = shape((e.clientY / innerHeight - .5) * 2);
+  }, { passive: true });
+  const leave = () => { PX.home = true; };
+  document.documentElement.addEventListener('pointerleave', leave);
+  addEventListener('blur', leave);
+}
+
+/* ------------------ gold flecks / stars canvas (S2) ------------------ */
+const flecks = $('#flecks'); const fx = flecks.getContext('2d');
+let FW = 0, FH = 0;
+function sizeF(){ const r = flecks.getBoundingClientRect();
+  FW = flecks.width = Math.round(r.width*devicePixelRatio);
+  FH = flecks.height = Math.round(r.height*devicePixelRatio); }
+sizeF(); addEventListener('resize', sizeF);
+const hash = (i,k) => { const x = Math.sin(i*127.1 + k*311.7)*43758.5453; return x - Math.floor(x); };
+
+function paintFlecks(t, s2p, burst) {
+  fx.clearRect(0,0,FW,FH);
+  /* slow dust motes drifting through the light beams */
+  const n = mobile ? 22 : 46;
+  for (let i = 0; i < n; i++) {
+    const h1 = hash(i,1), h2 = hash(i,2), h3 = hash(i,3);
+    const x = (0.36 + h1*0.3)*FW;                       /* in the beam corridor */
+    const y = ((h2 + t*.004*(0.3+h3)) % 1)*FH;
+    const tw = .4 + .4*Math.sin(t*(.6+h3)+i);
+    fx.fillStyle = `rgba(246,236,214,${(.34*tw).toFixed(3)})`;
+    fx.beginPath(); fx.arc(x,y,(.6+h2*1.2)*devicePixelRatio,0,7); fx.fill();
+  }
+  /* marble-dust burst at the point of impact */
+  if (burst > 0 && burst < 1) {
+    const cxp = FW*.455, cyp = FH*.838;
+    for (let i = 0; i < 30; i++) {
+      const a = Math.PI + hash(i,7)*Math.PI;            /* upward hemisphere */
+      const d = (14 + hash(i,8)*70)*burst*devicePixelRatio*2;
+      fx.fillStyle = i%4 ? `rgba(236,229,216,${(.85*(1-burst)).toFixed(3)})`
+                         : `rgba(240,199,103,${(.8*(1-burst)).toFixed(3)})`;
+      fx.beginPath();
+      fx.arc(cxp+Math.cos(a)*d*1.3, cyp+Math.sin(a)*d*.7, (0.8+hash(i,9)*1.6)*devicePixelRatio, 0, 7);
+      fx.fill();
     }
   }
-  let moldings = '';
-  for (let r = 0; r < RINGS.length; r++) {
-    moldings += '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + RINGS[r] +
-      '" ry="' + (RINGS[r] * ky).toFixed(1) + '" fill="none" stroke="rgba(201,164,76,' +
-      (0.30 + 0.06 * r).toFixed(2) + ')" stroke-width="' + (5 - r * 0.35).toFixed(1) + '"/>';
+}
+
+/* ------------------ blink ------------------ */
+const lids = $('#lids');
+let s2Active = false;
+function setLid(v) {  /* v: 0 open .. 1 closed; closes toward the lash line */
+  lids.setAttribute('transform', `translate(0 259) scale(1 ${Math.max(0.001, v)}) translate(0 -259)`);
+}
+function blinkOnce(double) {
+  /* keyframed with timeouts so it works regardless of rAF throttling */
+  const steps = [[0,.35],[35,.8],[70,1],[130,1],[175,.55],[220,.18],[270,0]];
+  steps.forEach(([t,v]) => setTimeout(() => setLid(v), t));
+  if (double) setTimeout(() => blinkOnce(false), 420);
+}
+function s2Visible() {
+  const top = s2El.offsetTop;
+  return scrollY + innerHeight > top && scrollY < top + s2El.offsetHeight;
+}
+function blinkLoop() {
+  setTimeout(() => {
+    if (s2Visible() && !document.hidden && !reduced) blinkOnce(Math.random() < .18);
+    blinkLoop();
+  }, 4000 + Math.random()*3000);
+}
+if (!reduced) { blinkLoop(); setTimeout(() => { if (s2Visible()) blinkOnce(false); }, 1500); }
+
+/* ------------------ main ticker ------------------ */
+/* ================= THE ENDGAME — Partners -> Courses -> Footer =================
+   One anchor drives all three beats: uRaw, the number of viewports scrolled
+   past the moment the Partners panel pins itself at the centre of the screen.
+     uRaw 0.05 .. 0.95   the parchment erodes into Courses
+     uRaw 1.05 ..        the ink rises out of Courses and becomes the footer
+   Everything below is a pure function of that number, so every state reverses
+   exactly on the way back up. #courseRun stays alive across the whole span, so
+   Courses is pinned and visible underneath from the first shard to the moment
+   the black has covered it.                                                  */
+const s7El = document.getElementById('s7');
+const s7stage = document.getElementById('s7stage');
+const ftScene = document.getElementById('ftScene');
+const ftBodyEl = document.getElementById('ftBody');
+const ftRealEl = document.getElementById('ftReal');
+const ftEdgeEl = document.getElementById('ftEdge');
+const ftVeilEl = document.getElementById('ftVeil');
+const ftVigEl = document.getElementById('ftVig');
+const ftUiEl = document.getElementById('ftUi');
+const s6El = document.getElementById('s6');
+const s6PanelEl = document.getElementById('s6panel');
+const s6PaperEl = document.getElementById('s6paper');
+const s6BurnEl = document.getElementById('s6burn');
+const s6ShelfEl = document.getElementById('s6shelf');
+const s6DustEl = document.getElementById('s6dust');
+const s6RunEl = document.getElementById('s6run');
+const s5El = document.getElementById('s5');
+const s5InEl = document.getElementById('s5in');
+const inkPathA = document.getElementById('inkPathA');
+const inkPathB = document.getElementById('inkPathB');
+const inkRectA = document.getElementById('inkRectA');
+const inkRectB = document.getElementById('inkRectB');
+const ftSparkEl = document.getElementById('ftSpark');
+const dctx = s6DustEl ? s6DustEl.getContext('2d') : null;
+const bctx = s6BurnEl ? s6BurnEl.getContext('2d') : null;
+const sctx = ftSparkEl ? ftSparkEl.getContext('2d') : null;
+/* a much gentler arrival than the old -30deg/1.25: a big tilt made the footer
+   read as a separate panel swinging in, which is the one thing it must not do */
+const FT_TILT = -9;
+const FT_ZOOM = 1.12;
+const INK_DELAY = 1.05;   /* the last shard is gone before the black starts */
+const INK_SPAN  = 1.30;   /* viewports the black takes to cover the screen   */
+/* A rotated rectangle only keeps covering its own frame if it is also scaled
+   up by this much — without it the corners of the stage show through as black
+   wedges over the resolved artwork, i.e. visible rectangular clipping. */
+function ftCover(deg, w, h) {
+  const r = Math.abs(deg) * Math.PI / 180, c = Math.cos(r), sn = Math.sin(r);
+  return Math.max((w * c + h * sn) / w, (w * sn + h * c) / h);
+}
+
+/* ---------------------- Part 2: the parchment burns ---------------------- */
+/* A static burn field, built once: value-noise fbm biased by distance from the
+   centre so the sheet catches at its edges and the middle is the last to go.
+   Per frame we only threshold it, which is cheap enough to do in JS as long as
+   the field is kept small and scaled up on the way out — a soft, slightly
+   blobby burn edge is what paper does anyway. */
+const BURN_W = 192, BURN_H = 160;
+const h2 = (a, b) => { const x = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return x - Math.floor(x); };
+let burnMap = null, burnCv = null, charCv = null, rimCv = null,
+    burnImg = null, charImg = null, rimImg = null;
+function vnoise(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const a = h2(xi, yi), b = h2(xi + 1, yi), c = h2(xi, yi + 1), d = h2(xi + 1, yi + 1);
+  return (a * (1 - u) + b * u) * (1 - v) + (c * (1 - u) + d * u) * v;
+}
+function fbm(x, y) {
+  let s = 0, amp = .5, f = 1;
+  for (let o = 0; o < 4; o++) { s += amp * vnoise(x * f, y * f); f *= 2; amp *= .5; }
+  return s / .9375;
+}
+function buildBurn() {
+  if (burnMap) return;
+  burnMap = new Float32Array(BURN_W * BURN_H);
+  for (let y = 0; y < BURN_H; y++) for (let x = 0; x < BURN_W; x++) {
+    const u = x / BURN_W, v = y / BURN_H;
+    /* 0 in the middle, ~1 out at the corners */
+    const d = Math.min(1.15, Math.hypot((u - .5) * 1.12, v - .5) / .62);
+    /* the noise has to carry nearly as much weight as the radial bias, or the
+       front stays a smooth oval and reads as a hole being scaled rather than
+       flame eating along the grain */
+    const n = fbm(u * 5.6, v * 5.6) * .74 + fbm(u * 13.0, v * 13.0) * .26;
+    burnMap[y * BURN_W + x] = Math.max(0, Math.min(1, (1 - d) * .52 + n * .48));
   }
-  /* drum windows just under the vault, throwing the real light into the hall */
-  let windows = '';
-  for (let i = 0; i < 11; i++) {
-    const x = 190 + i * 122;
-    windows += '<path d="M' + x + ' 470 L' + x + ' 402 q22 -30 44 0 L' + (x + 44) + ' 470 Z" fill="#F2E4BE" opacity=".5"/>' +
-      '<path d="M' + x + ' 470 L' + x + ' 402 q22 -30 44 0 L' + (x + 44) + ' 470 Z" fill="none" stroke="#8A6A2A" stroke-width="3"/>';
+  const mk = () => { const c = document.createElement('canvas');
+    c.width = BURN_W; c.height = BURN_H; return c; };
+  burnCv = mk(); charCv = mk(); rimCv = mk();
+  burnImg = burnCv.getContext('2d').createImageData(BURN_W, BURN_H);
+  charImg = charCv.getContext('2d').createImageData(BURN_W, BURN_H);
+  rimImg  = rimCv.getContext('2d').createImageData(BURN_W, BURN_H);
+}
+const RIM = .042, CHAR = .15;
+function burnLayers(t) {
+  const M = burnImg.data, C = charImg.data, R = rimImg.data;
+  for (let i = 0, j = 0; i < burnMap.length; i++, j += 4) {
+    const bm = burnMap[i], dz = bm - t;
+    /* hole: opaque here, and this buffer is used with destination-out */
+    const hole = dz <= 0 ? 1 : dz < .022 ? 1 - dz / .022 : 0;
+    M[j] = M[j + 1] = M[j + 2] = 255; M[j + 3] = (hole * 255) | 0;
+    /* Char scorching the paper ahead of the hole. Carried as brown-with-alpha
+       and composited source-atop, NOT as an opaque plate under 'multiply':
+       canvas blend modes composite alpha as well as colour, so multiplying a
+       full-bleed plate paints the parchment's transparent surround solid. */
+    const ck = dz > 0 && dz < CHAR ? 1 - dz / CHAR : 0;
+    const c2 = ck * ck;
+    C[j] = 62; C[j + 1] = 34; C[j + 2] = 14; C[j + 3] = (215 * c2) | 0;
+    /* the ember line on the lip of the hole (added) */
+    const rk = dz > 0 && dz < RIM ? 1 - dz / RIM : 0;
+    const r2 = rk * rk;
+    R[j] = 255; R[j + 1] = (64 + 140 * rk) | 0; R[j + 2] = (8 + 52 * r2) | 0;
+    R[j + 3] = (205 * r2) | 0;
   }
-  /* arcade below the cornice */
-  let arcade = '';
-  for (let i = 0; i < 7; i++) {
-    const x = 60 + i * 226, w = 168;
-    arcade += '<path d="M' + x + ' 792 L' + x + ' 640 q' + (w / 2) + ' -104 ' + w + ' 0 L' + (x + w) + ' 792 Z" fill="#120C07"/>' +
-      '<path d="M' + x + ' 792 L' + x + ' 640 q' + (w / 2) + ' -104 ' + w + ' 0 L' + (x + w) + ' 792 Z" fill="none" stroke="#B49250" stroke-width="2" opacity=".55"/>' +
-      '<rect x="' + (x + w + 8) + '" y="560" width="42" height="232" fill="url(#colm)"/>' +
-      '<rect x="' + (x + w + 4) + '" y="548" width="50" height="16" fill="#C9A44C" opacity=".55"/>';
-  }
-
-  return '' +
-  '<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
-  '<defs>' +
-    '<linearGradient id="colm" x1="0" y1="0" x2="1" y2="0">' +
-      '<stop offset="0" stop-color="#3A3227"/><stop offset=".35" stop-color="#B9AE97"/>' +
-      '<stop offset=".62" stop-color="#8C8371"/><stop offset="1" stop-color="#2C261D"/></linearGradient>' +
-    '<radialGradient id="ocul" cx=".5" cy=".46" r=".55">' +
-      '<stop offset="0" stop-color="#FFFFFF"/><stop offset=".34" stop-color="#FFF6DE"/>' +
-      '<stop offset=".72" stop-color="#E8CE95" stop-opacity=".85"/>' +
-      '<stop offset="1" stop-color="#C9A44C" stop-opacity=".35"/></radialGradient>' +
-    '<linearGradient id="shaft" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0" stop-color="#FFF3D2" stop-opacity=".40"/>' +
-      '<stop offset=".6" stop-color="#F5D77A" stop-opacity=".10"/>' +
-      '<stop offset="1" stop-color="#F5D77A" stop-opacity="0"/></linearGradient>' +
-    '<linearGradient id="stat" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop offset="0" stop-color="#8F8877"/><stop offset=".2" stop-color="#5B5546"/>' +
-      '<stop offset=".55" stop-color="#2C2822"/><stop offset="1" stop-color="#121110"/></linearGradient>' +
-    '<linearGradient id="floorg" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0" stop-color="#241A0F"/><stop offset="1" stop-color="#0C0805"/></linearGradient>' +
-    '<linearGradient id="archg" x1="0" y1="0" x2="0" y2="1">' +'<stop offset="0" stop-color="#241B12"/><stop offset="1" stop-color="#0D0906"/></linearGradient>' +'<linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">' +'<stop offset="0" stop-color="#FFF3D6" stop-opacity=".16"/>' +'<stop offset=".55" stop-color="#E8CE95" stop-opacity=".05"/>' +'<stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient>' +'<clipPath id="vault"><rect x="0" y="0" width="1600" height="472"/></clipPath>' +
-  '</defs>' +
-  '<rect width="1600" height="900" fill="#100A06"/>' +
-  '<g clip-path="url(#vault)">' + coffers + moldings +
-    '<ellipse cx="' + cx + '" cy="' + cy + '" rx="92" ry="' + (92 * ky).toFixed(1) + '" fill="url(#ocul)"/>' +
-    '<ellipse cx="' + cx + '" cy="' + cy + '" rx="92" ry="' + (92 * ky).toFixed(1) +
-      '" fill="none" stroke="#C9A44C" stroke-width="3.5" opacity=".8"/>' +
-  '</g>' +
-  windows +
-  /* cornice */
-  '<rect x="0" y="466" width="1600" height="34" fill="#1A1209"/>' +
-  '<rect x="0" y="470" width="1600" height="7" fill="#C9A44C" opacity=".5"/>' +
-  '<rect x="0" y="492" width="1600" height="4" fill="#8A6A2A" opacity=".6"/>' +
-  '<rect x="0" y="500" width="1600" height="52" fill="#150E08"/>' +
-  arcade +
-  /* floor + reflection */
-  '<rect y="792" width="1600" height="108" fill="url(#floorg)"/>' +
-  '<ellipse cx="800" cy="812" rx="300" ry="16" fill="#F5D77A" opacity=".10"/>' +
-  '<rect x="756" y="792" width="88" height="108" fill="#F5D77A" opacity=".06"/>' +
-  /* light shaft from the oculus onto the figure */
-  '<path d="M690 262 L910 262 L1010 830 L590 830 Z" fill="url(#shaft)"/>' +
-  /* ---- Michelangelo, Rebellious Slave (placeholder silhouette) ---- */
-  '<g transform="translate(800 486) scale(0.80)">' +
-    '<g fill="url(#stat)">' +
-      /* head, turned and tipped back - the twist that makes it a Slave */
-      '<ellipse cx="2" cy="24" rx="11.5" ry="14" transform="rotate(-22 2 24)"/>' +
-      '<path d="M-6 36 q6 4 12 0 l2 14 q-8 4 -16 0 z"/>' +
-      /* torso, tapering to the waist */
-      '<path d="M-30 52 q30 -10 58 2 q6 26 2 50 q-4 26 -10 40 q-22 8 -44 -2 q-8 -20 -8 -46 q0 -30 2 -44 z"/>' +
-      /* left arm raised and bound over the head */
-      '<path d="M-30 58 q-16 10 -18 34 q-2 20 6 30 q6 7 11 1 q-7 -15 -4 -31 q3 -16 13 -25 z"/>' +
-      /* right arm bound behind the back */
-      '<path d="M28 56 q16 8 18 30 q2 18 -6 28 q-6 6 -11 0 q6 -14 3 -28 q-3 -14 -12 -22 z"/>' +
-      '<path d="M-26 140 q26 10 52 -2 q5 18 1 30 q-26 10 -55 2 q-2 -18 2 -30 z"/>' +
-      /* weight-bearing leg, and the forward bent leg */
-      '<path d="M-23 168 q12 6 21 2 q6 34 2 64 q-2 20 -7 34 l-19 -2 q4 -32 5 -56 q2 -24 -2 -42 z"/>' +
-      '<path d="M6 170 q14 4 23 -2 q8 28 4 60 q-3 22 -12 38 l-18 -4 q7 -28 7 -52 q0 -22 -4 -40 z"/>' +
-    '</g>' +
-    /* rim light along the lit contour only - the figure stays dark stone */
-    '<g fill="#CFC7B4" opacity=".3">' +
-      '<path d="M-30 52 q9 -5 15 -6 q-7 20 -9 47 q-2 29 3 51 l-9 2 q-7 -22 -7 -49 q0 -29 7 -45 z"/>' +
-      '<path d="M-23 168 q6 4 11 3 q-6 27 -6 52 q0 25 4 44 l-10 -1 q-4 -27 -3 -50 q0 -27 4 -48 z"/>' +
-      '<path d="M-30 58 q-13 9 -15 30 q-2 17 4 26 q-8 -4 -9 -22 q-1 -22 20 -34 z"/>' +
-    '</g>' +
-    /* the raw block it is still fused into */
-    '<path d="M-40 258 q40 12 84 0 l8 42 q-52 12 -104 0 z" fill="#2E2921"/>' +
-    '<path d="M-40 258 q40 12 84 0 l3 15 q-48 11 -90 0 z" fill="#413A2F" opacity=".8"/>' +
-    '<ellipse cx="0" cy="300" rx="66" ry="9" fill="#000" opacity=".55"/>' +
-  '</g>' +
-  '<rect width="1600" height="900" fill="url(#haze)" style="mix-blend-mode:soft-light"/>' +
-  '<rect x="716" y="792" width="168" height="18" fill="#1C150C"/>' +
-  '</svg>' +
-  '<span class="caption">Chapter II - The Old Classroom</span>';
+  burnCv.getContext('2d').putImageData(burnImg, 0, 0);
+  charCv.getContext('2d').putImageData(charImg, 0, 0);
+  rimCv.getContext('2d').putImageData(rimImg, 0, 0);
 }
-const INTERIOR_SVG = buildInterior();
-$$('.interior').forEach((el) => { el.innerHTML = INTERIOR_SVG; });
-
-/* ---------------------------------------------------------- chapter model */
-const chapters = ['ch1','ch2intro','ch2','portal2','ch3','ch4','ch5'].map((id) => {
-  const el = document.getElementById(id);
-  return { id, el, top: 0, height: 0 };
-});
-function measure() {
-  for (const c of chapters) { c.top = c.el.offsetTop; c.height = c.el.offsetHeight; }
+let bW = 0, bH = 0;
+function sizeBurn() {
+  if (!s6BurnEl || !s6PanelEl) return;
+  const w = s6PanelEl.offsetWidth, h = s6PanelEl.offsetHeight;
+  if (!w || !h) return;
+  const dpr = Math.min(devicePixelRatio, 2);
+  bW = s6BurnEl.width = Math.round(w * dpr);
+  bH = s6BurnEl.height = Math.round(h * dpr);
 }
-function localP(c, sy) {
-  const range = c.height - innerHeight;
-  return range > 0 ? clamp01((sy - c.top) / range) : clamp01((sy - c.top) / innerHeight + 1);
-}
-function visible(c, sy) {
-  return sy + innerHeight > c.top && sy < c.top + c.height;
-}
-
-/* -------------------------------------------------------------- pointer */
-let pmx = 0, pmy = 0, tmx = 0, tmy = 0;
-if (!mobile && !reduced) {
-  addEventListener('pointermove', (e) => {
-    tmx = (e.clientX / innerWidth - 0.5) * 8;
-    tmy = (e.clientY / innerHeight - 0.5) * 8;
-  }, { passive: true });
-}
-
-/* -------------------------------------------------- copy + reveal system */
-function bindRanges(root) {
-  return $$('.copy', root).map((el) => ({
-    el, from: +el.dataset.in, to: +el.dataset.out, on: false,
-  }));
-}
-function paintRanges(list, p) {
-  for (const c of list) {
-    const want = p >= c.from && p < c.to;
-    if (want !== c.on) { c.on = want; c.el.classList.toggle('on', want); }
+let dW = 0, dH = 0;
+function sizeDust() { if (!s6DustEl) return; const r = s6DustEl.getBoundingClientRect();
+  if (!r.width) return;
+  dW = s6DustEl.width = Math.round(r.width * devicePixelRatio);
+  dH = s6DustEl.height = Math.round(r.height * devicePixelRatio); }
+function paintS6Dust(q) {
+  if (!dctx) return;
+  if (!dW) sizeDust();
+  if (!dW) return;
+  dctx.clearRect(0, 0, dW, dH);
+  const N = mobile ? 90 : 170, DPR = devicePixelRatio;
+  for (let i = 0; i < N; i++) {
+    const hx = h2(i, 3), hy = h2(i, 5), hs = h2(i, 7), hd = h2(i, 11);
+    /* each ash flake lifts off the spot it was burnt from */
+    const ox = .10 + hx * .80, oy = .10 + hy * .80;
+    const d = Math.min(1, Math.hypot((ox - .5) * 1.12, oy - .5) / .62);
+    const bm = Math.max(0, Math.min(1, (1 - d) * .60 + fbm(ox * 4.2, oy * 4.2) * .40));
+    const e = clamp01((q * 1.16 - bm) / .34);
+    if (e <= 0 || e >= 1) continue;
+    /* smoke rises and drifts; embers fall */
+    const up = hs > .74 ? .26 : -.34;
+    const x = (ox + (hd - .5) * e * .26) * dW;
+    const y = (oy + up * e * e + (hd - .5) * e * .05) * dH;
+    const a = Math.sin(e * Math.PI) * (.45 + hs * .55);
+    if (a <= .012) continue;
+    dctx.fillStyle = hs > .82 ? 'rgba(255,178,74,' + a.toFixed(3) + ')'
+                   : hs > .62 ? 'rgba(196,92,30,' + (a * .8).toFixed(3) + ')'
+                              : 'rgba(74,66,60,' + (a * .7).toFixed(3) + ')';
+    dctx.beginPath();
+    dctx.arc(x, y, (.7 + hs * 2.0) * DPR * (1 - .3 * e), 0, 7);
+    dctx.fill();
   }
 }
-const rvs = $$('.rv').map((el) => {
-  const [from, to] = (el.dataset.rv || '0 1').split(' ').map(Number);
-  const sec = el.closest('.track, #ch5');
-  return { el, from, to, sec, on: false };
-});
-function paintRvs(sy) {
-  for (const r of rvs) {
-    const c = chapters.find((x) => x.el === r.sec);
-    const p = c ? localP(c, sy) : 1;
-    const want = p >= r.from && p < r.to;
-    if (want !== r.on) { r.on = want; r.el.classList.toggle('on', want); }
-  }
-}
-
-/* ---------------------------------------------------------------- video */
-/* The marble plate, scrubbed exactly as before. It runs across 0-0.70 of the
-   chapter so the stone has settled before the burn begins. */
-const video = $('#bg');
-const net = navigator.connection || {};
-const thrifty = net.saveData === true || ['slow-2g','2g','3g'].includes(net.effectiveType);
-video.src = thrifty ? 'assets/video/hero-lite.mp4' : 'assets/video/hero.mp4';
-let duration = 0, lastSeek = -1;
-video.addEventListener('loadedmetadata', () => { duration = video.duration || 0; });
-let primed = false;
-function prime() {
-  if (primed) return; primed = true;
-  const pr = video.play();
-  if (pr && pr.then) pr.then(() => video.pause()).catch(() => {}); else video.pause();
-}
-video.addEventListener('loadeddata', prime, { once: true });
-['pointerdown','touchstart','wheel','keydown'].forEach((e) =>
-  addEventListener(e, prime, { once: true, passive: true }));
-
-/* ============================================================ CHAPTER 1 */
-const ch1 = chapters[0];
-const ch1Copies = bindRanges(ch1.el);
-const cue = $('#cue');
-const caveworld = $('#caveworld');
-const heat = $('#heat');
-const frags = $$('.frag').map((el) => ({
-  el,
-  d: el.dataset.d.split(',').map(Number),
-  t0: +el.dataset.t,
-}));
-const goldTraces = $$('.gt').map((p) => {
-  const len = p.getTotalLength();
-  p.style.strokeDasharray = len;
-  p.style.strokeDashoffset = len;
-  return { p, len };
-});
-const rimChar = $('#rim-char'), rimHot = $('#rim-hot'), rimCore = $('#rim-core');
-const embers = $('#embers');
-const ectx = embers.getContext('2d');
-let EW = 0, EH = 0;
-function sizeEmbers() {
-  const r = embers.getBoundingClientRect();
-  EW = embers.width = Math.round(r.width * devicePixelRatio);
-  EH = embers.height = Math.round(r.height * devicePixelRatio);
-}
-sizeEmbers(); addEventListener('resize', sizeEmbers);
-
-/* ---- the burn blob: seeded harmonics -> irregular, organic, reversible.
-   Returned as an SVG path in CSS pixels; used for both the evenodd hole
-   clip on #caveworld and the incandescent rim strokes. */
-const HARM = [[3, .14, 0.7], [5, .10, 2.4], [7, .065, 4.9], [11, .04, 1.6]];
-function burnGeom(pb) {
-  const W = innerWidth, H = innerHeight;
-  const rmax = Math.hypot(W, H) / 2;
-  const cx = W * .54 + W * .02 * Math.sin(pb * 2.1);
-  const cy = H * .46 + H * .03 * Math.sin(pb * 1.7 + 2);
-  const R = 1.45 * rmax * Math.pow(pb, 1.6);
-  const ampK = .55 + .8 * pb;
-  return { cx, cy, R, ampK };
-}
-function blobPath(g) {
-  const N = 72;
-  let d = '';
-  for (let i = 0; i <= N; i++) {
-    const th = (i % N) / N * Math.PI * 2;
-    let r = g.R;
-    for (const [k, a, ph] of HARM) r += g.R * a * g.ampK * Math.sin(k * th + ph);
-    const x = (g.cx + Math.cos(th) * r).toFixed(1);
-    const y = (g.cy + Math.sin(th) * r).toFixed(1);
-    d += (i ? 'L' : 'M') + x + ' ' + y;
-  }
-  return d + 'Z';
-}
-function paintBurn(p, t) {
-  const pb = clamp01((p - .73) / .27);
-  if (pb <= 0.003) {
-    caveworld.style.clipPath = 'none';
-    rimChar.style.opacity = rimHot.style.opacity = rimCore.style.opacity = 0;
-    ectx.clearRect(0, 0, EW, EH);
+let partnersOn = false;
+function paintPartners(q) {
+  if (!s6BurnEl || !bctx) return;
+  if (q <= 0) {
+    if (partnersOn) {
+      partnersOn = false;
+      s6BurnEl.style.opacity = '0'; s6DustEl.style.opacity = '0';
+      s6PaperEl.style.opacity = '1'; s6ShelfEl.style.opacity = '1';
+    }
     return;
   }
-  const g = burnGeom(pb);
-  if (g.R < 6) g.R = 6;
-  const blob = blobPath(g);
-  caveworld.style.clipPath =
-    `path(evenodd, "M0 0H${innerWidth}V${innerHeight}H0Z ${blob}")`;
-  /* rim: char outside, hot gold-orange at the lip; all fade near the end */
-  const end = 1 - smooth(clamp01((pb - .82) / .18));
-  rimChar.setAttribute('d', blob); rimHot.setAttribute('d', blob); rimCore.setAttribute('d', blob);
-  rimChar.style.opacity = (.85 * end).toFixed(2);
-  rimHot.style.opacity  = ((.8 + .2 * Math.sin(t * 9)) * end).toFixed(2);
-  rimCore.style.opacity = (.9 * end).toFixed(2);
-  /* embers, ash, sparse antique-gold particles along the rim */
-  ectx.clearRect(0, 0, EW, EH);
-  if (reduced) return;
-  const dpr = devicePixelRatio;
-  const n = mobile ? 26 : 48;
-  for (let i = 0; i < n; i++) {
-    const h1 = hash(i, 5), h2 = hash(i, 6), h3 = hash(i, 7);
-    const th = h1 * Math.PI * 2;
-    let r = g.R;
-    for (const [k, a, ph] of HARM) r += g.R * a * g.ampK * Math.sin(k * th + ph);
-    const life = (h2 + t * (0.25 + h3 * 0.4)) % 1;
-    const dist = life * (60 + h3 * 90);
-    const x = (g.cx + Math.cos(th) * (r + dist)) * dpr;
-    const y = (g.cy + Math.sin(th) * (r + dist) - life * 26) * dpr;
-    const a = (1 - life) * end * (pb > .06 ? 1 : pb / .06);
-    if (i % 5 === 0) {              /* ash */
-      ectx.fillStyle = `rgba(140,130,120,${(a * .35).toFixed(3)})`;
-      ectx.fillRect(x, y, 1.6 * dpr, 1.6 * dpr);
-    } else if (i % 9 === 0) {       /* antique gold */
-      ectx.fillStyle = `rgba(201,164,76,${(a * .8).toFixed(3)})`;
-      ectx.beginPath(); ectx.arc(x, y, 1.4 * dpr, 0, 7); ectx.fill();
-    } else {                        /* ember */
-      ectx.fillStyle = `rgba(${224 - life * 90 | 0},${118 - life * 70 | 0},47,${(a * .8).toFixed(3)})`;
-      ectx.beginPath(); ectx.arc(x, y, (1 + h2) * dpr, 0, 7); ectx.fill();
-    }
+  buildBurn();
+  if (!bW) sizeBurn();
+  if (!bW) return;
+  if (!partnersOn) {
+    partnersOn = true;
+    /* the canvas redraws both plates at their own boxes, so handing over from
+       the two <img>s is invisible at q just past zero */
+    s6BurnEl.style.opacity = '1'; s6DustEl.style.opacity = '1';
+    s6PaperEl.style.opacity = '0'; s6ShelfEl.style.opacity = '0';
   }
-  /* very brief cyan fringe at two disruption moments only */
-  if ((p > .775 && p < .787) || (p > .893 && p < .905)) {
-    ectx.strokeStyle = 'rgba(0,229,208,.65)';
-    ectx.lineWidth = dpr;
-    for (let s = 0; s < 2; s++) {
-      const th0 = (s ? 3.9 : 1.1) + pb;
-      ectx.beginPath();
-      for (let k = 0; k <= 10; k++) {
-        const th = th0 + k * .028;
-        let r = g.R;
-        for (const [kk, a, ph] of HARM) r += g.R * a * g.ampK * Math.sin(kk * th + ph);
-        const x = (g.cx + Math.cos(th) * r) * dpr, y = (g.cy + Math.sin(th) * r) * dpr;
-        k ? ectx.lineTo(x, y) : ectx.moveTo(x, y);
-      }
-      ectx.stroke();
-    }
+  /* run the front slightly past 1 so the last flecks are gone before the ink */
+  burnLayers(q * 1.16);
+  bctx.clearRect(0, 0, bW, bH);
+  bctx.globalCompositeOperation = 'source-over';
+  if (s6PaperEl.complete) bctx.drawImage(s6PaperEl, 0, 0, bW, bH);
+  if (s6ShelfEl.complete && s6ShelfEl.naturalWidth) {
+    const sw = bW * (mobile ? .88 : .76);
+    const sh = sw * (s6ShelfEl.naturalHeight / s6ShelfEl.naturalWidth);
+    bctx.drawImage(s6ShelfEl, (bW - sw) / 2, bH * .53 - sh / 2, sw, sh);
   }
-}
-function paintCh1(p, t) {
-  /* marble scrub: unchanged behaviour, mapped to the first 70% */
-  if (duration) {
-    const time = Math.min(clamp01(p / 0.70) * duration, duration - 0.001);
-    if (lastSeek < 0 || Math.abs(time - lastSeek) > 0.008) {
-      video.currentTime = time; lastSeek = time;
-    }
-  }
-  /* 18–35%: gold wakes inside the marks and travels through them */
-  const tr = smooth(clamp01((p - .18) / .17));
-  goldTraces.forEach(({ p: path, len }, i) => {
-    const local = smooth(clamp01(tr * 1.5 - i * .17));
-    path.style.strokeDashoffset = len * (1 - local);
-    path.style.opacity = local > 0 ? (0.55 + 0.35 * local).toFixed(2) : 0;
-  });
-  /* 35–55%: code released from the marks, drifting outward at depth */
-  for (const f of frags) {
-    const e = smooth(clamp01((p - f.t0) / .09));
-    const gone = smooth(clamp01((p - .68) / .06));
-    const o = e * (1 - gone);
-    f.el.style.opacity = (o * .92).toFixed(2);
-    const k = .3 + e * .7;
-    f.el.style.transform =
-      `translate(${(f.d[0] * k).toFixed(1)}px, ${(f.d[1] * k).toFixed(1)}px)`;
-  }
-  /* 55–73%: one irregular heat point gathers at the future burn centre */
-  const hp = smooth(clamp01((p - .55) / .15)) * (1 - smooth(clamp01((p - .73) / .04)));
-  heat.style.opacity = hp.toFixed(2);
-  const hg = burnGeom(0);
-  heat.style.left = hg.cx + 'px';
-  heat.style.top = hg.cy + 'px';
-  heat.style.transform = `translate(-50%,-50%) scale(${(.35 + hp * .85).toFixed(2)})`;
-  /* 73–100%: the burn-through */
-  paintBurn(p, t);
-  paintRanges(ch1Copies, p);
-  if (cue) cue.style.opacity = p > .03 ? '0' : '1';
+  bctx.globalCompositeOperation = 'source-atop';
+  bctx.drawImage(charCv, 0, 0, bW, bH);
+  bctx.globalCompositeOperation = 'destination-out';
+  bctx.drawImage(burnCv, 0, 0, bW, bH);
+  bctx.globalCompositeOperation = 'lighter';
+  bctx.drawImage(rimCv, 0, 0, bW, bH);
+  bctx.globalCompositeOperation = 'source-over';
+  paintS6Dust(q);
 }
 
-/* ==================================================== frozen chapters 2–4 */
-const ch2 = chapters[2];
-const ch2Copies = bindRanges(ch2.el);
-const deskfield = $('#deskfield');
-const DESKS = [];
-{
-  const cols = 6, rows = 4;
-  for (let i = 0; i < cols * rows; i++) {
-    const r = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    r.innerHTML = `<rect width="86" height="46" fill="rgba(232,228,219,.08)" stroke="rgba(184,178,166,.55)" stroke-width="1.2"/>
-                   <rect y="46" width="86" height="7" fill="rgba(184,178,166,.25)"/>`;
-    deskfield.appendChild(r);
-    const col = i % cols, row = (i / cols) | 0;
-    DESKS.push({
-      el: r,
-      sx: 120 + hash(i, 1) * 1320, sy: 380 + hash(i, 2) * 420, sr: (hash(i, 3) - .5) * 40,
-      gx: 330 + col * 170, gy: 430 + row * 116, gr: 0,
+/* ---------------------- Part 3: the ink rises out of Courses ---------------------- */
+/* Tendrils that reach up ahead of the body. Without them the front is still a
+   wave — recognisably a horizontal line with a wobble — rather than something
+   creeping through the composition. */
+const FING = [];
+for (let k = 0; k < 6; k++) FING.push({
+  x: (k + .5) / 6 + (h2(k, 71) - .5) * .13,
+  w: .055 + h2(k, 73) * .075,
+  h: .10 + h2(k, 79) * .17,
+  ph: h2(k, 83) * 6.283 });
+function inkY(x01, lvl, p) {
+  const H = innerHeight, T = x01 * 6.2832;
+  const a = .062 * Math.sin(T * 0.62 + p * 1.9)
+          + .041 * Math.sin(T * 1.17 - p * 2.7 + 1.1)
+          + .026 * Math.sin(T * 1.94 + p * 3.8 + 0.5)
+          + .015 * Math.sin(T * 3.30 - p * 5.1 + 2.3)
+          + .008 * Math.sin(T * 5.70 + p * 7.0 + 1.4);
+  let f = 0;
+  for (const g of FING) { const d = (x01 - g.x) / g.w;
+    f += g.h * Math.exp(-d * d) * (.675 + .325 * Math.sin(g.ph + p * 1.3)); }
+  /* the fingers only mean anything while the front is actually travelling */
+  f *= .15 + .85 * Math.sin(Math.min(1, Math.max(0, lvl)) * Math.PI);
+  return H * (1 - lvl) + a * H - f * H;
+}
+/* Draws one front as a blurred band plus a solid rect beneath it. sd is the
+   blur's stdDeviation, and the band has to clear it on both sides or the
+   Gaussian's falloff shows up as a light seam where the two meet. */
+const INK_N = 72;
+const inkYs = new Array(INK_N + 1);
+function paintInk(pathEl, rectEl, lvl, p, sd) {
+  const W = innerWidth, H = innerHeight;
+  let lo = 1e9, hi = -1e9;
+  for (let i = 0; i <= INK_N; i++) {
+    const y = Math.max(-340, inkY(i / INK_N, lvl, p));
+    inkYs[i] = y; if (y < lo) lo = y; if (y > hi) hi = y;
+  }
+  const bandBottom = hi + sd * 4;
+  let d = '';
+  for (let i = 0; i <= INK_N; i++) d += (i ? 'L' : 'M') + (i / INK_N * W).toFixed(1) + ' ' + inkYs[i].toFixed(1);
+  const foot = (bandBottom + sd * 3).toFixed(1);
+  pathEl.setAttribute('d', d + 'L' + W + ' ' + foot + 'L0 ' + foot + 'Z');
+  rectEl.setAttribute('x', -400);
+  rectEl.setAttribute('y', bandBottom.toFixed(1));
+  rectEl.setAttribute('width', W + 800);
+  rectEl.setAttribute('height', Math.max(0, H + 700 - bandBottom).toFixed(1));
+}
+function sizeInkMask(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.setAttribute('x', -400); m.setAttribute('y', -900);
+  m.setAttribute('width', innerWidth + 800); m.setAttribute('height', innerHeight + 1800);
+}
+let spW = 0, spH = 0;
+function sizeSpark() { if (!ftSparkEl) return;
+  spW = ftSparkEl.width = Math.round(innerWidth * devicePixelRatio);
+  spH = ftSparkEl.height = Math.round(innerHeight * devicePixelRatio); }
+function paintSpark(u, lvl) {
+  if (!sctx) return;
+  if (!spW) sizeSpark();
+  if (!spW) return;
+  const vis = clamp01(u / .35) * (1 - clamp01((u - 2.1) / .9));
+  if (vis <= .01) { if (ftSparkEl.style.opacity !== '0') ftSparkEl.style.opacity = '0'; return; }
+  ftSparkEl.style.opacity = vis.toFixed(3);
+  sctx.clearRect(0, 0, spW, spH);
+  const N = mobile ? 70 : 130, DPR = devicePixelRatio, H = innerHeight;
+  for (let i = 0; i < N; i++) {
+    const hx = h2(i, 17), hy = h2(i, 19), hs = h2(i, 23);
+    /* motes live inside the black, densest just under its leading edge */
+    const front = inkY(hx, lvl, u) / H;
+    const y01 = front + hy * (1.06 - front) - u * .045;
+    if (y01 < front - .01 || y01 > 1.04) continue;
+    const a = (1 - clamp01((y01 - front) / .30)) * (.55 + hs * .45) * vis;
+    if (a <= .012) continue;
+    sctx.fillStyle = hs > .82 ? 'rgba(246,236,206,' + a.toFixed(3) + ')'
+                              : 'rgba(232,240,252,' + (a * .9).toFixed(3) + ')';
+    sctx.beginPath();
+    sctx.arc(hx * spW, y01 * spH, (.5 + hs * 1.5) * DPR, 0, 7);
+    sctx.fill();
+  }
+}
+
+function syncCoursePartnerPin() {
+  if (!s6El) return;
+  /* trailing scroll for the dissolve and the ink's rise. #courseRun ends at
+     #s6's bottom, and that is when Courses unpins — so this must outlast the
+     black covering the screen, or Courses slides away mid-transition. */
+  const run = document.getElementById('s6run');
+  if (run) run.style.height = Math.round(innerHeight * 2.6) + 'px';
+}
+addEventListener('resize', () => { syncCoursePartnerPin(); sizeDust(); sizeSpark(); sizeBurn(); });
+addEventListener('orientationchange', () => setTimeout(() => {
+  syncCoursePartnerPin(); sizeDust(); sizeSpark(); sizeBurn(); }, 180));
+syncCoursePartnerPin();
+if (s6PanelEl) s6PanelEl.querySelectorAll('img').forEach((img) => {
+  if (!img.complete) img.addEventListener('load', () => { syncCoursePartnerPin(); sizeDust(); sizeBurn(); }, { once: true }); });
+
+let ftOn = false, s5Graded = false;
+function s7Frame() {
+  if (!s6El || !s6PanelEl) return;
+  const vh = innerHeight;
+  /* The anchor is the moment the panel pins itself centred. It must be derived
+     from STATIC layout: #s6panel is sticky, and offsetTop on a stuck element
+     reports where it is currently painted, so measuring off the panel makes
+     pinAt track scrollY and the progress never leaves zero. #s6run is the
+     ordinary block right after it, so its offsetTop is stable. */
+  const s6Top = s6El.getBoundingClientRect().top + scrollY;
+  const panelStatic = s6RunEl
+    ? s6RunEl.offsetTop - s6PanelEl.offsetHeight
+    : (parseFloat(getComputedStyle(s6El).paddingTop) || 0);
+  const pinAt = s6Top + panelStatic - vh * .5;
+  const uRaw = (scrollY - pinAt) / vh;
+
+  paintPartners(clamp01((uRaw - .05) / .90));
+
+  const u = uRaw - INK_DELAY;
+  if (u <= -.05) {
+    if (ftOn) { ftOn = false; s7stage.style.visibility = 'hidden'; ftSparkEl.style.opacity = '0'; }
+    if (s5Graded) { s5El.style.filter = ''; if (s5InEl) s5InEl.style.opacity = ''; s5Graded = false; }
+    return;
+  }
+  if (!ftOn) { ftOn = true; s7stage.style.visibility = 'visible'; }
+
+  /* 1 — the black flows up out of the bottom of the Courses composition, and
+     the traces run on a front a third of a viewport ahead of it, so white
+     contours surface over Courses before the black arrives under them */
+  const lvl = clamp01(u / INK_SPAN) * 1.06;
+  const lvlB = clamp01((u + .30) / INK_SPAN) * 1.10;
+  paintInk(inkPathA, inkRectA, lvl, u, 20);
+  paintInk(inkPathB, inkRectB, lvlB, u + .30, 26);
+  sizeInkMask('inkMaskA'); sizeInkMask('inkMaskB');
+
+  /* 2 — Courses turns to the footer's own black-and-white BEFORE the ink gets
+     there, so where the two meet they are already speaking one language and
+     the middle of the sequence is genuinely both worlds at once */
+  const cg = easeIO(clamp01(u / 1.05));
+  /* a full-viewport filter re-rasterises the whole section, so don't re-set it
+     with a string it already has — it saturates for most of the sequence */
+  const cgs = 'grayscale(' + cg.toFixed(3) + ') contrast(' + (1 + .55 * cg).toFixed(3)
+    + ') brightness(' + (1 - .42 * cg).toFixed(3) + ')';
+  if (s5El.style.filter !== cgs) {
+    s5El.style.filter = cgs;
+    if (s5InEl) s5InEl.style.opacity = (1 - .62 * cg).toFixed(3);
+  }
+  s5Graded = true;
+  ftVeilEl.style.opacity = (easeIO(clamp01(u / 1.0)) * .55).toFixed(3);
+
+  /* 3 — the scene settles square as it lands */
+  const t = easeIO(clamp01(u / 1.9));
+  const deg = FT_TILT * (1 - t);
+  const sw = ftScene.offsetWidth || 1, sh = ftScene.offsetHeight || 1;
+  const sc = Math.max(ftCover(deg, sw, sh) * 1.015, lerp(FT_ZOOM, 1, t));
+  ftScene.style.transform = 'rotate(' + deg.toFixed(3) + 'deg) scale(' + sc.toFixed(4) + ')';
+
+  /* 4 — inside the black, the plates resolve from a grey ghost to full colour
+     and the traces hand over once the shapes can carry the image themselves */
+  const g = easeIO(clamp01((u - 1.55) / 1.25));
+  ftRealEl.style.opacity = easeIO(clamp01((u - 1.15) / .95)).toFixed(3);
+  ftRealEl.style.filter = 'grayscale(' + (1 - g).toFixed(3) + ') brightness('
+    + (.34 + .66 * g).toFixed(3) + ') contrast(' + (1.35 - .35 * g).toFixed(3) + ')';
+  ftEdgeEl.style.opacity = (1 - easeIO(clamp01((u - 1.75) / 1.05))).toFixed(3);
+  ftVigEl.style.opacity = easeIO(clamp01((u - 1.9) / .85)).toFixed(3);
+
+  paintSpark(u, lvl);
+
+  /* 5 — the copy is last, once the picture is real */
+  const ui = easeIO(clamp01((u - 2.9) / .5));
+  ftUiEl.style.opacity = ui.toFixed(3);
+  s7stage.style.pointerEvents = ui > .9 ? 'auto' : 'none';
+}
+
+gsap.ticker.add((t) => {
+  /* frame-rate independent damping, so the feel is identical at 60 and 120Hz */
+  const dt = Math.min(.05, PX.last ? t - PX.last : .016); PX.last = t;
+  const aim = PX.home ? 0 : 1;
+  const k = 1 - Math.exp(-dt / (PX.home ? TAU_SETTLE : TAU_FOLLOW));
+  const ncx = PX.cx + (PX.tx * aim - PX.cx) * k;
+  const ncy = PX.cy + (PX.ty * aim - PX.cy) * k;
+  if (Math.abs(ncx - PX.cx) > .0004 || Math.abs(ncy - PX.cy) > .0004) {
+    document.documentElement.style.setProperty('--mx', ncx.toFixed(4) + 'px');
+    document.documentElement.style.setProperty('--my', ncy.toFixed(4) + 'px');
+  }
+  PX.cx = ncx; PX.cy = ncy;
+
+  const { fp } = appleFrame(t);
+  s7Frame();
+
+  const s2Top = s2El.offsetTop;
+  const s2p = clamp01((scrollY - s2Top)/(s2El.offsetHeight - innerHeight));
+  s2Active = scrollY + innerHeight > s2Top && scrollY < s2Top + s2El.offsetHeight;
+
+  if (s2Active) {
+    const burst = clamp01((s2p - .30)/.07);
+    paintFlecks(t, s2p, burst);
+    if (!reduced) {
+      /* beams breathe slowly; shadow tightens as the apple approaches */
+      const b = .7 + .3*Math.sin(t*.35);
+      const b1 = document.getElementById('beam1'); if (b1) b1.style.opacity = (b*.9).toFixed(2);
+      const near = clamp01((s2p - .10)/.19);
+      const sh = document.getElementById('tShadow');
+      if (sh) { sh.style.opacity = (near*.85).toFixed(2);
+        sh.style.transform = `translate(-50%,-50%) scale(${(.25+near*.75).toFixed(2)})`; }
+    }
+  }
+  if (!reduced) {
+    const s = Math.sin(t*.8), c = Math.cos(t*.6);
+    gsap.set('#fem',  { y: s*7, rotation: s*1.1 });
+    gsap.set('#male', { y: c*8, rotation: -c*1.2 });
+    gsap.set('#statue', { y: s*2.5 });
+    motes.forEach((m,i) => {
+      m.style.transform = `translateY(${Math.sin(t*.5+i)*10}px)`;
+      m.style.opacity = .18 + .2*(0.5+0.5*Math.sin(t*.9+i*2));
     });
   }
-}
-const hands = $$('.clockface').map((c) => ({ h: $('.hand-h', c), m: $('.hand-m', c) }));
-const verm = $('#vermilion');
-const vign = $('#ch2-vignette');
-function paintCh2(p) {
-  const q = smooth(clamp01((p - 0.12) / 0.45));
-  const squeeze = smooth(clamp01((p - 0.62) / 0.28));
-  for (const d of DESKS) {
-    const x = lerp(d.sx, d.gx, q);
-    const y = lerp(d.sy, d.gy - squeeze * 26, q);
-    const r = lerp(d.sr, 0, q);
-    d.el.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${r.toFixed(1)})`);
-    d.el.setAttribute('opacity', clamp01(p * 6).toFixed(2));
-  }
-  for (const c of hands) {
-    c.h.setAttribute('transform', `rotate(${(p * 720).toFixed(1)} 40 40)`);
-    c.m.setAttribute('transform', `rotate(${(p * 2160).toFixed(1)} 40 40)`);
-  }
-  const rebel = smooth(clamp01((p - 0.55) / 0.3));
-  verm.style.transform =
-    `translate(${(rebel * 34).toFixed(1)}vw, ${(-rebel * 20).toFixed(1)}vh) rotate(${(rebel * 260).toFixed(0)}deg)`;
-  vign.style.opacity = smooth(clamp01((p - 0.5) / 0.4)).toFixed(2);
-  paintRanges(ch2Copies, p);
-}
+});
 
-function makePortal(sec, seed) {
-  const canvas = $('canvas', sec);
-  const through = $('.portal-through', sec);
-  const ctx = canvas.getContext('2d');
-  let W = 0, H = 0;
-  function size() {
-    const r = canvas.getBoundingClientRect();
-    W = canvas.width = Math.round(r.width * devicePixelRatio);
-    H = canvas.height = Math.round(r.height * devicePixelRatio);
+/* gold micro-trail follows the fixed apple */
+const trail = [];
+if (!reduced) {
+  for (let i = 0; i < 6; i++) {
+    const d = document.createElement('i'); d.className = 'tr';
+    d.style.width = d.style.height = (8-i)+'px';
+    document.body.appendChild(d); trail.push({ el: d, x: 0, y: 0 });
   }
-  size(); addEventListener('resize', size);
-  const N = mobile ? 90 : 170;
-  function paint(p, t) {
-    ctx.clearRect(0, 0, W, H);
-    const open = smooth(clamp01((p - 0.25) / 0.6));
-    const half = open * 0.46;
-    const jag = (k) => half * (0.82 + 0.18 * Math.sin(k * 9.3 + seed * 7));
-    const pts = [];
-    for (let k = 0; k <= 8; k++) pts.push(`${(50 - jag(k) * 100).toFixed(2)}% ${k * 12.5}%`);
-    for (let k = 8; k >= 0; k--) pts.push(`${(50 + jag(k + .5) * 100).toFixed(2)}% ${k * 12.5}%`);
-    through.style.clipPath = `polygon(${pts.join(',')})`;
-    const fade = Math.sin(Math.PI * clamp01(p));
-    for (let i = 0; i < N; i++) {
-      const h1 = hash(i, seed), h2 = hash(i, seed + 1), h3 = hash(i, seed + 2);
-      const side = h1 < 0.5 ? -1 : 1;
-      const x = W * (0.5 + side * (0.04 + h2 * 0.46) * (0.35 + open));
-      const y = H * ((h3 + p * (0.22 + h1 * 0.35)) % 1);
-      const r = (0.8 + h2 * 2.2) * devicePixelRatio;
-      const tw = 0.55 + 0.45 * Math.sin(t * (1 + h1 * 2) + i);
-      if (i % 13 === 0) {
-        ctx.fillStyle = `rgba(232,228,219,${(0.5 * fade * tw).toFixed(3)})`;
-        ctx.fillRect(x, y, r * 2.4, r * 1.5);
-      } else {
-        ctx.fillStyle = `rgba(${i % 7 ? '201,164,76' : '245,215,122'},${(0.75 * fade * tw).toFixed(3)})`;
-        ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
-      }
+  gsap.ticker.add(() => {
+    const r = appleW.getBoundingClientRect();
+    if (appleW.style.opacity === '0' || document.body.dataset.s3 === '1') {
+      trail.forEach(p => p.el.style.opacity = 0); return;
     }
-  }
-  return { paint };
-}
-const portal2 = makePortal($('#portal2'), 11);
-
-const ch3 = chapters[4];
-const ch3Copies = bindRanges(ch3.el);
-const orbits = $('#orbits svg');
-const gear = $('#gear');
-const token = $('#token');
-function paintCh3(p) {
-  orbits.style.transform = `rotate(${(p * 40).toFixed(1)}deg)`;
-  if (gear) gear.style.transform = `rotate(${(p * 540).toFixed(0)}deg)`;
-  const a = p * Math.PI * 2 - Math.PI / 2;
-  token.style.left = `calc(50% + ${(Math.cos(a) * 30).toFixed(2)}vw)`;
-  token.style.top  = `calc(46% + ${(Math.sin(a) * 15).toFixed(2)}vh)`;
-  paintRanges(ch3Copies, p);
-}
-
-const ch4 = chapters[5];
-const ch4Copies = bindRanges(ch4.el);
-const NODE_TARGETS = [
-  [420, 300], [700, 210], [1010, 280], [1240, 420], [1090, 630],
-  [790, 700], [500, 620], [320, 470], [820, 450],
-];
-const ENTER_FROM = [
-  [-120, 120], [640, -140], [1100, -140], [1760, 300], [1760, 760],
-  [820, 1060], [300, 1060], [-140, 620], [-140, -100],
-];
-const LINKS = [[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,8],[7,8],[0,1],[2,3],[4,5],[6,7],[1,2],[5,6]];
-const conNodes = [], conLines = [];
-{
-  const gn = $('#con-nodes'), gl = $('#con-lines');
-  NODE_TARGETS.forEach((t, i) => {
-    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.innerHTML = `<circle class="halo" r="26"/><circle class="node" r="16"/><text y="4">${'ABCDEFGHI'[i]}</text>`;
-    g.setAttribute('aria-label', `Community member ${'ABCDEFGHI'[i]} (placeholder)`);
-    gn.appendChild(g);
-    conNodes.push(g);
+    const heroRange = heroEl.offsetHeight - innerHeight;
+    const p1 = clamp01(scrollY/heroRange);
+    const falling = p1 > .27;
+    let px = r.left + r.width*.6, py = r.top + r.height*.55;
+    trail.forEach((p,i) => {
+      p.x += (px-p.x)*(.34 - i*.04); p.y += (py-p.y)*(.34 - i*.04);
+      p.el.style.left = p.x+'px'; p.el.style.top = p.y+'px';
+      p.el.style.opacity = falling ? (.62 - i*.09) : 0;
+      px = p.x; py = p.y;
+    });
   });
-  LINKS.forEach(() => {
-    const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    gl.appendChild(l); conLines.push(l);
-  });
-}
-const conPass = $('#con-pass');
-const nodePos = NODE_TARGETS.map(() => [0, 0]);
-function paintCh4(p) {
-  const spread = Math.sin(Math.PI * clamp01((p - 0.6) / 0.3)) * 60;
-  const arr = [];
-  NODE_TARGETS.forEach((t, i) => {
-    const delay = i === NODE_TARGETS.length - 1 ? 0.02 : 0.07 + i * 0.035;
-    const arrive = smooth(clamp01((p - delay) / 0.16));
-    arr[i] = arrive;
-    const dx = t[0] - 800, dy = t[1] - 450;
-    const dist = Math.hypot(dx, dy) || 1;
-    const x = lerp(ENTER_FROM[i][0], t[0], arrive) + dx / dist * spread;
-    const y = lerp(ENTER_FROM[i][1], t[1], arrive) + dy / dist * spread;
-    nodePos[i] = [x, y];
-    conNodes[i].setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
-    conNodes[i].setAttribute('opacity', arrive.toFixed(2));
-  });
-  LINKS.forEach(([a, b], i) => {
-    const l = conLines[i];
-    const w = smooth(clamp01((p - 0.28 - i * 0.02) / 0.2)) * Math.min(arr[a], arr[b]);
-    l.setAttribute('x1', nodePos[a][0]); l.setAttribute('y1', nodePos[a][1]);
-    l.setAttribute('x2', lerp(nodePos[a][0], nodePos[b][0], w));
-    l.setAttribute('y2', lerp(nodePos[a][1], nodePos[b][1], w));
-    l.setAttribute('opacity', (w * .8).toFixed(2));
-  });
-  const route = [0, 8, 4, 8, 2];
-  const seg = clamp01((p - 0.35) / 0.5) * (route.length - 1);
-  const si = Math.min(route.length - 2, seg | 0);
-  const st = seg - si;
-  conPass.setAttribute('cx', lerp(nodePos[route[si]][0], nodePos[route[si + 1]][0], st));
-  conPass.setAttribute('cy', lerp(nodePos[route[si]][1], nodePos[route[si + 1]][1], st));
-  conPass.setAttribute('opacity', p > 0.35 && p < 0.9 ? 1 : 0);
-  paintRanges(ch4Copies, p);
-}
-
-/* ---------------------------------------------------------- chapter nav */
-const navBtns = $$('#chapnav button');
-const navBar = $('#chapnav .bar i');
-navBtns.forEach((b) => b.addEventListener('click', () => {
-  document.getElementById(b.dataset.go).scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
-}));
-const NAV_MAP = { ch1: 0, ch2intro: 1, ch2: 1, portal2: 2, ch3: 2, ch4: 3, ch5: 4 };
-function paintNav(sy) {
-  const mid = sy + innerHeight * 0.5;
-  let active = 0;
-  for (const c of chapters) if (mid >= c.top) active = NAV_MAP[c.id];
-  navBtns.forEach((b, i) => b.setAttribute('aria-current', i === active ? 'true' : 'false'));
-  const total = document.body.scrollHeight - innerHeight;
-  navBar.style.width = `${(clamp01(sy / total) * 100).toFixed(1)}%`;
-}
-
-const debugEl = $('#debug');
-function paintDebug(sy) {
-  if (!DEBUG) return;
-  const lines = chapters.filter((c) => visible(c, sy))
-    .map((c) => `${c.id.padEnd(8)} ${(localP(c, sy) * 100).toFixed(1)}%`);
-  debugEl.textContent = lines.join('\n') || '—';
-}
-
-/* ----------------------------------------------------------- main loop */
-/* The eased follower is what restores the original scrub smoothness: every
-   painter consumes syE, not raw scrollY. */
-let syE = scrollY;
-const EASE = 0.12;
-let t0 = performance.now();
-function loop(now) {
-  const t = (now - t0) / 1000;
-  syE += (scrollY - syE) * EASE;
-  if (Math.abs(scrollY - syE) < 0.4) syE = scrollY;
-  pmx += (tmx - pmx) * 0.08; pmy += (tmy - pmy) * 0.08;
-  document.documentElement.style.setProperty('--mx', pmx.toFixed(2) + 'px');
-  document.documentElement.style.setProperty('--my', pmy.toFixed(2) + 'px');
-  for (const c of chapters) {
-    if (!visible(c, syE)) continue;
-    const p = localP(c, syE);
-    if (c.id === 'ch1') paintCh1(p, t);
-    else if (c.id === 'ch2') paintCh2(p);
-    else if (c.id === 'portal2') portal2.paint(p, t);
-    else if (c.id === 'ch3') paintCh3(p);
-    else if (c.id === 'ch4') paintCh4(p);
-  }
-  paintRvs(syE);
-  paintNav(scrollY);
-  paintDebug(syE);
-  requestAnimationFrame(loop);
-}
-
-measure();
-addEventListener('resize', measure);
-
-if (reduced) {
-  /* Static, readable states; the burn becomes a fixed irregular cut once the
-     reader passes the transition point — no embers, no animation. */
-  paintCh1(0.5, 0); paintCh2(0.6); paintCh3(0.5); paintCh4(0.55);
-  portal2.paint(0.55, 0);
-  $$('.rv').forEach((el) => el.classList.add('on'));
-  let cut = false;
-  function reducedPaint() {
-    const sy = scrollY;
-    const p1 = localP(ch1, sy);
-    paintRanges(ch1Copies, p1);
-    const wantCut = p1 >= 0.7;
-    if (wantCut !== cut) {
-      cut = wantCut;
-      if (cut) {
-        const g = burnGeom(0.62);
-        const blob = blobPath(g);
-        caveworld.style.clipPath =
-          `path(evenodd, "M0 0H${innerWidth}V${innerHeight}H0Z ${blob}")`;
-        rimChar.setAttribute('d', blob); rimChar.style.opacity = .8;
-        rimHot.setAttribute('d', blob); rimHot.style.opacity = .55;
-      } else {
-        caveworld.style.clipPath = 'none';
-        rimChar.style.opacity = rimHot.style.opacity = 0;
-      }
-    }
-    if (visible(ch2, sy)) paintRanges(ch2Copies, localP(ch2, sy));
-    if (visible(ch3, sy)) paintRanges(ch3Copies, localP(ch3, sy));
-    if (visible(ch4, sy)) paintRanges(ch4Copies, localP(ch4, sy));
-    paintNav(sy);
-  }
-  addEventListener('scroll', reducedPaint, { passive: true });
-  reducedPaint();
-} else {
-  requestAnimationFrame(loop);
 }
 })();
 </script>
